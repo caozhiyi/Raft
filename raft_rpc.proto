@@ -1,0 +1,40 @@
+syntax = 'proto2';
+package raft_rpc;
+option cc_generic_services = true;
+
+message HeartRequest {
+    required sfixed64   version  = 1;          // last version in file
+    repeated string msg          = 2;          // client msg
+    optional bool   done_msg     = 3;          // write the msg of priv heart to file
+};
+
+message HeartResponse {
+    required sfixed64 version    = 1;          // cur node newest version
+};
+
+message VoteResuest {
+
+};
+
+message VoteToResponse {
+    required bool vote           = 1;          // is voting
+};
+
+
+message SyncToResuest {
+    required sfixed64 version      = 1;        // cur node newest version
+};
+
+message SyncToResponse {
+    required sfixed64 version      = 1;        // cur node newest version
+};
+
+
+service RaftService {
+
+    rpc RpcNodeHeart(HeartRequest) returns (HeartResponse);
+
+    rpc RpcNodeVote(VoteResuest) returns (VoteToResponse);
+ 
+    rpc RpcNodeSync(SyncToResuest) returns (SyncToResponse);
+};

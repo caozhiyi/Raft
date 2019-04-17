@@ -1,0 +1,17 @@
+syntax = 'proto2';
+package raft_rpc;
+option cc_generic_services = true;
+
+message ClientRequest {
+    required string   msg  = 1; 
+};
+
+message ClientResponse {
+    required int  status   = 1;  
+};
+
+service ClientService {
+
+    rpc RpcClient(ClientRequest) returns (ClientResponse);
+
+};
