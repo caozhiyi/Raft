@@ -29,6 +29,7 @@ public:
 
 	void HandleHeart(const std::string& ip_port, std::vector<std::string>& msg_vec, long long version, bool done_msg, long long& new_version);
 	void HandleVote(const std::string& ip_port, bool& vote);
+    void HandleNodeInfo(const std::string& ip_port, std::vector<std::string>& node_info, bool new_node);
     void Sync();
 private:
 	// timer
@@ -42,14 +43,12 @@ private:
 	CConfig		_config;
 
 	CHeart		_heart;
-	std::atomic_int _msg_re_count;	// reheart' num
 	CBinLog     _bin_log;
 	std::string _leader_ip_port;
 
     std::atomic_bool _done_msg;	    // notice follower done msg to file
 
-	std::string _local_ip;
-	int			_local_port;
+	std::string _local_ip_port;
 
 	std::mutex _msg_mutex;
 	std::vector<std::string>	_cur_msg;
@@ -58,7 +57,7 @@ private:
     std::vector<std::pair<std::string, Time>> _synv_vec;
 
 	std::mutex _stub_mutex;
-	std::map<std::string, std::shared_ptr<raft::RaftService_Stub*>>	_channel_map;
+	std::map<std::string, raft::RaftService_Stub*>	_channel_map;
 };
 
 #endif

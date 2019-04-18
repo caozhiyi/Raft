@@ -56,12 +56,12 @@ extern HeartRequestDefaultTypeInternal _HeartRequest_default_instance_;
 class HeartResponse;
 class HeartResponseDefaultTypeInternal;
 extern HeartResponseDefaultTypeInternal _HeartResponse_default_instance_;
-class SyncToResponse;
-class SyncToResponseDefaultTypeInternal;
-extern SyncToResponseDefaultTypeInternal _SyncToResponse_default_instance_;
-class SyncToResuest;
-class SyncToResuestDefaultTypeInternal;
-extern SyncToResuestDefaultTypeInternal _SyncToResuest_default_instance_;
+class NodeInfoRequest;
+class NodeInfoRequestDefaultTypeInternal;
+extern NodeInfoRequestDefaultTypeInternal _NodeInfoRequest_default_instance_;
+class NodeInfoResponse;
+class NodeInfoResponseDefaultTypeInternal;
+extern NodeInfoResponseDefaultTypeInternal _NodeInfoResponse_default_instance_;
 class VoteResuest;
 class VoteResuestDefaultTypeInternal;
 extern VoteResuestDefaultTypeInternal _VoteResuest_default_instance_;
@@ -73,8 +73,8 @@ namespace google {
 namespace protobuf {
 template<> ::raft_rpc::HeartRequest* Arena::CreateMaybeMessage<::raft_rpc::HeartRequest>(Arena*);
 template<> ::raft_rpc::HeartResponse* Arena::CreateMaybeMessage<::raft_rpc::HeartResponse>(Arena*);
-template<> ::raft_rpc::SyncToResponse* Arena::CreateMaybeMessage<::raft_rpc::SyncToResponse>(Arena*);
-template<> ::raft_rpc::SyncToResuest* Arena::CreateMaybeMessage<::raft_rpc::SyncToResuest>(Arena*);
+template<> ::raft_rpc::NodeInfoRequest* Arena::CreateMaybeMessage<::raft_rpc::NodeInfoRequest>(Arena*);
+template<> ::raft_rpc::NodeInfoResponse* Arena::CreateMaybeMessage<::raft_rpc::NodeInfoResponse>(Arena*);
 template<> ::raft_rpc::VoteResuest* Arena::CreateMaybeMessage<::raft_rpc::VoteResuest>(Arena*);
 template<> ::raft_rpc::VoteToResponse* Arena::CreateMaybeMessage<::raft_rpc::VoteToResponse>(Arena*);
 }  // namespace protobuf
@@ -590,25 +590,25 @@ class VoteToResponse final :
 };
 // -------------------------------------------------------------------
 
-class SyncToResuest final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:raft_rpc.SyncToResuest) */ {
+class NodeInfoRequest final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:raft_rpc.NodeInfoRequest) */ {
  public:
-  SyncToResuest();
-  virtual ~SyncToResuest();
+  NodeInfoRequest();
+  virtual ~NodeInfoRequest();
 
-  SyncToResuest(const SyncToResuest& from);
+  NodeInfoRequest(const NodeInfoRequest& from);
 
-  inline SyncToResuest& operator=(const SyncToResuest& from) {
+  inline NodeInfoRequest& operator=(const NodeInfoRequest& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  SyncToResuest(SyncToResuest&& from) noexcept
-    : SyncToResuest() {
+  NodeInfoRequest(NodeInfoRequest&& from) noexcept
+    : NodeInfoRequest() {
     *this = ::std::move(from);
   }
 
-  inline SyncToResuest& operator=(SyncToResuest&& from) noexcept {
+  inline NodeInfoRequest& operator=(NodeInfoRequest&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -627,34 +627,34 @@ class SyncToResuest final :
   static const ::google::protobuf::Descriptor* descriptor() {
     return default_instance().GetDescriptor();
   }
-  static const SyncToResuest& default_instance();
+  static const NodeInfoRequest& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const SyncToResuest* internal_default_instance() {
-    return reinterpret_cast<const SyncToResuest*>(
-               &_SyncToResuest_default_instance_);
+  static inline const NodeInfoRequest* internal_default_instance() {
+    return reinterpret_cast<const NodeInfoRequest*>(
+               &_NodeInfoRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     4;
 
-  void Swap(SyncToResuest* other);
-  friend void swap(SyncToResuest& a, SyncToResuest& b) {
+  void Swap(NodeInfoRequest* other);
+  friend void swap(NodeInfoRequest& a, NodeInfoRequest& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline SyncToResuest* New() const final {
-    return CreateMaybeMessage<SyncToResuest>(nullptr);
+  inline NodeInfoRequest* New() const final {
+    return CreateMaybeMessage<NodeInfoRequest>(nullptr);
   }
 
-  SyncToResuest* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<SyncToResuest>(arena);
+  NodeInfoRequest* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<NodeInfoRequest>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const SyncToResuest& from);
-  void MergeFrom(const SyncToResuest& from);
+  void CopyFrom(const NodeInfoRequest& from);
+  void MergeFrom(const NodeInfoRequest& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -676,7 +676,7 @@ class SyncToResuest final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(SyncToResuest* other);
+  void InternalSwap(NodeInfoRequest* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return nullptr;
@@ -692,44 +692,59 @@ class SyncToResuest final :
 
   // accessors -------------------------------------------------------
 
-  // required sfixed64 version = 1;
-  bool has_version() const;
-  void clear_version();
-  static const int kVersionFieldNumber = 1;
-  ::google::protobuf::int64 version() const;
-  void set_version(::google::protobuf::int64 value);
+  // repeated string ip_port = 1;
+  int ip_port_size() const;
+  void clear_ip_port();
+  static const int kIpPortFieldNumber = 1;
+  const ::std::string& ip_port(int index) const;
+  ::std::string* mutable_ip_port(int index);
+  void set_ip_port(int index, const ::std::string& value);
+  #if LANG_CXX11
+  void set_ip_port(int index, ::std::string&& value);
+  #endif
+  void set_ip_port(int index, const char* value);
+  void set_ip_port(int index, const char* value, size_t size);
+  ::std::string* add_ip_port();
+  void add_ip_port(const ::std::string& value);
+  #if LANG_CXX11
+  void add_ip_port(::std::string&& value);
+  #endif
+  void add_ip_port(const char* value);
+  void add_ip_port(const char* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField<::std::string>& ip_port() const;
+  ::google::protobuf::RepeatedPtrField<::std::string>* mutable_ip_port();
 
-  // @@protoc_insertion_point(class_scope:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(class_scope:raft_rpc.NodeInfoRequest)
  private:
   class HasBitSetters;
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::google::protobuf::int64 version_;
+  ::google::protobuf::RepeatedPtrField<::std::string> ip_port_;
   friend struct ::TableStruct_raft_5frpc_2eproto;
 };
 // -------------------------------------------------------------------
 
-class SyncToResponse final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:raft_rpc.SyncToResponse) */ {
+class NodeInfoResponse final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:raft_rpc.NodeInfoResponse) */ {
  public:
-  SyncToResponse();
-  virtual ~SyncToResponse();
+  NodeInfoResponse();
+  virtual ~NodeInfoResponse();
 
-  SyncToResponse(const SyncToResponse& from);
+  NodeInfoResponse(const NodeInfoResponse& from);
 
-  inline SyncToResponse& operator=(const SyncToResponse& from) {
+  inline NodeInfoResponse& operator=(const NodeInfoResponse& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  SyncToResponse(SyncToResponse&& from) noexcept
-    : SyncToResponse() {
+  NodeInfoResponse(NodeInfoResponse&& from) noexcept
+    : NodeInfoResponse() {
     *this = ::std::move(from);
   }
 
-  inline SyncToResponse& operator=(SyncToResponse&& from) noexcept {
+  inline NodeInfoResponse& operator=(NodeInfoResponse&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -748,34 +763,34 @@ class SyncToResponse final :
   static const ::google::protobuf::Descriptor* descriptor() {
     return default_instance().GetDescriptor();
   }
-  static const SyncToResponse& default_instance();
+  static const NodeInfoResponse& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const SyncToResponse* internal_default_instance() {
-    return reinterpret_cast<const SyncToResponse*>(
-               &_SyncToResponse_default_instance_);
+  static inline const NodeInfoResponse* internal_default_instance() {
+    return reinterpret_cast<const NodeInfoResponse*>(
+               &_NodeInfoResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     5;
 
-  void Swap(SyncToResponse* other);
-  friend void swap(SyncToResponse& a, SyncToResponse& b) {
+  void Swap(NodeInfoResponse* other);
+  friend void swap(NodeInfoResponse& a, NodeInfoResponse& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline SyncToResponse* New() const final {
-    return CreateMaybeMessage<SyncToResponse>(nullptr);
+  inline NodeInfoResponse* New() const final {
+    return CreateMaybeMessage<NodeInfoResponse>(nullptr);
   }
 
-  SyncToResponse* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<SyncToResponse>(arena);
+  NodeInfoResponse* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<NodeInfoResponse>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const SyncToResponse& from);
-  void MergeFrom(const SyncToResponse& from);
+  void CopyFrom(const NodeInfoResponse& from);
+  void MergeFrom(const NodeInfoResponse& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -797,7 +812,7 @@ class SyncToResponse final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(SyncToResponse* other);
+  void InternalSwap(NodeInfoResponse* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return nullptr;
@@ -813,21 +828,13 @@ class SyncToResponse final :
 
   // accessors -------------------------------------------------------
 
-  // required sfixed64 version = 1;
-  bool has_version() const;
-  void clear_version();
-  static const int kVersionFieldNumber = 1;
-  ::google::protobuf::int64 version() const;
-  void set_version(::google::protobuf::int64 value);
-
-  // @@protoc_insertion_point(class_scope:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(class_scope:raft_rpc.NodeInfoResponse)
  private:
   class HasBitSetters;
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::google::protobuf::int64 version_;
   friend struct ::TableStruct_raft_5frpc_2eproto;
 };
 // ===================================================================
@@ -845,17 +852,17 @@ class RaftService : public ::google::protobuf::Service {
 
   static const ::google::protobuf::ServiceDescriptor* descriptor();
 
-  virtual void RpcNodeHeart(::google::protobuf::RpcController* controller,
+  virtual void rpc_heart(::google::protobuf::RpcController* controller,
                        const ::raft_rpc::HeartRequest* request,
                        ::raft_rpc::HeartResponse* response,
                        ::google::protobuf::Closure* done);
-  virtual void RpcNodeVote(::google::protobuf::RpcController* controller,
+  virtual void rpc_vote(::google::protobuf::RpcController* controller,
                        const ::raft_rpc::VoteResuest* request,
                        ::raft_rpc::VoteToResponse* response,
                        ::google::protobuf::Closure* done);
-  virtual void RpcNodeSync(::google::protobuf::RpcController* controller,
-                       const ::raft_rpc::SyncToResuest* request,
-                       ::raft_rpc::SyncToResponse* response,
+  virtual void rpc_node_info(::google::protobuf::RpcController* controller,
+                       const ::raft_rpc::NodeInfoRequest* request,
+                       ::raft_rpc::NodeInfoResponse* response,
                        ::google::protobuf::Closure* done);
 
   // implements Service ----------------------------------------------
@@ -886,17 +893,17 @@ class RaftService_Stub : public RaftService {
 
   // implements RaftService ------------------------------------------
 
-  void RpcNodeHeart(::google::protobuf::RpcController* controller,
+  void rpc_heart(::google::protobuf::RpcController* controller,
                        const ::raft_rpc::HeartRequest* request,
                        ::raft_rpc::HeartResponse* response,
                        ::google::protobuf::Closure* done);
-  void RpcNodeVote(::google::protobuf::RpcController* controller,
+  void rpc_vote(::google::protobuf::RpcController* controller,
                        const ::raft_rpc::VoteResuest* request,
                        ::raft_rpc::VoteToResponse* response,
                        ::google::protobuf::Closure* done);
-  void RpcNodeSync(::google::protobuf::RpcController* controller,
-                       const ::raft_rpc::SyncToResuest* request,
-                       ::raft_rpc::SyncToResponse* response,
+  void rpc_node_info(::google::protobuf::RpcController* controller,
+                       const ::raft_rpc::NodeInfoRequest* request,
+                       ::raft_rpc::NodeInfoResponse* response,
                        ::google::protobuf::Closure* done);
  private:
   ::google::protobuf::RpcChannel* channel_;
@@ -1071,47 +1078,80 @@ inline void VoteToResponse::set_vote(bool value) {
 
 // -------------------------------------------------------------------
 
-// SyncToResuest
+// NodeInfoRequest
 
-// required sfixed64 version = 1;
-inline bool SyncToResuest::has_version() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+// repeated string ip_port = 1;
+inline int NodeInfoRequest::ip_port_size() const {
+  return ip_port_.size();
 }
-inline void SyncToResuest::clear_version() {
-  version_ = PROTOBUF_LONGLONG(0);
-  _has_bits_[0] &= ~0x00000001u;
+inline void NodeInfoRequest::clear_ip_port() {
+  ip_port_.Clear();
 }
-inline ::google::protobuf::int64 SyncToResuest::version() const {
-  // @@protoc_insertion_point(field_get:raft_rpc.SyncToResuest.version)
-  return version_;
+inline const ::std::string& NodeInfoRequest::ip_port(int index) const {
+  // @@protoc_insertion_point(field_get:raft_rpc.NodeInfoRequest.ip_port)
+  return ip_port_.Get(index);
 }
-inline void SyncToResuest::set_version(::google::protobuf::int64 value) {
-  _has_bits_[0] |= 0x00000001u;
-  version_ = value;
-  // @@protoc_insertion_point(field_set:raft_rpc.SyncToResuest.version)
+inline ::std::string* NodeInfoRequest::mutable_ip_port(int index) {
+  // @@protoc_insertion_point(field_mutable:raft_rpc.NodeInfoRequest.ip_port)
+  return ip_port_.Mutable(index);
+}
+inline void NodeInfoRequest::set_ip_port(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:raft_rpc.NodeInfoRequest.ip_port)
+  ip_port_.Mutable(index)->assign(value);
+}
+#if LANG_CXX11
+inline void NodeInfoRequest::set_ip_port(int index, ::std::string&& value) {
+  // @@protoc_insertion_point(field_set:raft_rpc.NodeInfoRequest.ip_port)
+  ip_port_.Mutable(index)->assign(std::move(value));
+}
+#endif
+inline void NodeInfoRequest::set_ip_port(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  ip_port_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:raft_rpc.NodeInfoRequest.ip_port)
+}
+inline void NodeInfoRequest::set_ip_port(int index, const char* value, size_t size) {
+  ip_port_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:raft_rpc.NodeInfoRequest.ip_port)
+}
+inline ::std::string* NodeInfoRequest::add_ip_port() {
+  // @@protoc_insertion_point(field_add_mutable:raft_rpc.NodeInfoRequest.ip_port)
+  return ip_port_.Add();
+}
+inline void NodeInfoRequest::add_ip_port(const ::std::string& value) {
+  ip_port_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:raft_rpc.NodeInfoRequest.ip_port)
+}
+#if LANG_CXX11
+inline void NodeInfoRequest::add_ip_port(::std::string&& value) {
+  ip_port_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:raft_rpc.NodeInfoRequest.ip_port)
+}
+#endif
+inline void NodeInfoRequest::add_ip_port(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  ip_port_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:raft_rpc.NodeInfoRequest.ip_port)
+}
+inline void NodeInfoRequest::add_ip_port(const char* value, size_t size) {
+  ip_port_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:raft_rpc.NodeInfoRequest.ip_port)
+}
+inline const ::google::protobuf::RepeatedPtrField<::std::string>&
+NodeInfoRequest::ip_port() const {
+  // @@protoc_insertion_point(field_list:raft_rpc.NodeInfoRequest.ip_port)
+  return ip_port_;
+}
+inline ::google::protobuf::RepeatedPtrField<::std::string>*
+NodeInfoRequest::mutable_ip_port() {
+  // @@protoc_insertion_point(field_mutable_list:raft_rpc.NodeInfoRequest.ip_port)
+  return &ip_port_;
 }
 
 // -------------------------------------------------------------------
 
-// SyncToResponse
-
-// required sfixed64 version = 1;
-inline bool SyncToResponse::has_version() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void SyncToResponse::clear_version() {
-  version_ = PROTOBUF_LONGLONG(0);
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline ::google::protobuf::int64 SyncToResponse::version() const {
-  // @@protoc_insertion_point(field_get:raft_rpc.SyncToResponse.version)
-  return version_;
-}
-inline void SyncToResponse::set_version(::google::protobuf::int64 value) {
-  _has_bits_[0] |= 0x00000001u;
-  version_ = value;
-  // @@protoc_insertion_point(field_set:raft_rpc.SyncToResponse.version)
-}
+// NodeInfoResponse
 
 #ifdef __GNUC__
   #pragma GCC diagnostic pop

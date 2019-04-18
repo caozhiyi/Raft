@@ -33,14 +33,14 @@ class VoteToResponseDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<VoteToResponse> _instance;
 } _VoteToResponse_default_instance_;
-class SyncToResuestDefaultTypeInternal {
+class NodeInfoRequestDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<SyncToResuest> _instance;
-} _SyncToResuest_default_instance_;
-class SyncToResponseDefaultTypeInternal {
+  ::google::protobuf::internal::ExplicitlyConstructed<NodeInfoRequest> _instance;
+} _NodeInfoRequest_default_instance_;
+class NodeInfoResponseDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<SyncToResponse> _instance;
-} _SyncToResponse_default_instance_;
+  ::google::protobuf::internal::ExplicitlyConstructed<NodeInfoResponse> _instance;
+} _NodeInfoResponse_default_instance_;
 }  // namespace raft_rpc
 static void InitDefaultsHeartRequest_raft_5frpc_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -98,41 +98,41 @@ static void InitDefaultsVoteToResponse_raft_5frpc_2eproto() {
 ::google::protobuf::internal::SCCInfo<0> scc_info_VoteToResponse_raft_5frpc_2eproto =
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsVoteToResponse_raft_5frpc_2eproto}, {}};
 
-static void InitDefaultsSyncToResuest_raft_5frpc_2eproto() {
+static void InitDefaultsNodeInfoRequest_raft_5frpc_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::raft_rpc::_SyncToResuest_default_instance_;
-    new (ptr) ::raft_rpc::SyncToResuest();
+    void* ptr = &::raft_rpc::_NodeInfoRequest_default_instance_;
+    new (ptr) ::raft_rpc::NodeInfoRequest();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::raft_rpc::SyncToResuest::InitAsDefaultInstance();
+  ::raft_rpc::NodeInfoRequest::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_SyncToResuest_raft_5frpc_2eproto =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSyncToResuest_raft_5frpc_2eproto}, {}};
+::google::protobuf::internal::SCCInfo<0> scc_info_NodeInfoRequest_raft_5frpc_2eproto =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsNodeInfoRequest_raft_5frpc_2eproto}, {}};
 
-static void InitDefaultsSyncToResponse_raft_5frpc_2eproto() {
+static void InitDefaultsNodeInfoResponse_raft_5frpc_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::raft_rpc::_SyncToResponse_default_instance_;
-    new (ptr) ::raft_rpc::SyncToResponse();
+    void* ptr = &::raft_rpc::_NodeInfoResponse_default_instance_;
+    new (ptr) ::raft_rpc::NodeInfoResponse();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::raft_rpc::SyncToResponse::InitAsDefaultInstance();
+  ::raft_rpc::NodeInfoResponse::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_SyncToResponse_raft_5frpc_2eproto =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSyncToResponse_raft_5frpc_2eproto}, {}};
+::google::protobuf::internal::SCCInfo<0> scc_info_NodeInfoResponse_raft_5frpc_2eproto =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsNodeInfoResponse_raft_5frpc_2eproto}, {}};
 
 void InitDefaults_raft_5frpc_2eproto() {
   ::google::protobuf::internal::InitSCC(&scc_info_HeartRequest_raft_5frpc_2eproto.base);
   ::google::protobuf::internal::InitSCC(&scc_info_HeartResponse_raft_5frpc_2eproto.base);
   ::google::protobuf::internal::InitSCC(&scc_info_VoteResuest_raft_5frpc_2eproto.base);
   ::google::protobuf::internal::InitSCC(&scc_info_VoteToResponse_raft_5frpc_2eproto.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_SyncToResuest_raft_5frpc_2eproto.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_SyncToResponse_raft_5frpc_2eproto.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_NodeInfoRequest_raft_5frpc_2eproto.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_NodeInfoResponse_raft_5frpc_2eproto.base);
 }
 
 ::google::protobuf::Metadata file_level_metadata_raft_5frpc_2eproto[6];
@@ -170,28 +170,26 @@ const ::google::protobuf::uint32 TableStruct_raft_5frpc_2eproto::offsets[] PROTO
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::raft_rpc::VoteToResponse, vote_),
   0,
-  PROTOBUF_FIELD_OFFSET(::raft_rpc::SyncToResuest, _has_bits_),
-  PROTOBUF_FIELD_OFFSET(::raft_rpc::SyncToResuest, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::raft_rpc::NodeInfoRequest, _has_bits_),
+  PROTOBUF_FIELD_OFFSET(::raft_rpc::NodeInfoRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::raft_rpc::SyncToResuest, version_),
-  0,
-  PROTOBUF_FIELD_OFFSET(::raft_rpc::SyncToResponse, _has_bits_),
-  PROTOBUF_FIELD_OFFSET(::raft_rpc::SyncToResponse, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::raft_rpc::NodeInfoRequest, ip_port_),
+  ~0u,
+  PROTOBUF_FIELD_OFFSET(::raft_rpc::NodeInfoResponse, _has_bits_),
+  PROTOBUF_FIELD_OFFSET(::raft_rpc::NodeInfoResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::raft_rpc::SyncToResponse, version_),
-  0,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 8, sizeof(::raft_rpc::HeartRequest)},
   { 11, 17, sizeof(::raft_rpc::HeartResponse)},
   { 18, 23, sizeof(::raft_rpc::VoteResuest)},
   { 23, 29, sizeof(::raft_rpc::VoteToResponse)},
-  { 30, 36, sizeof(::raft_rpc::SyncToResuest)},
-  { 37, 43, sizeof(::raft_rpc::SyncToResponse)},
+  { 30, 36, sizeof(::raft_rpc::NodeInfoRequest)},
+  { 37, 42, sizeof(::raft_rpc::NodeInfoResponse)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -199,8 +197,8 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::raft_rpc::_HeartResponse_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::raft_rpc::_VoteResuest_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::raft_rpc::_VoteToResponse_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::raft_rpc::_SyncToResuest_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::raft_rpc::_SyncToResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::raft_rpc::_NodeInfoRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::raft_rpc::_NodeInfoResponse_default_instance_),
 };
 
 ::google::protobuf::internal::AssignDescriptorsTable assign_descriptors_table_raft_5frpc_2eproto = {
@@ -214,19 +212,19 @@ const char descriptor_table_protodef_raft_5frpc_2eproto[] =
   "st\022\017\n\007version\030\001 \002(\020\022\013\n\003msg\030\002 \003(\t\022\020\n\010done"
   "_msg\030\003 \001(\010\" \n\rHeartResponse\022\017\n\007version\030\001"
   " \002(\020\"\r\n\013VoteResuest\"\036\n\016VoteToResponse\022\014\n"
-  "\004vote\030\001 \002(\010\" \n\rSyncToResuest\022\017\n\007version\030"
-  "\001 \002(\020\"!\n\016SyncToResponse\022\017\n\007version\030\001 \002(\020"
-  "2\320\001\n\013RaftService\022\?\n\014RpcNodeHeart\022\026.raft_"
-  "rpc.HeartRequest\032\027.raft_rpc.HeartRespons"
-  "e\022>\n\013RpcNodeVote\022\025.raft_rpc.VoteResuest\032"
-  "\030.raft_rpc.VoteToResponse\022@\n\013RpcNodeSync"
-  "\022\027.raft_rpc.SyncToResuest\032\030.raft_rpc.Syn"
-  "cToResponseB\003\200\001\001"
+  "\004vote\030\001 \002(\010\"\"\n\017NodeInfoRequest\022\017\n\007ip_por"
+  "t\030\001 \003(\t\"\022\n\020NodeInfoResponse2\320\001\n\013RaftServ"
+  "ice\022<\n\trpc_heart\022\026.raft_rpc.HeartRequest"
+  "\032\027.raft_rpc.HeartResponse\022;\n\010rpc_vote\022\025."
+  "raft_rpc.VoteResuest\032\030.raft_rpc.VoteToRe"
+  "sponse\022F\n\rrpc_node_info\022\031.raft_rpc.NodeI"
+  "nfoRequest\032\032.raft_rpc.NodeInfoResponseB\003"
+  "\200\001\001"
   ;
 ::google::protobuf::internal::DescriptorTable descriptor_table_raft_5frpc_2eproto = {
   false, InitDefaults_raft_5frpc_2eproto, 
   descriptor_table_protodef_raft_5frpc_2eproto,
-  "raft_rpc.proto", &assign_descriptors_table_raft_5frpc_2eproto, 456,
+  "raft_rpc.proto", &assign_descriptors_table_raft_5frpc_2eproto, 443,
 };
 
 void AddDescriptors_raft_5frpc_2eproto() {
@@ -1386,69 +1384,67 @@ void VoteToResponse::InternalSwap(VoteToResponse* other) {
 
 // ===================================================================
 
-void SyncToResuest::InitAsDefaultInstance() {
+void NodeInfoRequest::InitAsDefaultInstance() {
 }
-class SyncToResuest::HasBitSetters {
+class NodeInfoRequest::HasBitSetters {
  public:
-  static void set_has_version(SyncToResuest* msg) {
-    msg->_has_bits_[0] |= 0x00000001u;
-  }
 };
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int SyncToResuest::kVersionFieldNumber;
+const int NodeInfoRequest::kIpPortFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-SyncToResuest::SyncToResuest()
+NodeInfoRequest::NodeInfoRequest()
   : ::google::protobuf::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(constructor:raft_rpc.NodeInfoRequest)
 }
-SyncToResuest::SyncToResuest(const SyncToResuest& from)
+NodeInfoRequest::NodeInfoRequest(const NodeInfoRequest& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(nullptr),
-      _has_bits_(from._has_bits_) {
+      _has_bits_(from._has_bits_),
+      ip_port_(from.ip_port_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  version_ = from.version_;
-  // @@protoc_insertion_point(copy_constructor:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(copy_constructor:raft_rpc.NodeInfoRequest)
 }
 
-void SyncToResuest::SharedCtor() {
-  version_ = PROTOBUF_LONGLONG(0);
+void NodeInfoRequest::SharedCtor() {
+  ::google::protobuf::internal::InitSCC(
+      &scc_info_NodeInfoRequest_raft_5frpc_2eproto.base);
 }
 
-SyncToResuest::~SyncToResuest() {
-  // @@protoc_insertion_point(destructor:raft_rpc.SyncToResuest)
+NodeInfoRequest::~NodeInfoRequest() {
+  // @@protoc_insertion_point(destructor:raft_rpc.NodeInfoRequest)
   SharedDtor();
 }
 
-void SyncToResuest::SharedDtor() {
+void NodeInfoRequest::SharedDtor() {
 }
 
-void SyncToResuest::SetCachedSize(int size) const {
+void NodeInfoRequest::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const SyncToResuest& SyncToResuest::default_instance() {
-  ::google::protobuf::internal::InitSCC(&::scc_info_SyncToResuest_raft_5frpc_2eproto.base);
+const NodeInfoRequest& NodeInfoRequest::default_instance() {
+  ::google::protobuf::internal::InitSCC(&::scc_info_NodeInfoRequest_raft_5frpc_2eproto.base);
   return *internal_default_instance();
 }
 
 
-void SyncToResuest::Clear() {
-// @@protoc_insertion_point(message_clear_start:raft_rpc.SyncToResuest)
+void NodeInfoRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:raft_rpc.NodeInfoRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  version_ = PROTOBUF_LONGLONG(0);
+  ip_port_.Clear();
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
 
 #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-const char* SyncToResuest::_InternalParse(const char* begin, const char* end, void* object,
+const char* NodeInfoRequest::_InternalParse(const char* begin, const char* end, void* object,
                   ::google::protobuf::internal::ParseContext* ctx) {
-  auto msg = static_cast<SyncToResuest*>(object);
+  auto msg = static_cast<NodeInfoRequest*>(object);
   ::google::protobuf::int32 size; (void)size;
   int depth; (void)depth;
   ::google::protobuf::uint32 tag;
@@ -1458,11 +1454,23 @@ const char* SyncToResuest::_InternalParse(const char* begin, const char* end, vo
     ptr = ::google::protobuf::io::Parse32(ptr, &tag);
     GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
     switch (tag >> 3) {
-      // required sfixed64 version = 1;
+      // repeated string ip_port = 1;
       case 1: {
-        if (static_cast<::google::protobuf::uint8>(tag) != 9) goto handle_unusual;
-        msg->set_version(::google::protobuf::io::UnalignedLoad<::google::protobuf::int64>(ptr));
-        ptr += sizeof(::google::protobuf::int64);
+        if (static_cast<::google::protobuf::uint8>(tag) != 10) goto handle_unusual;
+        do {
+          ptr = ::google::protobuf::io::ReadSize(ptr, &size);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+          ctx->extra_parse_data().SetFieldName("raft_rpc.NodeInfoRequest.ip_port");
+          object = msg->add_ip_port();
+          if (size > end - ptr + ::google::protobuf::internal::ParseContext::kSlopBytes) {
+            parser_till_end = ::google::protobuf::internal::GreedyStringParserUTF8Verify;
+            goto string_till_end;
+          }
+          GOOGLE_PROTOBUF_PARSER_ASSERT(::google::protobuf::internal::StringCheckUTF8Verify(ptr, size, ctx));
+          ::google::protobuf::internal::InlineGreedyStringParser(object, ptr, size, ctx);
+          ptr += size;
+          if (ptr >= end) break;
+        } while ((::google::protobuf::io::UnalignedLoad<::google::protobuf::uint64>(ptr) & 255) == 10 && (ptr += 1));
         break;
       }
       default: {
@@ -1480,25 +1488,35 @@ const char* SyncToResuest::_InternalParse(const char* begin, const char* end, vo
     }  // switch
   }  // while
   return ptr;
+string_till_end:
+  static_cast<::std::string*>(object)->clear();
+  static_cast<::std::string*>(object)->reserve(size);
+  goto len_delim_till_end;
+len_delim_till_end:
+  return ctx->StoreAndTailCall(ptr, end, {_InternalParse, msg},
+                               {parser_till_end, object}, size);
 }
 #else  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-bool SyncToResuest::MergePartialFromCodedStream(
+bool NodeInfoRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!PROTOBUF_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(parse_start:raft_rpc.NodeInfoRequest)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required sfixed64 version = 1;
+      // repeated string ip_port = 1;
       case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) == (9 & 0xFF)) {
-          HasBitSetters::set_has_version(this);
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SFIXED64>(
-                 input, &version_)));
+        if (static_cast< ::google::protobuf::uint8>(tag) == (10 & 0xFF)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_ip_port()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->ip_port(this->ip_port_size() - 1).data(),
+            static_cast<int>(this->ip_port(this->ip_port_size() - 1).length()),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "raft_rpc.NodeInfoRequest.ip_port");
         } else {
           goto handle_unusual;
         }
@@ -1517,56 +1535,64 @@ bool SyncToResuest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(parse_success:raft_rpc.NodeInfoRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(parse_failure:raft_rpc.NodeInfoRequest)
   return false;
 #undef DO_
 }
 #endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
 
-void SyncToResuest::SerializeWithCachedSizes(
+void NodeInfoRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(serialize_start:raft_rpc.NodeInfoRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
-  // required sfixed64 version = 1;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormatLite::WriteSFixed64(1, this->version(), output);
+  // repeated string ip_port = 1;
+  for (int i = 0, n = this->ip_port_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->ip_port(i).data(), static_cast<int>(this->ip_port(i).length()),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "raft_rpc.NodeInfoRequest.ip_port");
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->ip_port(i), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(serialize_end:raft_rpc.NodeInfoRequest)
 }
 
-::google::protobuf::uint8* SyncToResuest::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* NodeInfoRequest::InternalSerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(serialize_to_array_start:raft_rpc.NodeInfoRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
-  // required sfixed64 version = 1;
-  if (cached_has_bits & 0x00000001u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteSFixed64ToArray(1, this->version(), target);
+  // repeated string ip_port = 1;
+  for (int i = 0, n = this->ip_port_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->ip_port(i).data(), static_cast<int>(this->ip_port(i).length()),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "raft_rpc.NodeInfoRequest.ip_port");
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(1, this->ip_port(i), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(serialize_to_array_end:raft_rpc.NodeInfoRequest)
   return target;
 }
 
-size_t SyncToResuest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:raft_rpc.SyncToResuest)
+size_t NodeInfoRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:raft_rpc.NodeInfoRequest)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1574,77 +1600,78 @@ size_t SyncToResuest::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // required sfixed64 version = 1;
-  if (has_version()) {
-    total_size += 1 + 8;
-  }
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // repeated string ip_port = 1;
+  total_size += 1 *
+      ::google::protobuf::internal::FromIntSize(this->ip_port_size());
+  for (int i = 0, n = this->ip_port_size(); i < n; i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->ip_port(i));
+  }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
 }
 
-void SyncToResuest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:raft_rpc.SyncToResuest)
+void NodeInfoRequest::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:raft_rpc.NodeInfoRequest)
   GOOGLE_DCHECK_NE(&from, this);
-  const SyncToResuest* source =
-      ::google::protobuf::DynamicCastToGenerated<SyncToResuest>(
+  const NodeInfoRequest* source =
+      ::google::protobuf::DynamicCastToGenerated<NodeInfoRequest>(
           &from);
   if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:raft_rpc.NodeInfoRequest)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:raft_rpc.SyncToResuest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:raft_rpc.NodeInfoRequest)
     MergeFrom(*source);
   }
 }
 
-void SyncToResuest::MergeFrom(const SyncToResuest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft_rpc.SyncToResuest)
+void NodeInfoRequest::MergeFrom(const NodeInfoRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:raft_rpc.NodeInfoRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.has_version()) {
-    set_version(from.version());
-  }
+  ip_port_.MergeFrom(from.ip_port_);
 }
 
-void SyncToResuest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:raft_rpc.SyncToResuest)
+void NodeInfoRequest::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:raft_rpc.NodeInfoRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void SyncToResuest::CopyFrom(const SyncToResuest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:raft_rpc.SyncToResuest)
+void NodeInfoRequest::CopyFrom(const NodeInfoRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:raft_rpc.NodeInfoRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool SyncToResuest::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+bool NodeInfoRequest::IsInitialized() const {
   return true;
 }
 
-void SyncToResuest::Swap(SyncToResuest* other) {
+void NodeInfoRequest::Swap(NodeInfoRequest* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void SyncToResuest::InternalSwap(SyncToResuest* other) {
+void NodeInfoRequest::InternalSwap(NodeInfoRequest* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_has_bits_[0], other->_has_bits_[0]);
-  swap(version_, other->version_);
+  ip_port_.InternalSwap(CastToBase(&other->ip_port_));
 }
 
-::google::protobuf::Metadata SyncToResuest::GetMetadata() const {
+::google::protobuf::Metadata NodeInfoRequest::GetMetadata() const {
   ::google::protobuf::internal::AssignDescriptors(&::assign_descriptors_table_raft_5frpc_2eproto);
   return ::file_level_metadata_raft_5frpc_2eproto[kIndexInFileMessages];
 }
@@ -1652,69 +1679,62 @@ void SyncToResuest::InternalSwap(SyncToResuest* other) {
 
 // ===================================================================
 
-void SyncToResponse::InitAsDefaultInstance() {
+void NodeInfoResponse::InitAsDefaultInstance() {
 }
-class SyncToResponse::HasBitSetters {
+class NodeInfoResponse::HasBitSetters {
  public:
-  static void set_has_version(SyncToResponse* msg) {
-    msg->_has_bits_[0] |= 0x00000001u;
-  }
 };
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int SyncToResponse::kVersionFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-SyncToResponse::SyncToResponse()
+NodeInfoResponse::NodeInfoResponse()
   : ::google::protobuf::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(constructor:raft_rpc.NodeInfoResponse)
 }
-SyncToResponse::SyncToResponse(const SyncToResponse& from)
+NodeInfoResponse::NodeInfoResponse(const NodeInfoResponse& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(nullptr),
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  version_ = from.version_;
-  // @@protoc_insertion_point(copy_constructor:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(copy_constructor:raft_rpc.NodeInfoResponse)
 }
 
-void SyncToResponse::SharedCtor() {
-  version_ = PROTOBUF_LONGLONG(0);
+void NodeInfoResponse::SharedCtor() {
 }
 
-SyncToResponse::~SyncToResponse() {
-  // @@protoc_insertion_point(destructor:raft_rpc.SyncToResponse)
+NodeInfoResponse::~NodeInfoResponse() {
+  // @@protoc_insertion_point(destructor:raft_rpc.NodeInfoResponse)
   SharedDtor();
 }
 
-void SyncToResponse::SharedDtor() {
+void NodeInfoResponse::SharedDtor() {
 }
 
-void SyncToResponse::SetCachedSize(int size) const {
+void NodeInfoResponse::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const SyncToResponse& SyncToResponse::default_instance() {
-  ::google::protobuf::internal::InitSCC(&::scc_info_SyncToResponse_raft_5frpc_2eproto.base);
+const NodeInfoResponse& NodeInfoResponse::default_instance() {
+  ::google::protobuf::internal::InitSCC(&::scc_info_NodeInfoResponse_raft_5frpc_2eproto.base);
   return *internal_default_instance();
 }
 
 
-void SyncToResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:raft_rpc.SyncToResponse)
+void NodeInfoResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:raft_rpc.NodeInfoResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  version_ = PROTOBUF_LONGLONG(0);
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
 
 #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-const char* SyncToResponse::_InternalParse(const char* begin, const char* end, void* object,
+const char* NodeInfoResponse::_InternalParse(const char* begin, const char* end, void* object,
                   ::google::protobuf::internal::ParseContext* ctx) {
-  auto msg = static_cast<SyncToResponse*>(object);
+  auto msg = static_cast<NodeInfoResponse*>(object);
   ::google::protobuf::int32 size; (void)size;
   int depth; (void)depth;
   ::google::protobuf::uint32 tag;
@@ -1724,15 +1744,7 @@ const char* SyncToResponse::_InternalParse(const char* begin, const char* end, v
     ptr = ::google::protobuf::io::Parse32(ptr, &tag);
     GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
     switch (tag >> 3) {
-      // required sfixed64 version = 1;
-      case 1: {
-        if (static_cast<::google::protobuf::uint8>(tag) != 9) goto handle_unusual;
-        msg->set_version(::google::protobuf::io::UnalignedLoad<::google::protobuf::int64>(ptr));
-        ptr += sizeof(::google::protobuf::int64);
-        break;
-      }
       default: {
-      handle_unusual:
         if ((tag & 7) == 4 || tag == 0) {
           ctx->EndGroup(tag);
           return ptr;
@@ -1748,101 +1760,67 @@ const char* SyncToResponse::_InternalParse(const char* begin, const char* end, v
   return ptr;
 }
 #else  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-bool SyncToResponse::MergePartialFromCodedStream(
+bool NodeInfoResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!PROTOBUF_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(parse_start:raft_rpc.NodeInfoResponse)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required sfixed64 version = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) == (9 & 0xFF)) {
-          HasBitSetters::set_has_version(this);
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SFIXED64>(
-                 input, &version_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+  handle_unusual:
+    if (tag == 0) {
+      goto success;
     }
+    DO_(::google::protobuf::internal::WireFormat::SkipField(
+          input, tag, _internal_metadata_.mutable_unknown_fields()));
   }
 success:
-  // @@protoc_insertion_point(parse_success:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(parse_success:raft_rpc.NodeInfoResponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(parse_failure:raft_rpc.NodeInfoResponse)
   return false;
 #undef DO_
 }
 #endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
 
-void SyncToResponse::SerializeWithCachedSizes(
+void NodeInfoResponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(serialize_start:raft_rpc.NodeInfoResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
-
-  cached_has_bits = _has_bits_[0];
-  // required sfixed64 version = 1;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormatLite::WriteSFixed64(1, this->version(), output);
-  }
 
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(serialize_end:raft_rpc.NodeInfoResponse)
 }
 
-::google::protobuf::uint8* SyncToResponse::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* NodeInfoResponse::InternalSerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:raft_rpc.NodeInfoResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
-
-  cached_has_bits = _has_bits_[0];
-  // required sfixed64 version = 1;
-  if (cached_has_bits & 0x00000001u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteSFixed64ToArray(1, this->version(), target);
-  }
 
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:raft_rpc.NodeInfoResponse)
   return target;
 }
 
-size_t SyncToResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:raft_rpc.SyncToResponse)
+size_t NodeInfoResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:raft_rpc.NodeInfoResponse)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
-  }
-  // required sfixed64 version = 1;
-  if (has_version()) {
-    total_size += 1 + 8;
   }
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -1853,64 +1831,59 @@ size_t SyncToResponse::ByteSizeLong() const {
   return total_size;
 }
 
-void SyncToResponse::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:raft_rpc.SyncToResponse)
+void NodeInfoResponse::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:raft_rpc.NodeInfoResponse)
   GOOGLE_DCHECK_NE(&from, this);
-  const SyncToResponse* source =
-      ::google::protobuf::DynamicCastToGenerated<SyncToResponse>(
+  const NodeInfoResponse* source =
+      ::google::protobuf::DynamicCastToGenerated<NodeInfoResponse>(
           &from);
   if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:raft_rpc.NodeInfoResponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:raft_rpc.SyncToResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:raft_rpc.NodeInfoResponse)
     MergeFrom(*source);
   }
 }
 
-void SyncToResponse::MergeFrom(const SyncToResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft_rpc.SyncToResponse)
+void NodeInfoResponse::MergeFrom(const NodeInfoResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:raft_rpc.NodeInfoResponse)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.has_version()) {
-    set_version(from.version());
-  }
 }
 
-void SyncToResponse::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:raft_rpc.SyncToResponse)
+void NodeInfoResponse::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:raft_rpc.NodeInfoResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void SyncToResponse::CopyFrom(const SyncToResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:raft_rpc.SyncToResponse)
+void NodeInfoResponse::CopyFrom(const NodeInfoResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:raft_rpc.NodeInfoResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool SyncToResponse::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+bool NodeInfoResponse::IsInitialized() const {
   return true;
 }
 
-void SyncToResponse::Swap(SyncToResponse* other) {
+void NodeInfoResponse::Swap(NodeInfoResponse* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void SyncToResponse::InternalSwap(SyncToResponse* other) {
+void NodeInfoResponse::InternalSwap(NodeInfoResponse* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_has_bits_[0], other->_has_bits_[0]);
-  swap(version_, other->version_);
 }
 
-::google::protobuf::Metadata SyncToResponse::GetMetadata() const {
+::google::protobuf::Metadata NodeInfoResponse::GetMetadata() const {
   ::google::protobuf::internal::AssignDescriptors(&::assign_descriptors_table_raft_5frpc_2eproto);
   return ::file_level_metadata_raft_5frpc_2eproto[kIndexInFileMessages];
 }
@@ -1929,27 +1902,27 @@ const ::google::protobuf::ServiceDescriptor* RaftService::GetDescriptor() {
   return descriptor();
 }
 
-void RaftService::RpcNodeHeart(::google::protobuf::RpcController* controller,
+void RaftService::rpc_heart(::google::protobuf::RpcController* controller,
                          const ::raft_rpc::HeartRequest*,
                          ::raft_rpc::HeartResponse*,
                          ::google::protobuf::Closure* done) {
-  controller->SetFailed("Method RpcNodeHeart() not implemented.");
+  controller->SetFailed("Method rpc_heart() not implemented.");
   done->Run();
 }
 
-void RaftService::RpcNodeVote(::google::protobuf::RpcController* controller,
+void RaftService::rpc_vote(::google::protobuf::RpcController* controller,
                          const ::raft_rpc::VoteResuest*,
                          ::raft_rpc::VoteToResponse*,
                          ::google::protobuf::Closure* done) {
-  controller->SetFailed("Method RpcNodeVote() not implemented.");
+  controller->SetFailed("Method rpc_vote() not implemented.");
   done->Run();
 }
 
-void RaftService::RpcNodeSync(::google::protobuf::RpcController* controller,
-                         const ::raft_rpc::SyncToResuest*,
-                         ::raft_rpc::SyncToResponse*,
+void RaftService::rpc_node_info(::google::protobuf::RpcController* controller,
+                         const ::raft_rpc::NodeInfoRequest*,
+                         ::raft_rpc::NodeInfoResponse*,
                          ::google::protobuf::Closure* done) {
-  controller->SetFailed("Method RpcNodeSync() not implemented.");
+  controller->SetFailed("Method rpc_node_info() not implemented.");
   done->Run();
 }
 
@@ -1961,21 +1934,21 @@ void RaftService::CallMethod(const ::google::protobuf::MethodDescriptor* method,
   GOOGLE_DCHECK_EQ(method->service(), file_level_service_descriptors_raft_5frpc_2eproto[0]);
   switch(method->index()) {
     case 0:
-      RpcNodeHeart(controller,
+      rpc_heart(controller,
              ::google::protobuf::down_cast<const ::raft_rpc::HeartRequest*>(request),
              ::google::protobuf::down_cast< ::raft_rpc::HeartResponse*>(response),
              done);
       break;
     case 1:
-      RpcNodeVote(controller,
+      rpc_vote(controller,
              ::google::protobuf::down_cast<const ::raft_rpc::VoteResuest*>(request),
              ::google::protobuf::down_cast< ::raft_rpc::VoteToResponse*>(response),
              done);
       break;
     case 2:
-      RpcNodeSync(controller,
-             ::google::protobuf::down_cast<const ::raft_rpc::SyncToResuest*>(request),
-             ::google::protobuf::down_cast< ::raft_rpc::SyncToResponse*>(response),
+      rpc_node_info(controller,
+             ::google::protobuf::down_cast<const ::raft_rpc::NodeInfoRequest*>(request),
+             ::google::protobuf::down_cast< ::raft_rpc::NodeInfoResponse*>(response),
              done);
       break;
     default:
@@ -1993,7 +1966,7 @@ const ::google::protobuf::Message& RaftService::GetRequestPrototype(
     case 1:
       return ::raft_rpc::VoteResuest::default_instance();
     case 2:
-      return ::raft_rpc::SyncToResuest::default_instance();
+      return ::raft_rpc::NodeInfoRequest::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
       return *::google::protobuf::MessageFactory::generated_factory()
@@ -2010,7 +1983,7 @@ const ::google::protobuf::Message& RaftService::GetResponsePrototype(
     case 1:
       return ::raft_rpc::VoteToResponse::default_instance();
     case 2:
-      return ::raft_rpc::SyncToResponse::default_instance();
+      return ::raft_rpc::NodeInfoResponse::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
       return *::google::protobuf::MessageFactory::generated_factory()
@@ -2029,23 +2002,23 @@ RaftService_Stub::~RaftService_Stub() {
   if (owns_channel_) delete channel_;
 }
 
-void RaftService_Stub::RpcNodeHeart(::google::protobuf::RpcController* controller,
+void RaftService_Stub::rpc_heart(::google::protobuf::RpcController* controller,
                               const ::raft_rpc::HeartRequest* request,
                               ::raft_rpc::HeartResponse* response,
                               ::google::protobuf::Closure* done) {
   channel_->CallMethod(descriptor()->method(0),
                        controller, request, response, done);
 }
-void RaftService_Stub::RpcNodeVote(::google::protobuf::RpcController* controller,
+void RaftService_Stub::rpc_vote(::google::protobuf::RpcController* controller,
                               const ::raft_rpc::VoteResuest* request,
                               ::raft_rpc::VoteToResponse* response,
                               ::google::protobuf::Closure* done) {
   channel_->CallMethod(descriptor()->method(1),
                        controller, request, response, done);
 }
-void RaftService_Stub::RpcNodeSync(::google::protobuf::RpcController* controller,
-                              const ::raft_rpc::SyncToResuest* request,
-                              ::raft_rpc::SyncToResponse* response,
+void RaftService_Stub::rpc_node_info(::google::protobuf::RpcController* controller,
+                              const ::raft_rpc::NodeInfoRequest* request,
+                              ::raft_rpc::NodeInfoResponse* response,
                               ::google::protobuf::Closure* done) {
   channel_->CallMethod(descriptor()->method(2),
                        controller, request, response, done);
@@ -2067,11 +2040,11 @@ template<> PROTOBUF_NOINLINE ::raft_rpc::VoteResuest* Arena::CreateMaybeMessage<
 template<> PROTOBUF_NOINLINE ::raft_rpc::VoteToResponse* Arena::CreateMaybeMessage< ::raft_rpc::VoteToResponse >(Arena* arena) {
   return Arena::CreateInternal< ::raft_rpc::VoteToResponse >(arena);
 }
-template<> PROTOBUF_NOINLINE ::raft_rpc::SyncToResuest* Arena::CreateMaybeMessage< ::raft_rpc::SyncToResuest >(Arena* arena) {
-  return Arena::CreateInternal< ::raft_rpc::SyncToResuest >(arena);
+template<> PROTOBUF_NOINLINE ::raft_rpc::NodeInfoRequest* Arena::CreateMaybeMessage< ::raft_rpc::NodeInfoRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::raft_rpc::NodeInfoRequest >(arena);
 }
-template<> PROTOBUF_NOINLINE ::raft_rpc::SyncToResponse* Arena::CreateMaybeMessage< ::raft_rpc::SyncToResponse >(Arena* arena) {
-  return Arena::CreateInternal< ::raft_rpc::SyncToResponse >(arena);
+template<> PROTOBUF_NOINLINE ::raft_rpc::NodeInfoResponse* Arena::CreateMaybeMessage< ::raft_rpc::NodeInfoResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::raft_rpc::NodeInfoResponse >(arena);
 }
 }  // namespace protobuf
 }  // namespace google

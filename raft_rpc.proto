@@ -4,12 +4,12 @@ option cc_generic_services = true;
 
 message HeartRequest {
     required sfixed64   version  = 1;          // last version in file
-    repeated string msg          = 2;          // client msg
-    optional bool   done_msg     = 3;          // write the msg of priv heart to file
+    repeated string     msg      = 2;          // client msg
+    optional bool       done_msg = 3;          // write the msg of priv heart to file
 };
 
 message HeartResponse {
-    required sfixed64 version    = 1;          // cur node newest version
+    required sfixed64   version    = 1;        // cur node newest version
 };
 
 message VoteResuest {
@@ -20,21 +20,20 @@ message VoteToResponse {
     required bool vote           = 1;          // is voting
 };
 
+message NodeInfoRequest {
+    repeated string ip_port      = 1;          // all node ip info
+    required bool new_node       = 2;          // is a new node
+}
 
-message SyncToResuest {
-    required sfixed64 version      = 1;        // cur node newest version
-};
-
-message SyncToResponse {
-    required sfixed64 version      = 1;        // cur node newest version
-};
-
+message NodeInfoResponse {
+    repeated string ip_port      = 1;          // all node ip info
+}
 
 service RaftService {
 
-    rpc RpcNodeHeart(HeartRequest) returns (HeartResponse);
+    rpc rpc_heart(HeartRequest) returns (HeartResponse);
 
-    rpc RpcNodeVote(VoteResuest) returns (VoteToResponse);
- 
-    rpc RpcNodeSync(SyncToResuest) returns (SyncToResponse);
+    rpc rpc_vote(VoteResuest) returns (VoteToResponse);
+
+    rpc rpc_node_info(NodeInfoRequest) returns (NodeInfoResponse);
 };
