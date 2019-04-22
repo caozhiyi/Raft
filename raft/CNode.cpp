@@ -1,7 +1,5 @@
 #include "Log.h"
 #include "CNode.h"
-#include "CZkNodeInfo.h"
-#include "CParser.h"
 
 #include <iostream>
 
@@ -24,16 +22,7 @@ bool CNode::Init() {
         return false;
 	}
 	
-	// start timer
-    _heart.SetHeartCallBack(std::bind(&CNode::_HeartCallBack, this));
-    _heart.SetTimeOutCallBack(std::bind(&CNode::_TimeOutCallBack, this));
-	int step = _config.GetIntValue("timer_step");
-	int heart_time = _config.GetIntValue("heart_time");
-	int time_out = _config.GetIntValue("time_out");
-	LOG_INFO("Init heart timer. timer_step:%d, heart_time:%d, time_out:%d", step, heart_time, time_out);
-	_heart.Init(step, heart_time, time_out);
-
-    // init net
+    // init net. begin listen
     _local_ip_port = _config.GetIntValue("local");
     
     baidu::rpc::Server server;
@@ -41,39 +30,52 @@ bool CNode::Init() {
     raft::CNodeRpc node(this);
     if (server.AddService(&node, baidu::rpc::SERVER_DOESNT_OWN_SERVICE) != 0) {
         LOG_ERROR("fail to add service.");
-        return -1;
+        return false;
     }
 
     baidu::rpc::ServerOptions options;
     if (server.Start(_local_ip_port.c_str(), &options) != 0) {
         LOG_ERROR("Fail to start storage_server. ip : %s", _local_ip_port.c_str());
-        return -1;
+        return false;
     }
 
+    // add a new node to cluster
     std::string node_ip = _config.GetIntValue("node");
-    
     baidu::rpc::Channel *channel = new  baidu::rpc::Channel;
     baidu::rpc::ChannelOptions options;
+    // may be first node
     if (channel.Init(node_ip.c_str(), &options) != 0) {
         LOG_ERROR("connect a new node failed. ip : %s", node_info[i].c_str());
-        continue;
+    
+    } else {
+        raft::RaftService_Stub *stub = new raft::RaftService_Stub(channel);
+        _channel_map[node_ip] = stub;
+
+        // get all node info
+        raft::NodeInfoRequest request;
+        raft::NodeInfoResponse response;
+        baidu::rpc::Controller cntl;
+        cntl.set_timeout_ms(500);
+        stub->rpc_node_info(&cntl, &request, &response, NULL);
+
+        std::vector<std::string> info_vec;
+        for (int i = 0; i < response.ip_port_size(); i++) {
+            info_vec.push_back(response.ip_port(i));
+        }
+        // connect all node
+        AddNewNode(node_ip, info_vec);
+
+        BroadCastNodeInfo();
     }
 
-    raft::RaftService_Stub *stub = new raft::RaftService_Stub(channel);
-    _channel_map[node_ip] = stub;
-
-    raft::NodeInfoRequest request;
-    raft::NodeInfoResponse response;
-    baidu::rpc::Controller cntl;
-    cntl.set_timeout_ms(500);
-    request.set_new_node(true);
-    stub->rpc_node_info(&cntl, &request, &response, NULL);
-
-    std::vector<std::string> info_vec;
-    for (int i = 0; i < response.ip_port_size(); i++) {
-        info_vec.push_back(response.ip_port(i));
-    }
-    HandleNodeInfo(node_ip, info_vec, false);
+    // start timer
+    _heart.SetHeartCallBack(std::bind(&CNode::_HeartCallBack, this));
+    _heart.SetTimeOutCallBack(std::bind(&CNode::_TimeOutCallBack, this));
+    int step = _config.GetIntValue("timer_step");
+    int heart_time = _config.GetIntValue("heart_time");
+    int time_out = _config.GetIntValue("time_out");
+    LOG_INFO("Init heart timer. timer_step:%d, heart_time:%d, time_out:%d", step, heart_time, time_out);
+    _heart.Init(step, heart_time, time_out);
 
     server.RunUntilAskedToQuit();
 	return true;
@@ -88,11 +90,19 @@ void CNode::SendAllHeart() {
     raft_rpc::HeartResponse response;
     baidu::rpc::Controller cntl;
     cntl.set_timeout_ms(500);
+
+    // leader write msg to file
     if (_done_msg) {
+         for (size_t i = 0; i < _will_done_msg.size(); i++) {
+            _bin_log.PushLog(_will_done_msg[i]);
+         }
+         _will_done_msg.clear();
+
         request.set_done_msg(_done_msg);
         _done_msg = false;
     }
 
+    // get current newest version
     Time new_version = 0;
 	{
 		std::unique_lock<std::mutex> lock(_msg_mutex);
@@ -104,6 +114,8 @@ void CNode::SendAllHeart() {
         new_version = bin_log.first;
         _cur_msg.clear();
 	}
+
+    // get the pri newest version
     Time version = _bin_log.GetNewestTime();
     request.set_version(version);
 
@@ -112,8 +124,9 @@ void CNode::SendAllHeart() {
         std::unique_lock<std::mutex> lock(_stub_mutex);
         for (auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
             iter->second->rpc_heart(&cntl, &request, &response, NULL);
+            // neew sync
             if (response->version() != new_version) {
-                _synv_vec.push_back(std::make_pair(iter->first, response->version()));
+                _sync_vec.push_back(std::make_pair(iter->first, response->version()));
 
             } else {
                 back_count++;
@@ -168,11 +181,13 @@ void CNode::HandleHeart(const std::string& ip_port, std::vector<std::string>& ms
 
 	_heart.ResetTimer();
 
+    // follower write msg to file
     if (done_msg) {
-        for (size_t i = 0; i < _will_done_msg.size(); i++) {
-            _bin_log.PushLog(_will_done_msg[i]);
+        std::unique_lock<std::mutex> lock(_msg_mutex);
+        for (size_t i = 0; i < _cur_msg.size(); i++) {
+            _bin_log.PushLog(_cur_msg[i]);
         }
-        _will_done_msg.clear();
+        _cur_msg.clear();
     }
 
 	// cur node lost message. sync from loeader
@@ -199,10 +214,16 @@ void CNode::HandleHeart(const std::string& ip_port, std::vector<std::string>& ms
     LOG_INFO("send a reheart msg to leader : %s", ip_port.c_str());
 }
 
-void CNode::HandleVote(const std::string& ip_port, bool& vote) {
+void CNode::HandleVote(const std::string& ip_port, long long version, bool& vote) {
     if (_role == Leader) {
-        vote = true;
-        _heart.ResetTimer();
+        // current leader is powerful
+        if (_bin_log.GetNewestTime() >= version) {
+            SendAllHeart();
+        // vote
+        } else {
+            vote = true;
+            _heart.ResetTimer();
+        }
 
     } else if (_role == Follower) {
         vote = true;
@@ -213,38 +234,55 @@ void CNode::HandleVote(const std::string& ip_port, bool& vote) {
     }
 }
 
-void CNode::HandleNodeInfo(const std::string& ip_port, std::vector<std::string>& node_info, bool new_node) {
-    if (new_node) {
-        baidu::rpc::Channel *channel = new  baidu::rpc::Channel;
-        baidu::rpc::ChannelOptions options;
-        if (channel.Init(ip_port.c_str(), &options) != 0) {
-            LOG_ERROR("connect a new node failed. ip : %s", ip_port.c_str());
-            return;
-        }
-
-        raft::RaftService_Stub *stub = new raft::RaftService_Stub(channel);
-        std::unique_lock<std::mutex> lock(_stub_mutex);
-        _channel_map[ip_port] = stub;
-
-        for (auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
-            node_info.add_ip_port(iter->first);
-        }
-        return;
-    }
+void CNode::BroadCastNodeInfo() {
+    raft::NodeInfoRequest request;
+    raft::NodeInfoResponse response;
+    baidu::rpc::Controller cntl;
+    cntl.set_timeout_ms(500);
 
     std::unique_lock<std::mutex> lock(_stub_mutex);
+    for (auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
+        request->add_ip_port(iter->first);
+    }
+    for (auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
+        iter->second->rpc_node_info(&cntl, &request, &response, NULL);
+    } 
+}
+
+void CNode::GetNodeInfo(const std::string& ip_port, std::vector<std::string>& node_info) {
+    // connect the new node
+    baidu::rpc::Channel *channel = new  baidu::rpc::Channel;
+    baidu::rpc::ChannelOptions options;
+    if (channel.Init(ip_port.c_str(), &options) != 0) {
+        LOG_ERROR("connect a new node failed. ip : %s", ip_port.c_str());
+        return;
+    }
+    raft::RaftService_Stub *stub = new raft::RaftService_Stub(channel);
+    std::unique_lock<std::mutex> lock(_stub_mutex);
+    _channel_map[ip_port] = stub;
+
+    // get all old node
+    for (auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
+        node_info.add_ip_port(iter->first);
+    }
+    return;
+}
+
+void CNode::AddNewNode(const std::string& ip_port, const std::vector<std::string>& node_info) {
+    std::unique_lock<std::mutex> lock(_stub_mutex);
+    // add all node info
     for (size_t i = 0; i < node_info.size(); i++) {
         if (_channel_map.find(node_info[i] != _channel_map.end())) {
             continue;
         }
 
         baidu::rpc::Channel *channel = new  baidu::rpc::Channel;
-        baidu::rpc::ChannelOptions options; 
+        baidu::rpc::ChannelOptions options;
         if (channel.Init(node_info[i].c_str(), &options) != 0) {
             LOG_ERROR("connect a new node failed. ip : %s", node_info[i].c_str());
             continue;
         }
-        
+
         raft::RaftService_Stub *stub = new raft::RaftService_Stub(channel);
         _channel_map[node_info[i]] = stub;
     }
@@ -254,7 +292,7 @@ void CNode::Sync() {
     raft_rpc::HeartResponse response;
     baidu::rpc::Controller cntl;
     cntl.set_timeout_ms(500);
-    for (auto iter = _synv_vec.begin(); iter != _synv_vec.end(); ++iter) {
+    for (auto iter = _sync_vec.begin(); iter != _sync_vec.end(); ++iter) {
         raft_rpc::HeartRequest request;
         request.set_done_msg(false);
         request.set_version(iter->second);
@@ -271,7 +309,11 @@ void CNode::Sync() {
             stub->rpc_heart(&cntl, &request, &response, NULL);
         }
     }
-    _synv_vec.clear();
+    _sync_vec.clear();
+}
+
+void CNode::CleanMsg() {
+
 }
 
 void CNode::HandleClient(const BinLog& log) {

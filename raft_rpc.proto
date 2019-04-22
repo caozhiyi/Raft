@@ -13,7 +13,7 @@ message HeartResponse {
 };
 
 message VoteResuest {
-
+	required sfixed64   version    = 1;        // cur node newest version
 };
 
 message VoteToResponse {
@@ -22,7 +22,6 @@ message VoteToResponse {
 
 message NodeInfoRequest {
     repeated string ip_port      = 1;          // all node ip info
-    required bool new_node       = 2;          // is a new node
 }
 
 message NodeInfoResponse {

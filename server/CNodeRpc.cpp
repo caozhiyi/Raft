@@ -67,15 +67,17 @@ void CNodeRpc::rpc_node_info(::google::protobuf::RpcController* controller,
     std::string ip = base::endpoint2str(cntl->remote_side()).c_str();
 
     std::vector<std::string> info_vec;
-    bool new_node = false;
     for (int i = 0; i < request->ip_port_size(); i++) {
         info_vec.push_back(request->ip_port(i));
     }
-    new_node = request->new_node();
-    
-    _node->HandleNodeInfo(ip, info_vec, new_node);
 
-    for (auto iter = info_vec.begin(); iter != info_vec.end(); ++iter) {
-        response->add_ip_port(*iter);
+    if (info_vec.empty()) {
+        _node->GetNodeInfo(ip, info_vec);
+        for (auto iter = info_vec.begin(); iter != info_vec.end(); ++iter) {
+            response->add_ip_port(*iter);
+        }
+
+    } else {
+        _node->AddNewNode(ip, info_vec);
     }
 }

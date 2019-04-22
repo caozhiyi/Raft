@@ -7,11 +7,12 @@ message ClientRequest {
 };
 
 message ClientResponse {
-    required int  status   = 1;  
+    required int32	err_code   = 1;  
+	required string des		   = 2;  
 };
 
 service ClientService {
 
-    rpc RpcClient(ClientRequest) returns (ClientResponse);
+    rpc client_msg(ClientRequest) returns (ClientResponse);
 
 };
