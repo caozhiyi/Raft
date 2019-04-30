@@ -2,12 +2,18 @@
 #define HEADER_CNODE
 
 #include <mutex>
+#include <atomic>
 
 #include "baidu/rpc/channel.h"
 #include "CHeart.h"
 #include "CLogReplication.h"
 #include "common.h"
 #include "config.h"
+#include "CListener.h"
+
+namespace raft {
+    class RaftService_Stub;
+}
 
 class CNode
 {
@@ -25,6 +31,7 @@ public:
 	void SendAllVote();
 
 	bool IsLeader();
+    std::string GetLeaderInfo();
 
 	void HandleHeart(const std::string& ip_port, std::vector<std::string>& msg_vec, long long version, bool done_msg, long long& new_version);
 
@@ -55,15 +62,16 @@ private:
 	CHeart		_heart;
 	CBinLog     _bin_log;
 
+    CListener   _listener;
+
 	std::string _leader_ip_port;
     std::string _local_ip_port;
 
-    std::atomic_bool _done_msg;	    // notice follower done msg to file
+    std::atomic<bool> _done_msg;	    // notice follower done msg to file
 
 	std::mutex _msg_mutex;
 	std::vector<std::string>	_cur_msg;
     std::vector<std::string>	_will_done_msg;              // only leader use
-    std::vector<std::pair<Time, std::string>> _client_msg;   // msg version and client ip
 
     std::vector<std::pair<std::string, Time>>       _sync_vec;
 

@@ -1,5 +1,6 @@
 #include "Log.h"
 #include "CNode.h"
+#include "Tool.h"
 
 #include <iostream>
 
@@ -39,17 +40,36 @@ bool CNode::Init() {
         return false;
     }
 
-    // add a new node to cluster
-    std::string node_ip = _config.GetIntValue("node");
-    baidu::rpc::Channel *channel = new  baidu::rpc::Channel;
-    baidu::rpc::ChannelOptions options;
-    // may be first node
-    if (channel.Init(node_ip.c_str(), &options) != 0) {
-        LOG_ERROR("connect a new node failed. ip : %s", node_info[i].c_str());
+    // is first node?
+    bool is_first_node = _config.GetIntValue("is_first_node");
     
-    } else {
+    
+    if (!is_first_node) {
+        // add a new node to cluster
+        std::vector<std::string> node_info_list;
+        std::string node_list = _config.GetIntValue("node_list");
+        node_info_list = SplitStr(node_list, ";");
+
+        baidu::rpc::Channel *channel = new  baidu::rpc::Channel;
+        baidu::rpc::ChannelOptions options;
+        std::string connect_node_ip;
+        for (auto iter = node_info_list.begin(); iter != node_info_list.end(); ++iter) {
+            if (channel.Init(iter->c_str(), &options) != 0) {
+                LOG_ERROR("connect a new node failed. ip : %s", iter->c_str());
+            
+            } else {
+                connect_node_ip = std::move(*iter);
+                break;
+            }
+        }
+
+        if (connect_node_ip.empty()) {
+            LOG_ERROR("connect a new node failed. but current node is't the firstly.");
+            return false;
+        }
+        
         raft::RaftService_Stub *stub = new raft::RaftService_Stub(channel);
-        _channel_map[node_ip] = stub;
+        _channel_map[connect_node_ip] = stub;
 
         // get all node info
         raft::NodeInfoRequest request;
@@ -63,11 +83,11 @@ bool CNode::Init() {
             info_vec.push_back(response.ip_port(i));
         }
         // connect all node
-        AddNewNode(node_ip, info_vec);
+        AddNewNode(connect_node_ip, info_vec);
 
         BroadCastNodeInfo();
     }
-
+    
     // start timer
     _heart.SetHeartCallBack(std::bind(&CNode::_HeartCallBack, this));
     _heart.SetTimeOutCallBack(std::bind(&CNode::_TimeOutCallBack, this));
@@ -95,10 +115,13 @@ void CNode::SendAllHeart() {
     if (_done_msg) {
          for (size_t i = 0; i < _will_done_msg.size(); i++) {
             _bin_log.PushLog(_will_done_msg[i]);
+            BinLog bin_log = _bin_log.StrToBinLog(_will_done_msg[i]);
+            // send client response
+            _listener.SendRet(bin_log.first, ERR_Success, "success");
          }
          _will_done_msg.clear();
-
         request.set_done_msg(_done_msg);
+
         _done_msg = false;
     }
 
@@ -136,6 +159,14 @@ void CNode::SendAllHeart() {
 	
     if (back_count  >= _socket_map.size() / 2) {
         _done_msg = true;
+    
+    } else {
+        // send client response
+        for (auto iter = _cur_msg.begin(); iter != _cur_msg.end(); ++iter) {
+            BinLog bin_log = _bin_log.StrToBinLog(_cur_msg[_cur_msg.size() - 1]);
+            _listener.SendRet(bin_log.first, ERR_LessNodeRecv, "less half node recv the msg");
+        }
+        _cur_msg.clear();
     }
 
     Sync();
@@ -234,6 +265,18 @@ void CNode::HandleVote(const std::string& ip_port, long long version, bool& vote
     }
 }
 
+Time CNode::HandleClientMsg(const std::string& ip_port, const std::string& msg) {
+    if (_role == Leader) {
+        BinLog log;
+        log.first = _bin_log.GetUTC();
+        log.second = msg;
+        std::string log_str = _bin_log.BinLogToStr(log);
+        std::unique_lock<std::mutex> lock(_msg_mutex);
+        _cur_msg.push_back(std::move(log_str));
+        return log.first;
+    }
+}
+
 void CNode::BroadCastNodeInfo() {
     raft::NodeInfoRequest request;
     raft::NodeInfoResponse response;
@@ -313,15 +356,11 @@ void CNode::Sync() {
 }
 
 void CNode::CleanMsg() {
-
-}
-
-void CNode::HandleClient(const BinLog& log) {
-	if (_role == Leader) {
-        std::string log_str = _bin_log.BinLogToStr(log);
-		std::unique_lock<std::mutex> lock(_msg_mutex);
-		_cur_msg.push_back(std::move(log_str));
-	}
+    CleanMsg();
+    _done_msg = false;
+    std::unique_lock<std::mutex> lock(_msg_mutex);
+    _cur_msg.clear();
+    _will_done_msg.clear();
 }
 
 // timer

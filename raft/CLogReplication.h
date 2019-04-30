@@ -28,7 +28,7 @@ public:
     bool GetLog(Time time, std::vector<BinLog>& log_vec);
     //get the newest time
     Time GetNewestTime();
-
+    //get now utc time
 	Time GetUTC();
 
 public:
