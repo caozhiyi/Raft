@@ -1,23 +1,24 @@
-#include <baidu/rpc/server.h>
-#include <base/logging.h>
+#include <brpc/server.h>
+#include <butil/logging.h>
 
-#include "CNodeRpc.h"
+#include "CClientRpc.h"
 #include "common.h"
 #include "CNode.h"
+#include "client_rpc.pb.h"
 
 using namespace raft;
 
-CNodeRpc::CNodeRpc(CNode* node) : _node(node) {
+CClientRpc::CClientRpc(CListener* listener) : _listener(listener) {
+    
+}
+
+CClientRpc::~CClientRpc() {
 
 }
 
-CNodeRpc::~CNodeRpc() {
-
-}
-
-void CNodeRpc::client_msg(::google::protobuf::RpcController* controller,
-    const ::raft_rpc::ClientRequest* request,
-    ::raft_rpc::ClientResponse* response,
+void CClientRpc::client_msg(::google::protobuf::RpcController* controller,
+    const ::raft::ClientRequest* request,
+    ::raft::ClientResponse* response,
     ::google::protobuf::Closure* done) {
     
 }

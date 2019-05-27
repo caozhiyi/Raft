@@ -1,6 +1,8 @@
 #include "CHeart.h"
 #include "Runnable.h"
 
+using namespace raft;
+
 CHeart::CHeart() : 
 	_step(0),
 	_heart_time(0),

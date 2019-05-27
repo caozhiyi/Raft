@@ -1,24 +1,23 @@
-#ifndef HADMAP_RPC_SERVICE_H
-#define HADMAP_RPC_SERVICE_H
+#ifndef HADMAP_RPC_CLIENT_H
+#define HADMAP_RPC_CLIENT_H
 
-#include "raft_rpc.pb.h"
+#include "client_rpc.pb.h"
+#include "CListener.h"
 
-class CListener;
 namespace raft {
 
-	class CClientRpc : public ClientService
-	{
-	public:
+    class CClientRpc : public ClientService {
+    public:
         CClientRpc(CListener* listener);
-		virtual ~CClientRpc();
+        virtual ~CClientRpc();
 
         virtual void client_msg(::google::protobuf::RpcController* controller,
-            const ::raft_rpc::ClientRequest* request,
-            ::raft_rpc::ClientResponse* response,
+            const ::raft::ClientRequest* request,
+            ::raft::ClientResponse* response,
             ::google::protobuf::Closure* done);
 
     private:
         CListener* _listener;
-	}; 
+    };
 }
 #endif

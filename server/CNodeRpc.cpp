@@ -1,5 +1,5 @@
-#include <baidu/rpc/server.h>
-#include <base/logging.h>
+#include <brpc/server.h>
+#include <butil/logging.h>
 
 #include "CNodeRpc.h"
 #include "common.h"
@@ -16,15 +16,15 @@ CNodeRpc::~CNodeRpc() {
 }
 
 void CNodeRpc::rpc_heart(::google::protobuf::RpcController* controller,
-    const ::raft_rpc::HeartRequest* request,
-    ::raft_rpc::HeartResponse* response,
+    const ::raft::HeartRequest* request,
+    ::raft::HeartResponse* response,
     ::google::protobuf::Closure* done) {
     
-    baidu::rpc::ClosureGuard done_guard(done);
+    brpc::ClosureGuard done_guard(done);
 
     // get client ip info
-    baidu::rpc::Controller* cntl = static_cast<baidu::rpc::Controller*>(controller);
-    std::string ip = base::endpoint2str(cntl->remote_side()).c_str();
+    brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
+    std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
     
     std::vector<std::string> msg_vec;
     for (int i = 0; i < request->msg_size(); i++) {
@@ -39,32 +39,33 @@ void CNodeRpc::rpc_heart(::google::protobuf::RpcController* controller,
 }
 
 void CNodeRpc::rpc_vote(::google::protobuf::RpcController* controller,
-    const ::raft_rpc::VoteResuest* request,
-    ::raft_rpc::VoteToResponse* response,
+    const ::raft::VoteResuest* request,
+    ::raft::VoteToResponse* response,
     ::google::protobuf::Closure* done) {
 
-    baidu::rpc::ClosureGuard done_guard(done);
+    brpc::ClosureGuard done_guard(done);
 
     // get client ip info
-    baidu::rpc::Controller* cntl = static_cast<baidu::rpc::Controller*>(controller);
-    std::string ip = base::endpoint2str(cntl->remote_side()).c_str();
+    brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
+    std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
+    long long version = request->version();
     
     bool vote = false;
-    _node->HandleVote(ip, vote);
+    _node->HandleVote(ip, version, vote);
 
     response->set_vote(vote);
 }
 
 void CNodeRpc::rpc_node_info(::google::protobuf::RpcController* controller,
-    const ::raft_rpc::NodeInfoRequest* request,
-    ::raft_rpc::NodeInfoResponse* response,
+    const ::raft::NodeInfoRequest* request,
+    ::raft::NodeInfoResponse* response,
     ::google::protobuf::Closure* done) {
     
-    baidu::rpc::ClosureGuard done_guard(done);
+    brpc::ClosureGuard done_guard(done);
 
     // get client ip info
-    baidu::rpc::Controller* cntl = static_cast<baidu::rpc::Controller*>(controller);
-    std::string ip = base::endpoint2str(cntl->remote_side()).c_str();
+    brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
+    std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
 
     std::vector<std::string> info_vec;
     for (int i = 0; i < request->ip_port_size(); i++) {

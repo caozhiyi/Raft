@@ -5,12 +5,12 @@
 #include <mutex>
 #include <condition_variable>
 
-#define INT_MAX 2147483647
+const long int_max = 2147483647;
 
 template<typename T>
 class CTaskQueue {
 public:
-	CTaskQueue(int size = -1) :_list_size(size > 0 ? size : INT_MAX) {
+	CTaskQueue(int size = -1) :_list_size(size > 0 ? size : int_max) {
 
 	}
 

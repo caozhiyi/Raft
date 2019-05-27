@@ -2,7 +2,8 @@
 #include <string.h>         //for memset
 #include "CLogReplication.h"
 
-#include <iostream>
+using namespace raft;
+
 #define FLAG_STR "%R%N"
 #define FLAG_LEN 4
 #define ONCE_LEN 1024

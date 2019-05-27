@@ -1,9 +1,10 @@
+#include <brpc/channel.h>
 #include "Log.h"
 #include "CClient.h"
 #include "Tool.h"
 #include "client_rpc.pb.h"
 
-#include <iostream>
+using namespace raft;
 
 CClient::CClient() : _channel(nullptr){
 
@@ -29,13 +30,13 @@ bool CClient::Init(const std::string& config_file) {
         _channel = nullptr;
     }
 
-    std::vector<std::string> node_info_list = SplitStr(node_list);
+    std::vector<std::string> node_info_list = SplitStr(node_list, ";");
 
-    baidu::rpc::Channel *channel = new  baidu::rpc::Channel;
-    baidu::rpc::ChannelOptions options;
+    brpc::Channel *channel = new brpc::Channel;
+    brpc::ChannelOptions options;
     std::string connect_node_ip;
     for (auto iter = node_info_list.begin(); iter != node_info_list.end(); ++iter) {
-        if (channel.Init(iter->c_str(), &options) != 0) {
+        if (channel->Init(iter->c_str(), &options) != 0) {
             LOG_ERROR("connect a new node failed. ip : %s", iter->c_str());
 
         } else {
