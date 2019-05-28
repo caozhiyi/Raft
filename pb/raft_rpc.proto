@@ -16,7 +16,7 @@ message VoteResuest {
 	required sfixed64   version    = 1;        // cur node newest version
 };
 
-message VoteToResponse {
+message VoteResponse {
     required bool vote           = 1;          // is voting
 };
 
@@ -32,7 +32,7 @@ service RaftService {
 
     rpc rpc_heart(HeartRequest) returns (HeartResponse);
 
-    rpc rpc_vote(VoteResuest) returns (VoteToResponse);
+    rpc rpc_vote(VoteResuest) returns (VoteResponse);
 
     rpc rpc_node_info(NodeInfoRequest) returns (NodeInfoResponse);
 };

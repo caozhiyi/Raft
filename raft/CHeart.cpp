@@ -50,6 +50,9 @@ void CHeart::ResetTimer() {
 
 void CHeart::Stop() {
 	_stop = true;
+    if (_pthread) {
+        _pthread->join();
+    }
 }
 
 void CHeart::ProcessTimer() {

@@ -18,7 +18,7 @@ namespace raft {
 
         virtual void rpc_vote(::google::protobuf::RpcController* controller,
             const ::raft::VoteResuest* request,
-            ::raft::VoteToResponse* response,
+            ::raft::VoteResponse* response,
             ::google::protobuf::Closure* done);
 
         virtual void rpc_node_info(::google::protobuf::RpcController* controller,

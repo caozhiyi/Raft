@@ -8,8 +8,9 @@ message ClientRequest {
 
 message ClientResponse {
     required int32	err_code   = 1;  
-	required string des		   = 2;  
+	optional string des		   = 2;  
 	optional string leader_ip  = 3;
+	optional string msg        = 4;
 };
 
 service ClientService {

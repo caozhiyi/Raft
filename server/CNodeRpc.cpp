@@ -1,9 +1,10 @@
 #include <brpc/server.h>
-#include <butil/logging.h>
+#include <json2pb/pb_to_json.h>
 
 #include "CNodeRpc.h"
 #include "common.h"
 #include "CNode.h"
+#include "Log.h"
 
 using namespace raft;
 
@@ -22,6 +23,16 @@ void CNodeRpc::rpc_heart(::google::protobuf::RpcController* controller,
     
     brpc::ClosureGuard done_guard(done);
 
+    json2pb::Pb2JsonOptions options;
+    options.bytes_to_base64 = true;
+    options.pretty_json = true;
+    std::string json;
+    std::string error;
+    bool ret = json2pb::ProtoMessageToJson(*request, &json, options, &error);
+    if (ret) {
+        LOG_DEBUG("Received rpc_heart. request : %s", json.c_str());;
+    }
+
     // get client ip info
     brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
     std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
@@ -36,14 +47,29 @@ void CNodeRpc::rpc_heart(::google::protobuf::RpcController* controller,
     _node->HandleHeart(ip, msg_vec, version, done_msg, new_version);
     
     response->set_version(new_version);
+
+    ret = json2pb::ProtoMessageToJson(*response, &json, options, &error);
+    if (ret) {
+        LOG_DEBUG("Received rpc_heart. response : %s", json.c_str());;
+    }
 }
 
 void CNodeRpc::rpc_vote(::google::protobuf::RpcController* controller,
     const ::raft::VoteResuest* request,
-    ::raft::VoteToResponse* response,
+    ::raft::VoteResponse* response,
     ::google::protobuf::Closure* done) {
 
     brpc::ClosureGuard done_guard(done);
+
+    json2pb::Pb2JsonOptions options;
+    options.bytes_to_base64 = true;
+    options.pretty_json = true;
+    std::string json;
+    std::string error;
+    bool ret = json2pb::ProtoMessageToJson(*request, &json, options, &error);
+    if (ret) {
+        LOG_DEBUG("Received rpc_vote. request : %s", json.c_str());;
+    }
 
     // get client ip info
     brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
@@ -54,6 +80,11 @@ void CNodeRpc::rpc_vote(::google::protobuf::RpcController* controller,
     _node->HandleVote(ip, version, vote);
 
     response->set_vote(vote);
+
+    ret = json2pb::ProtoMessageToJson(*response, &json, options, &error);
+    if (ret) {
+        LOG_DEBUG("Received rpc_vote. response : %s", json.c_str());;
+    }
 }
 
 void CNodeRpc::rpc_node_info(::google::protobuf::RpcController* controller,
@@ -62,6 +93,16 @@ void CNodeRpc::rpc_node_info(::google::protobuf::RpcController* controller,
     ::google::protobuf::Closure* done) {
     
     brpc::ClosureGuard done_guard(done);
+
+    json2pb::Pb2JsonOptions options;
+    options.bytes_to_base64 = true;
+    options.pretty_json = true;
+    std::string json;
+    std::string error;
+    bool ret = json2pb::ProtoMessageToJson(*request, &json, options, &error);
+    if (ret) {
+        LOG_DEBUG("Received rpc_node_info. request : %s", json.c_str());;
+    }
 
     // get client ip info
     brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
@@ -80,5 +121,10 @@ void CNodeRpc::rpc_node_info(::google::protobuf::RpcController* controller,
 
     } else {
         _node->AddNewNode(ip, info_vec);
+    }
+
+    ret = json2pb::ProtoMessageToJson(*response, &json, options, &error);
+    if (ret) {
+        LOG_DEBUG("Received rpc_node_info. response : %s", json.c_str());;
     }
 }

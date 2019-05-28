@@ -40,6 +40,7 @@ bool CListener::Init(const std::string& ip_port, CNode* node) {
 void CListener::HandleClient(const std::string& ip_port, const std::string& msg, ::raft::ClientResponse* response,
     ::google::protobuf::Closure* done) {
     //judge current node is leader
+    response->set_msg(msg);
     if (!_node->IsLeader()) {
         response->set_err_code(1);
         response->set_des("not a leader");
@@ -67,7 +68,7 @@ bool CListener::SendRet(Time& time_pos, int err_code, const std::string& des) {
     response->set_err_code(err_code);
     response->set_des(des);
     done->Run();
-
+ 
     _client_msg.erase(iter);
 }
 

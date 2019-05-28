@@ -16,6 +16,7 @@ CNode::CNode(const std::string& config_path) :
 
 CNode::~CNode() {
     _bin_log.Stop();
+    _heart.Stop();
 }
 
 bool CNode::Init() {
@@ -27,7 +28,7 @@ bool CNode::Init() {
 	}
 	
     // init net. begin listen
-    _local_ip_port = _config.GetIntValue("local");
+    _local_ip_port = _config.GetStringValue("local");
     
     brpc::Server server;
     server.set_version("raft_server_1.0");
@@ -57,6 +58,9 @@ bool CNode::Init() {
         brpc::ChannelOptions options;
         std::string connect_node_ip;
         for (auto iter = node_info_list.begin(); iter != node_info_list.end(); ++iter) {
+            if (*iter == _local_ip_port) {
+                continue;
+            }
             if (channel->Init(iter->c_str(), &options) != 0) {
                 LOG_ERROR("connect a new node failed. ip : %s", iter->c_str());
             
@@ -70,7 +74,8 @@ bool CNode::Init() {
             LOG_ERROR("connect a new node failed. but current node is't the firstly.");
             return false;
         }
-        
+        LOG_INFO("connect to one node. ip : %s", connect_node_ip.c_str());
+
         raft::RaftService_Stub *stub = new raft::RaftService_Stub(channel);
         _channel_map[connect_node_ip] = stub;
 
@@ -83,6 +88,7 @@ bool CNode::Init() {
 
         std::vector<std::string> info_vec;
         for (int i = 0; i < response.ip_port_size(); i++) {
+            LOG_INFO("get node ip from other node. ip : %s", response.ip_port(i).c_str());
             info_vec.push_back(response.ip_port(i));
         }
         // connect all node
@@ -97,10 +103,16 @@ bool CNode::Init() {
     int step = _config.GetIntValue("timer_step");
     int heart_time = _config.GetIntValue("heart_time");
     int time_out = _config.GetIntValue("time_out");
-    LOG_INFO("Init heart timer. timer_step:%d, heart_time:%d, time_out:%d", step, heart_time, time_out);
     _heart.Init(step, heart_time, time_out);
+    LOG_INFO("Init heart timer. timer_step:%d, heart_time:%d, time_out:%d", step, heart_time, time_out);
 
-    server.RunUntilAskedToQuit();
+    std::string listen_ip = _config.GetStringValue("listen_ip");
+    // init listener
+    if (!_listener.Init(listen_ip, this)) {
+        LOG_ERROR("init listener failed. listen_ip:%s", listen_ip.c_str());
+        return false;
+    }
+    //server.RunUntilAskedToQuit();
 	return true;
 }
 
@@ -136,9 +148,11 @@ void CNode::SendAllHeart() {
             request.add_msg(*iter);
             _will_done_msg.push_back(*iter);
         }
-        BinLog bin_log = _bin_log.StrToBinLog(_cur_msg[_cur_msg.size() - 1]);
-        new_version = bin_log.first;
-        _cur_msg.clear();
+        if (!_cur_msg.empty()) {
+            BinLog bin_log = _bin_log.StrToBinLog(_cur_msg[_cur_msg.size() - 1]);
+            new_version = bin_log.first;
+            _cur_msg.clear();
+        }
 	}
 
     // get the pri newest version
@@ -150,7 +164,7 @@ void CNode::SendAllHeart() {
         std::unique_lock<std::mutex> lock(_stub_mutex);
         for (auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
             iter->second->rpc_heart(&cntl, &request, &response, NULL);
-            // neew sync
+            // new sync
             if (response.version() != new_version) {
                 _sync_vec.push_back(std::make_pair(iter->first, response.version()));
 
@@ -177,11 +191,11 @@ void CNode::SendAllHeart() {
 
 void CNode::SendAllVote() {
     ::raft::VoteResuest request;
-    ::raft::VoteToResponse response;
+    ::raft::VoteResponse response;
     brpc::Controller cntl;
     cntl.set_timeout_ms(500);
 
-    int vote_count = 0;	// vote's num
+    int vote_count = 1;	// vote's num
 
 	std::unique_lock<std::mutex> lock(_stub_mutex);
     for(auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
@@ -192,7 +206,7 @@ void CNode::SendAllVote() {
     }
     
     // to be a leader
-    if (vote_count >= _channel_map.size() / 2) {
+    if (vote_count >= _channel_map.size() / 2 && vote_count > 1) {
         _role = Leader;
         SendAllHeart();
     }
@@ -244,7 +258,7 @@ void CNode::HandleHeart(const std::string& ip_port, std::vector<std::string>& ms
 
 	// set response
 	BinLog bin_log = _bin_log.StrToBinLog(_cur_msg[_cur_msg.size() - 1]);
-	Time response_version = bin_log.first;
+    new_version = bin_log.first;
     LOG_INFO("send a reheart msg to leader : %s", ip_port.c_str());
 }
 
@@ -286,6 +300,8 @@ void CNode::BroadCastNodeInfo() {
     brpc::Controller cntl;
     cntl.set_timeout_ms(500);
 
+    // add local node info
+    request.add_ip_port(_local_ip_port);
     std::unique_lock<std::mutex> lock(_stub_mutex);
     for (auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
         request.add_ip_port(iter->first);
@@ -308,6 +324,7 @@ void CNode::GetNodeInfo(const std::string& ip_port, std::vector<std::string>& no
     _channel_map[ip_port] = stub;
 
     // get all old node
+    node_info.push_back(_local_ip_port);
     for (auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
         node_info.push_back(iter->first);
     }
@@ -359,7 +376,7 @@ void CNode::Sync() {
 }
 
 void CNode::CleanMsg() {
-    CleanMsg();
+    _listener.CleanMsg();
     _done_msg = false;
     std::unique_lock<std::mutex> lock(_msg_mutex);
     _cur_msg.clear();
