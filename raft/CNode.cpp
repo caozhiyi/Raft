@@ -4,6 +4,7 @@
 #include "Tool.h"
 #include "raft_rpc.pb.h"
 #include "CNodeRpc.h"
+#include "UnixOs.h"
 
 using namespace raft;
 
@@ -28,7 +29,12 @@ bool CNode::Init() {
 	}
 	
     // init net. begin listen
-    _local_ip_port = _config.GetStringValue("local");
+    std::string ip = GetOsIp();
+    if (ip.empty()) {
+        LOG_ERROR("get local ip failed.");
+        return false;
+    }
+    _local_ip_port = ip + ":" + _config.GetStringValue("server");
     
     brpc::Server server;
     server.set_version("raft_server_1.0");
@@ -40,7 +46,7 @@ bool CNode::Init() {
 
     brpc::ServerOptions options;
     if (server.Start(_local_ip_port.c_str(), &options) != 0) {
-        LOG_ERROR("Fail to start storage_server. ip : %s", _local_ip_port.c_str());
+        LOG_ERROR("Fail to start server. ip : %s", _local_ip_port.c_str());
         return false;
     }
 
@@ -52,21 +58,34 @@ bool CNode::Init() {
         // add a new node to cluster
         std::vector<std::string> node_info_list;
         std::string node_list = _config.GetStringValue("node_list");
+        
         node_info_list = SplitStr(node_list, ";");
-
+        
         brpc::Channel *channel = new  brpc::Channel;
         brpc::ChannelOptions options;
         std::string connect_node_ip;
+
+        raft::NodeInfoRequest request;
+        raft::NodeInfoResponse response;
+        request.set_local_ip(_local_ip_port);
+
         for (auto iter = node_info_list.begin(); iter != node_info_list.end(); ++iter) {
             if (*iter == _local_ip_port) {
                 continue;
             }
-            if (channel->Init(iter->c_str(), &options) != 0) {
-                LOG_ERROR("connect a new node failed. ip : %s", iter->c_str());
-            
-            } else {
+            LOG_INFO("try to connect node. ip : %s", iter->c_str());
+            channel->Init(iter->c_str(), &options);
+            raft::RaftService_Stub stub(channel);
+            // test if we can connect the node
+            brpc::Controller cntl;
+            cntl.set_timeout_ms(500);
+            stub.rpc_node_info(&cntl, &request, &response, NULL);
+            if (!cntl.Failed()) {
                 connect_node_ip = std::move(*iter);
                 break;
+            
+            } else {
+                LOG_ERROR("connect a new node failed. ip : %s", iter->c_str());
             }
         }
 
@@ -80,11 +99,12 @@ bool CNode::Init() {
         _channel_map[connect_node_ip] = stub;
 
         // get all node info
-        raft::NodeInfoRequest request;
-        raft::NodeInfoResponse response;
         brpc::Controller cntl;
         cntl.set_timeout_ms(500);
         stub->rpc_node_info(&cntl, &request, &response, NULL);
+        if (cntl.Failed()) {
+            LOG_ERROR("rpc_node_info called failed. err:", cntl.ErrorText().c_str());
+        }
 
         std::vector<std::string> info_vec;
         for (int i = 0; i < response.ip_port_size(); i++) {
@@ -95,6 +115,7 @@ bool CNode::Init() {
         AddNewNode(connect_node_ip, info_vec);
 
         BroadCastNodeInfo();
+
     }
     
     // start timer
@@ -106,7 +127,7 @@ bool CNode::Init() {
     _heart.Init(step, heart_time, time_out);
     LOG_INFO("Init heart timer. timer_step:%d, heart_time:%d, time_out:%d", step, heart_time, time_out);
 
-    std::string listen_ip = _config.GetStringValue("listen_ip");
+    std::string listen_ip = ip + ":" + _config.GetStringValue("listen");
     // init listener
     if (!_listener.Init(listen_ip, this)) {
         LOG_ERROR("init listener failed. listen_ip:%s", listen_ip.c_str());
@@ -122,9 +143,7 @@ bool CNode::LoadConfig() {
 
 void CNode::SendAllHeart() {
     raft::HeartRequest request;
-    raft::HeartResponse response;
-    brpc::Controller cntl;
-    cntl.set_timeout_ms(500);
+    request.set_local_ip(_local_ip_port);
 
     // leader write msg to file
     if (_done_msg) {
@@ -163,7 +182,20 @@ void CNode::SendAllHeart() {
     {
         std::unique_lock<std::mutex> lock(_stub_mutex);
         for (auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
+            raft::HeartResponse response;
+            brpc::Controller cntl;
+            cntl.set_timeout_ms(500);
             iter->second->rpc_heart(&cntl, &request, &response, NULL);
+            if (cntl.Failed()) {
+                LOG_ERROR("rpc_heart called failed. err:", cntl.ErrorText().c_str());
+                delete iter->second->channel();
+                delete iter->second;
+                iter = _channel_map.erase(iter);
+                if (iter == _channel_map.end()) {
+                    break;
+                }
+                continue;
+            }
             // new sync
             if (response.version() != new_version) {
                 _sync_vec.push_back(std::make_pair(iter->first, response.version()));
@@ -191,23 +223,32 @@ void CNode::SendAllHeart() {
 
 void CNode::SendAllVote() {
     ::raft::VoteResuest request;
-    ::raft::VoteResponse response;
-    brpc::Controller cntl;
-    cntl.set_timeout_ms(500);
+    request.set_local_ip(_local_ip_port);
+    request.set_version(_bin_log.GetNewestTime());
 
     int vote_count = 1;	// vote's num
 
-	std::unique_lock<std::mutex> lock(_stub_mutex);
-    for(auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
-        iter->second->rpc_vote(&cntl, &request, &response, NULL);
-        if (response.vote()) {
-            vote_count++;
-        } 
+	{
+        std::unique_lock<std::mutex> lock(_stub_mutex);
+        for(auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
+            ::raft::VoteResponse response;
+            brpc::Controller cntl;
+            cntl.set_timeout_ms(500);
+            iter->second->rpc_vote(&cntl, &request, &response, NULL);
+            if (cntl.Failed()) {
+                LOG_ERROR("rpc_vote called failed. err:", cntl.ErrorText().c_str());
+            }
+            LOG_INFO("get a vote from ip:%s", iter->first.c_str());
+            if (response.vote()) {
+                vote_count++;
+            }
+        }
     }
     
     // to be a leader
     if (vote_count >= _channel_map.size() / 2 && vote_count > 1) {
         _role = Leader;
+        LOG_INFO("I'm a leader now. ip:%s", _local_ip_port.c_str());
         SendAllHeart();
     }
 }
@@ -257,15 +298,17 @@ void CNode::HandleHeart(const std::string& ip_port, std::vector<std::string>& ms
 	}
 
 	// set response
-	BinLog bin_log = _bin_log.StrToBinLog(_cur_msg[_cur_msg.size() - 1]);
-    new_version = bin_log.first;
+    if (_cur_msg.size()) {
+        BinLog bin_log = _bin_log.StrToBinLog(_cur_msg[_cur_msg.size() - 1]);
+        new_version = bin_log.first;
+    }
     LOG_INFO("send a reheart msg to leader : %s", ip_port.c_str());
 }
-
+                      
 void CNode::HandleVote(const std::string& ip_port, long long version, bool& vote) {
     if (_role == Leader) {
         // current leader is powerful
-        if (_bin_log.GetNewestTime() >= version) {
+        if (_bin_log.GetNewestTime() > version && version != 0) {
             SendAllHeart();
         // vote
         } else {
@@ -297,8 +340,7 @@ Time CNode::HandleClientMsg(const std::string& ip_port, const std::string& msg) 
 void CNode::BroadCastNodeInfo() {
     raft::NodeInfoRequest request;
     raft::NodeInfoResponse response;
-    brpc::Controller cntl;
-    cntl.set_timeout_ms(500);
+    request.set_local_ip(_local_ip_port);
 
     // add local node info
     request.add_ip_port(_local_ip_port);
@@ -307,11 +349,24 @@ void CNode::BroadCastNodeInfo() {
         request.add_ip_port(iter->first);
     }
     for (auto iter = _channel_map.begin(); iter != _channel_map.end(); ++iter) {
+        brpc::Controller cntl;
+        cntl.set_timeout_ms(500);
         iter->second->rpc_node_info(&cntl, &request, &response, NULL);
+        if (cntl.Failed()) {
+            LOG_ERROR("rpc_node_info called failed. err:", cntl.ErrorText().c_str());
+        }
+        
     } 
 }
 
 void CNode::GetNodeInfo(const std::string& ip_port, std::vector<std::string>& node_info) {
+    // if reconnect
+    auto old_iter = _channel_map.find(ip_port);
+    if (old_iter != _channel_map.end()) {
+        delete old_iter->second;
+        _channel_map.erase(old_iter);
+    }
+
     // connect the new node
     brpc::Channel *channel = new  brpc::Channel;
     brpc::ChannelOptions options;
@@ -335,17 +390,21 @@ void CNode::AddNewNode(const std::string& ip_port, const std::vector<std::string
     std::unique_lock<std::mutex> lock(_stub_mutex);
     // add all node info
     for (size_t i = 0; i < node_info.size(); i++) {
-        if (_channel_map.find(node_info[i]) != _channel_map.end()) {
+        if (node_info[i] == _local_ip_port) {
             continue;
         }
-
-        brpc::Channel *channel = new  brpc::Channel;
+        auto old_iter = _channel_map.find(node_info[i]);
+        if (old_iter != _channel_map.end()) {
+           continue;
+        }
+        
+        brpc::Channel *channel = new brpc::Channel;
         brpc::ChannelOptions options;
         if (channel->Init(node_info[i].c_str(), &options) != 0) {
             LOG_ERROR("connect a new node failed. ip : %s", node_info[i].c_str());
             continue;
         }
-
+        LOG_INFO("connect to a new node. ip : %s", node_info[i].c_str());
         raft::RaftService_Stub *stub = new raft::RaftService_Stub(channel);
         _channel_map[node_info[i]] = stub;
     }
@@ -353,10 +412,9 @@ void CNode::AddNewNode(const std::string& ip_port, const std::vector<std::string
 
 void CNode::Sync() {
     raft::HeartResponse response;
-    brpc::Controller cntl;
-    cntl.set_timeout_ms(500);
     for (auto iter = _sync_vec.begin(); iter != _sync_vec.end(); ++iter) {
         raft::HeartRequest request;
+        request.set_local_ip(_local_ip_port);
         request.set_done_msg(false);
         request.set_version(iter->second);
         std::vector<BinLog> log_vec;
@@ -369,7 +427,12 @@ void CNode::Sync() {
         }
         auto stub = _channel_map.find(iter->first);
         if (stub->second) {
+            brpc::Controller cntl;
+            cntl.set_timeout_ms(500);
             stub->second->rpc_heart(&cntl, &request, &response, NULL);
+            if (cntl.Failed()) {
+                LOG_ERROR("rpc_heart called failed. err:", cntl.ErrorText().c_str());
+            }
         }
     }
     _sync_vec.clear();
@@ -388,16 +451,15 @@ void CNode::_HeartCallBack() {
 	if (_role == Leader) {
 		_heart.ResetTimer();
 		SendAllHeart();
-		LoadConfig();
-		LOG_INFO("heart call back.");
+		LOG_DEBUG("heart call back.");
 	}
+    //LoadConfig();
 }
 
 void CNode::_TimeOutCallBack() {
 	if (_role != Leader) {
         _role = Candidate;
         SendAllVote();
-		LOG_INFO("to be a candidate.");
 	} 
-    LOG_INFO("time out call back.");
+    LOG_INFO("time out call back to be a candidate.");
 }

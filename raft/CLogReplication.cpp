@@ -8,7 +8,7 @@ using namespace raft;
 #define FLAG_LEN 4
 #define ONCE_LEN 1024
 
-CBinLog::CBinLog(std::string fine_name) : _file_name(fine_name) {
+CBinLog::CBinLog(std::string fine_name) : _file_name(fine_name), _newest_time(0){
 	_file_stream.open(_file_name, std::ios::in|std::ios::app| std::ios::out);
 	if (!_file_stream.good()) {
 		throw std::exception(std::logic_error("open log file failed"));

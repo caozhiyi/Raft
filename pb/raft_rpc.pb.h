@@ -97,17 +97,29 @@ class HeartRequest : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required sfixed64 version = 1;
+  // required string local_ip = 1;
+  inline bool has_local_ip() const;
+  inline void clear_local_ip();
+  static const int kLocalIpFieldNumber = 1;
+  inline const ::std::string& local_ip() const;
+  inline void set_local_ip(const ::std::string& value);
+  inline void set_local_ip(const char* value);
+  inline void set_local_ip(const char* value, size_t size);
+  inline ::std::string* mutable_local_ip();
+  inline ::std::string* release_local_ip();
+  inline void set_allocated_local_ip(::std::string* local_ip);
+
+  // required sfixed64 version = 2;
   inline bool has_version() const;
   inline void clear_version();
-  static const int kVersionFieldNumber = 1;
+  static const int kVersionFieldNumber = 2;
   inline ::google::protobuf::int64 version() const;
   inline void set_version(::google::protobuf::int64 value);
 
-  // repeated string msg = 2;
+  // repeated string msg = 3;
   inline int msg_size() const;
   inline void clear_msg();
-  static const int kMsgFieldNumber = 2;
+  static const int kMsgFieldNumber = 3;
   inline const ::std::string& msg(int index) const;
   inline ::std::string* mutable_msg(int index);
   inline void set_msg(int index, const ::std::string& value);
@@ -120,15 +132,17 @@ class HeartRequest : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& msg() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_msg();
 
-  // optional bool done_msg = 3;
+  // optional bool done_msg = 4;
   inline bool has_done_msg() const;
   inline void clear_done_msg();
-  static const int kDoneMsgFieldNumber = 3;
+  static const int kDoneMsgFieldNumber = 4;
   inline bool done_msg() const;
   inline void set_done_msg(bool value);
 
   // @@protoc_insertion_point(class_scope:raft.HeartRequest)
  private:
+  inline void set_has_local_ip();
+  inline void clear_has_local_ip();
   inline void set_has_version();
   inline void clear_has_version();
   inline void set_has_done_msg();
@@ -136,12 +150,13 @@ class HeartRequest : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* local_ip_;
   ::google::protobuf::int64 version_;
   ::google::protobuf::RepeatedPtrField< ::std::string> msg_;
   bool done_msg_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_raft_5frpc_2eproto();
   friend void protobuf_AssignDesc_raft_5frpc_2eproto();
@@ -288,24 +303,39 @@ class VoteResuest : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required sfixed64 version = 1;
+  // required string local_ip = 1;
+  inline bool has_local_ip() const;
+  inline void clear_local_ip();
+  static const int kLocalIpFieldNumber = 1;
+  inline const ::std::string& local_ip() const;
+  inline void set_local_ip(const ::std::string& value);
+  inline void set_local_ip(const char* value);
+  inline void set_local_ip(const char* value, size_t size);
+  inline ::std::string* mutable_local_ip();
+  inline ::std::string* release_local_ip();
+  inline void set_allocated_local_ip(::std::string* local_ip);
+
+  // required sfixed64 version = 2;
   inline bool has_version() const;
   inline void clear_version();
-  static const int kVersionFieldNumber = 1;
+  static const int kVersionFieldNumber = 2;
   inline ::google::protobuf::int64 version() const;
   inline void set_version(::google::protobuf::int64 value);
 
   // @@protoc_insertion_point(class_scope:raft.VoteResuest)
  private:
+  inline void set_has_local_ip();
+  inline void clear_has_local_ip();
   inline void set_has_version();
   inline void clear_has_version();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* local_ip_;
   ::google::protobuf::int64 version_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_raft_5frpc_2eproto();
   friend void protobuf_AssignDesc_raft_5frpc_2eproto();
@@ -452,10 +482,22 @@ class NodeInfoRequest : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated string ip_port = 1;
+  // required string local_ip = 1;
+  inline bool has_local_ip() const;
+  inline void clear_local_ip();
+  static const int kLocalIpFieldNumber = 1;
+  inline const ::std::string& local_ip() const;
+  inline void set_local_ip(const ::std::string& value);
+  inline void set_local_ip(const char* value);
+  inline void set_local_ip(const char* value, size_t size);
+  inline ::std::string* mutable_local_ip();
+  inline ::std::string* release_local_ip();
+  inline void set_allocated_local_ip(::std::string* local_ip);
+
+  // repeated string ip_port = 2;
   inline int ip_port_size() const;
   inline void clear_ip_port();
-  static const int kIpPortFieldNumber = 1;
+  static const int kIpPortFieldNumber = 2;
   inline const ::std::string& ip_port(int index) const;
   inline ::std::string* mutable_ip_port(int index);
   inline void set_ip_port(int index, const ::std::string& value);
@@ -470,13 +512,16 @@ class NodeInfoRequest : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:raft.NodeInfoRequest)
  private:
+  inline void set_has_local_ip();
+  inline void clear_has_local_ip();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* local_ip_;
   ::google::protobuf::RepeatedPtrField< ::std::string> ip_port_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_raft_5frpc_2eproto();
   friend void protobuf_AssignDesc_raft_5frpc_2eproto();
@@ -656,15 +701,85 @@ class RaftService_Stub : public RaftService {
 
 // HeartRequest
 
-// required sfixed64 version = 1;
-inline bool HeartRequest::has_version() const {
+// required string local_ip = 1;
+inline bool HeartRequest::has_local_ip() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void HeartRequest::set_has_version() {
+inline void HeartRequest::set_has_local_ip() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void HeartRequest::clear_has_version() {
+inline void HeartRequest::clear_has_local_ip() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void HeartRequest::clear_local_ip() {
+  if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+    local_ip_->clear();
+  }
+  clear_has_local_ip();
+}
+inline const ::std::string& HeartRequest::local_ip() const {
+  return *local_ip_;
+}
+inline void HeartRequest::set_local_ip(const ::std::string& value) {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  local_ip_->assign(value);
+}
+inline void HeartRequest::set_local_ip(const char* value) {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  local_ip_->assign(value);
+}
+inline void HeartRequest::set_local_ip(const char* value, size_t size) {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  local_ip_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* HeartRequest::mutable_local_ip() {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  return local_ip_;
+}
+inline ::std::string* HeartRequest::release_local_ip() {
+  clear_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = local_ip_;
+    local_ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void HeartRequest::set_allocated_local_ip(::std::string* local_ip) {
+  if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+    delete local_ip_;
+  }
+  if (local_ip) {
+    set_has_local_ip();
+    local_ip_ = local_ip;
+  } else {
+    clear_has_local_ip();
+    local_ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// required sfixed64 version = 2;
+inline bool HeartRequest::has_version() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void HeartRequest::set_has_version() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void HeartRequest::clear_has_version() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void HeartRequest::clear_version() {
   version_ = GOOGLE_LONGLONG(0);
@@ -678,7 +793,7 @@ inline void HeartRequest::set_version(::google::protobuf::int64 value) {
   version_ = value;
 }
 
-// repeated string msg = 2;
+// repeated string msg = 3;
 inline int HeartRequest::msg_size() const {
   return msg_.size();
 }
@@ -722,15 +837,15 @@ HeartRequest::mutable_msg() {
   return &msg_;
 }
 
-// optional bool done_msg = 3;
+// optional bool done_msg = 4;
 inline bool HeartRequest::has_done_msg() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void HeartRequest::set_has_done_msg() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void HeartRequest::clear_has_done_msg() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void HeartRequest::clear_done_msg() {
   done_msg_ = false;
@@ -774,15 +889,85 @@ inline void HeartResponse::set_version(::google::protobuf::int64 value) {
 
 // VoteResuest
 
-// required sfixed64 version = 1;
-inline bool VoteResuest::has_version() const {
+// required string local_ip = 1;
+inline bool VoteResuest::has_local_ip() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void VoteResuest::set_has_version() {
+inline void VoteResuest::set_has_local_ip() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void VoteResuest::clear_has_version() {
+inline void VoteResuest::clear_has_local_ip() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void VoteResuest::clear_local_ip() {
+  if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+    local_ip_->clear();
+  }
+  clear_has_local_ip();
+}
+inline const ::std::string& VoteResuest::local_ip() const {
+  return *local_ip_;
+}
+inline void VoteResuest::set_local_ip(const ::std::string& value) {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  local_ip_->assign(value);
+}
+inline void VoteResuest::set_local_ip(const char* value) {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  local_ip_->assign(value);
+}
+inline void VoteResuest::set_local_ip(const char* value, size_t size) {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  local_ip_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* VoteResuest::mutable_local_ip() {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  return local_ip_;
+}
+inline ::std::string* VoteResuest::release_local_ip() {
+  clear_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = local_ip_;
+    local_ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void VoteResuest::set_allocated_local_ip(::std::string* local_ip) {
+  if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+    delete local_ip_;
+  }
+  if (local_ip) {
+    set_has_local_ip();
+    local_ip_ = local_ip;
+  } else {
+    clear_has_local_ip();
+    local_ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// required sfixed64 version = 2;
+inline bool VoteResuest::has_version() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void VoteResuest::set_has_version() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void VoteResuest::clear_has_version() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void VoteResuest::clear_version() {
   version_ = GOOGLE_LONGLONG(0);
@@ -826,7 +1011,77 @@ inline void VoteResponse::set_vote(bool value) {
 
 // NodeInfoRequest
 
-// repeated string ip_port = 1;
+// required string local_ip = 1;
+inline bool NodeInfoRequest::has_local_ip() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void NodeInfoRequest::set_has_local_ip() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void NodeInfoRequest::clear_has_local_ip() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void NodeInfoRequest::clear_local_ip() {
+  if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+    local_ip_->clear();
+  }
+  clear_has_local_ip();
+}
+inline const ::std::string& NodeInfoRequest::local_ip() const {
+  return *local_ip_;
+}
+inline void NodeInfoRequest::set_local_ip(const ::std::string& value) {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  local_ip_->assign(value);
+}
+inline void NodeInfoRequest::set_local_ip(const char* value) {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  local_ip_->assign(value);
+}
+inline void NodeInfoRequest::set_local_ip(const char* value, size_t size) {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  local_ip_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NodeInfoRequest::mutable_local_ip() {
+  set_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    local_ip_ = new ::std::string;
+  }
+  return local_ip_;
+}
+inline ::std::string* NodeInfoRequest::release_local_ip() {
+  clear_has_local_ip();
+  if (local_ip_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = local_ip_;
+    local_ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void NodeInfoRequest::set_allocated_local_ip(::std::string* local_ip) {
+  if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+    delete local_ip_;
+  }
+  if (local_ip) {
+    set_has_local_ip();
+    local_ip_ = local_ip;
+  } else {
+    clear_has_local_ip();
+    local_ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated string ip_port = 2;
 inline int NodeInfoRequest::ip_port_size() const {
   return ip_port_.size();
 }

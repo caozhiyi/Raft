@@ -66,12 +66,13 @@ bool CClient::SendMsg(const std::string& msg) {
         return false;
     }
     ::raft::ClientRequest request;
+    request.set_msg(msg);
     ::raft::ClientResponse* response = new ::raft::ClientResponse;
     brpc::Controller* cntl = new brpc::Controller;
     std::pair<CClient*, ::raft::ClientResponse*> *param = new std::pair<CClient*, ::raft::ClientResponse*>;
     param->first = this;
     param->second = response;
-    cntl->set_timeout_ms(500);
+    cntl->set_timeout_ms(1000000);
     auto closure = google::protobuf::NewCallback(&raft::CClient::RpcDone, (void*)param, cntl);
 
     _channel->client_msg(cntl, &request, response, closure);

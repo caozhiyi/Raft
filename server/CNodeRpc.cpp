@@ -34,9 +34,10 @@ void CNodeRpc::rpc_heart(::google::protobuf::RpcController* controller,
     }
 
     // get client ip info
-    brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
-    std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
-    
+    //brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
+    //std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
+    std::string ip = request->local_ip();
+
     std::vector<std::string> msg_vec;
     for (int i = 0; i < request->msg_size(); i++) {
         msg_vec.push_back(request->msg(i));
@@ -48,6 +49,7 @@ void CNodeRpc::rpc_heart(::google::protobuf::RpcController* controller,
     
     response->set_version(new_version);
 
+    json.clear();
     ret = json2pb::ProtoMessageToJson(*response, &json, options, &error);
     if (ret) {
         LOG_DEBUG("Received rpc_heart. response : %s", json.c_str());;
@@ -60,6 +62,8 @@ void CNodeRpc::rpc_vote(::google::protobuf::RpcController* controller,
     ::google::protobuf::Closure* done) {
 
     brpc::ClosureGuard done_guard(done);
+    
+    std::cout << " a rpc vote" << std::endl;
 
     json2pb::Pb2JsonOptions options;
     options.bytes_to_base64 = true;
@@ -72,8 +76,9 @@ void CNodeRpc::rpc_vote(::google::protobuf::RpcController* controller,
     }
 
     // get client ip info
-    brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
-    std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
+    //brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
+    //std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
+    std::string ip = request->local_ip();
     long long version = request->version();
     
     bool vote = false;
@@ -81,6 +86,7 @@ void CNodeRpc::rpc_vote(::google::protobuf::RpcController* controller,
 
     response->set_vote(vote);
 
+    json.clear();
     ret = json2pb::ProtoMessageToJson(*response, &json, options, &error);
     if (ret) {
         LOG_DEBUG("Received rpc_vote. response : %s", json.c_str());;
@@ -105,8 +111,9 @@ void CNodeRpc::rpc_node_info(::google::protobuf::RpcController* controller,
     }
 
     // get client ip info
-    brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
-    std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
+    //brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
+    //std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
+    std::string ip = request->local_ip();
 
     std::vector<std::string> info_vec;
     for (int i = 0; i < request->ip_port_size(); i++) {
@@ -123,6 +130,7 @@ void CNodeRpc::rpc_node_info(::google::protobuf::RpcController* controller,
         _node->AddNewNode(ip, info_vec);
     }
 
+    json.clear();
     ret = json2pb::ProtoMessageToJson(*response, &json, options, &error);
     if (ret) {
         LOG_DEBUG("Received rpc_node_info. response : %s", json.c_str());;

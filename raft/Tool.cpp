@@ -15,7 +15,7 @@ namespace raft {
             if (!temp.empty()) {
                 res.push_back(temp);
             }
-            str = str.substr(pos + len, sep.length());
+            str = str.substr(pos + len, str.length());
         }
         return std::move(res);
     }

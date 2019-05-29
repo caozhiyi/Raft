@@ -109,4 +109,6 @@ void CConfig::_Trim(std::string& line) {
 	}
 	line.erase(0, line.find_first_not_of(" "));
 	line.erase(line.find_last_not_of(" ") + 1);
+    line.erase(0, line.find_first_not_of("\r"));
+    line.erase(line.find_last_not_of("\r") + 1);
 }

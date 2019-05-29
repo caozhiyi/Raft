@@ -3,9 +3,10 @@ package raft;
 option cc_generic_services = true;
 
 message HeartRequest {
-    required sfixed64   version  = 1;          // last version in file
-    repeated string     msg      = 2;          // client msg
-    optional bool       done_msg = 3;          // write the msg of priv heart to file
+	required string		local_ip = 1;		   // request side ip
+    required sfixed64   version  = 2;          // last version in file
+    repeated string     msg      = 3;          // client msg
+    optional bool       done_msg = 4;          // write the msg of priv heart to file
 };
 
 message HeartResponse {
@@ -13,7 +14,8 @@ message HeartResponse {
 };
 
 message VoteResuest {
-	required sfixed64   version    = 1;        // cur node newest version
+	required string		local_ip   = 1;		   // request side ip
+	required sfixed64   version    = 2;        // cur node newest version
 };
 
 message VoteResponse {
@@ -21,7 +23,8 @@ message VoteResponse {
 };
 
 message NodeInfoRequest {
-    repeated string ip_port      = 1;          // all node ip info
+	required string local_ip     = 1;		   // request side ip
+    repeated string ip_port      = 2;          // all node ip info
 }
 
 message NodeInfoResponse {

@@ -28,7 +28,9 @@ protoc:
 $(TAR1) : $(OBJS) ./exe/Server.cpp
 	$(CC) $^ -o $@ $(INCLUDES) $(LIBS) $(CCFLAGS)
 	-mkdir out_put 
-	-mv ${TAR1} out_put
+	-cp ${TAR1} out_put
+	#-cp ${TAR1} out_put1
+	#-cp ${TAR1} out_put2
 	-cp conf/server.conf out_put
 
 ${TAR2} : $(OBJS) ./exe/Client.cpp

@@ -50,7 +50,8 @@ void protobuf_AssignDesc_raft_5frpc_2eproto() {
       "raft_rpc.proto");
   GOOGLE_CHECK(file != NULL);
   HeartRequest_descriptor_ = file->message_type(0);
-  static const int HeartRequest_offsets_[3] = {
+  static const int HeartRequest_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HeartRequest, local_ip_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HeartRequest, version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HeartRequest, msg_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HeartRequest, done_msg_),
@@ -82,7 +83,8 @@ void protobuf_AssignDesc_raft_5frpc_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(HeartResponse));
   VoteResuest_descriptor_ = file->message_type(2);
-  static const int VoteResuest_offsets_[1] = {
+  static const int VoteResuest_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(VoteResuest, local_ip_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(VoteResuest, version_),
   };
   VoteResuest_reflection_ =
@@ -112,7 +114,8 @@ void protobuf_AssignDesc_raft_5frpc_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(VoteResponse));
   NodeInfoRequest_descriptor_ = file->message_type(4);
-  static const int NodeInfoRequest_offsets_[1] = {
+  static const int NodeInfoRequest_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeInfoRequest, local_ip_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeInfoRequest, ip_port_),
   };
   NodeInfoRequest_reflection_ =
@@ -192,18 +195,19 @@ void protobuf_AddDesc_raft_5frpc_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016raft_rpc.proto\022\004raft\">\n\014HeartRequest\022\017"
-    "\n\007version\030\001 \002(\020\022\013\n\003msg\030\002 \003(\t\022\020\n\010done_msg"
-    "\030\003 \001(\010\" \n\rHeartResponse\022\017\n\007version\030\001 \002(\020"
-    "\"\036\n\013VoteResuest\022\017\n\007version\030\001 \002(\020\"\034\n\014Vote"
-    "Response\022\014\n\004vote\030\001 \002(\010\"\"\n\017NodeInfoReques"
-    "t\022\017\n\007ip_port\030\001 \003(\t\"#\n\020NodeInfoResponse\022\017"
-    "\n\007ip_port\030\001 \003(\t2\266\001\n\013RaftService\0224\n\trpc_h"
-    "eart\022\022.raft.HeartRequest\032\023.raft.HeartRes"
-    "ponse\0221\n\010rpc_vote\022\021.raft.VoteResuest\032\022.r"
-    "aft.VoteResponse\022>\n\rrpc_node_info\022\025.raft"
-    ".NodeInfoRequest\032\026.raft.NodeInfoResponse"
-    "B\003\200\001\001", 445);
+    "\n\016raft_rpc.proto\022\004raft\"P\n\014HeartRequest\022\020"
+    "\n\010local_ip\030\001 \002(\t\022\017\n\007version\030\002 \002(\020\022\013\n\003msg"
+    "\030\003 \003(\t\022\020\n\010done_msg\030\004 \001(\010\" \n\rHeartRespons"
+    "e\022\017\n\007version\030\001 \002(\020\"0\n\013VoteResuest\022\020\n\010loc"
+    "al_ip\030\001 \002(\t\022\017\n\007version\030\002 \002(\020\"\034\n\014VoteResp"
+    "onse\022\014\n\004vote\030\001 \002(\010\"4\n\017NodeInfoRequest\022\020\n"
+    "\010local_ip\030\001 \002(\t\022\017\n\007ip_port\030\002 \003(\t\"#\n\020Node"
+    "InfoResponse\022\017\n\007ip_port\030\001 \003(\t2\266\001\n\013RaftSe"
+    "rvice\0224\n\trpc_heart\022\022.raft.HeartRequest\032\023"
+    ".raft.HeartResponse\0221\n\010rpc_vote\022\021.raft.V"
+    "oteResuest\032\022.raft.VoteResponse\022>\n\rrpc_no"
+    "de_info\022\025.raft.NodeInfoRequest\032\026.raft.No"
+    "deInfoResponseB\003\200\001\001", 499);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "raft_rpc.proto", &protobuf_RegisterTypes);
   HeartRequest::default_instance_ = new HeartRequest();
@@ -231,6 +235,7 @@ struct StaticDescriptorInitializer_raft_5frpc_2eproto {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int HeartRequest::kLocalIpFieldNumber;
 const int HeartRequest::kVersionFieldNumber;
 const int HeartRequest::kMsgFieldNumber;
 const int HeartRequest::kDoneMsgFieldNumber;
@@ -252,6 +257,7 @@ HeartRequest::HeartRequest(const HeartRequest& from)
 
 void HeartRequest::SharedCtor() {
   _cached_size_ = 0;
+  local_ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   version_ = GOOGLE_LONGLONG(0);
   done_msg_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -262,6 +268,9 @@ HeartRequest::~HeartRequest() {
 }
 
 void HeartRequest::SharedDtor() {
+  if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+    delete local_ip_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -289,6 +298,11 @@ HeartRequest* HeartRequest::New() const {
 
 void HeartRequest::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_local_ip()) {
+      if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+        local_ip_->clear();
+      }
+    }
     version_ = GOOGLE_LONGLONG(0);
     done_msg_ = false;
   }
@@ -303,10 +317,27 @@ bool HeartRequest::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required sfixed64 version = 1;
+      // required string local_ip = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_local_ip()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->local_ip().data(), this->local_ip().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(17)) goto parse_version;
+        break;
+      }
+
+      // required sfixed64 version = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+         parse_version:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SFIXED64>(
                  input, &version_)));
@@ -314,12 +345,12 @@ bool HeartRequest::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_msg;
+        if (input->ExpectTag(26)) goto parse_msg;
         break;
       }
 
-      // repeated string msg = 2;
-      case 2: {
+      // repeated string msg = 3;
+      case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_msg:
@@ -332,13 +363,13 @@ bool HeartRequest::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_msg;
-        if (input->ExpectTag(24)) goto parse_done_msg;
+        if (input->ExpectTag(26)) goto parse_msg;
+        if (input->ExpectTag(32)) goto parse_done_msg;
         break;
       }
 
-      // optional bool done_msg = 3;
-      case 3: {
+      // optional bool done_msg = 4;
+      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_done_msg:
@@ -371,23 +402,32 @@ bool HeartRequest::MergePartialFromCodedStream(
 
 void HeartRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required sfixed64 version = 1;
-  if (has_version()) {
-    ::google::protobuf::internal::WireFormatLite::WriteSFixed64(1, this->version(), output);
+  // required string local_ip = 1;
+  if (has_local_ip()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->local_ip().data(), this->local_ip().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->local_ip(), output);
   }
 
-  // repeated string msg = 2;
+  // required sfixed64 version = 2;
+  if (has_version()) {
+    ::google::protobuf::internal::WireFormatLite::WriteSFixed64(2, this->version(), output);
+  }
+
+  // repeated string msg = 3;
   for (int i = 0; i < this->msg_size(); i++) {
   ::google::protobuf::internal::WireFormat::VerifyUTF8String(
     this->msg(i).data(), this->msg(i).length(),
     ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->msg(i), output);
+      3, this->msg(i), output);
   }
 
-  // optional bool done_msg = 3;
+  // optional bool done_msg = 4;
   if (has_done_msg()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->done_msg(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->done_msg(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -398,23 +438,33 @@ void HeartRequest::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* HeartRequest::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required sfixed64 version = 1;
-  if (has_version()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteSFixed64ToArray(1, this->version(), target);
+  // required string local_ip = 1;
+  if (has_local_ip()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->local_ip().data(), this->local_ip().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->local_ip(), target);
   }
 
-  // repeated string msg = 2;
+  // required sfixed64 version = 2;
+  if (has_version()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteSFixed64ToArray(2, this->version(), target);
+  }
+
+  // repeated string msg = 3;
   for (int i = 0; i < this->msg_size(); i++) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->msg(i).data(), this->msg(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteStringToArray(2, this->msg(i), target);
+      WriteStringToArray(3, this->msg(i), target);
   }
 
-  // optional bool done_msg = 3;
+  // optional bool done_msg = 4;
   if (has_done_msg()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->done_msg(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->done_msg(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -428,18 +478,25 @@ int HeartRequest::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required sfixed64 version = 1;
+    // required string local_ip = 1;
+    if (has_local_ip()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->local_ip());
+    }
+
+    // required sfixed64 version = 2;
     if (has_version()) {
       total_size += 1 + 8;
     }
 
-    // optional bool done_msg = 3;
+    // optional bool done_msg = 4;
     if (has_done_msg()) {
       total_size += 1 + 1;
     }
 
   }
-  // repeated string msg = 2;
+  // repeated string msg = 3;
   total_size += 1 * this->msg_size();
   for (int i = 0; i < this->msg_size(); i++) {
     total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -473,6 +530,9 @@ void HeartRequest::MergeFrom(const HeartRequest& from) {
   GOOGLE_CHECK_NE(&from, this);
   msg_.MergeFrom(from.msg_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_local_ip()) {
+      set_local_ip(from.local_ip());
+    }
     if (from.has_version()) {
       set_version(from.version());
     }
@@ -496,13 +556,14 @@ void HeartRequest::CopyFrom(const HeartRequest& from) {
 }
 
 bool HeartRequest::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
 
 void HeartRequest::Swap(HeartRequest* other) {
   if (other != this) {
+    std::swap(local_ip_, other->local_ip_);
     std::swap(version_, other->version_);
     msg_.Swap(&other->msg_);
     std::swap(done_msg_, other->done_msg_);
@@ -731,6 +792,7 @@ void HeartResponse::Swap(HeartResponse* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int VoteResuest::kLocalIpFieldNumber;
 const int VoteResuest::kVersionFieldNumber;
 #endif  // !_MSC_VER
 
@@ -750,6 +812,7 @@ VoteResuest::VoteResuest(const VoteResuest& from)
 
 void VoteResuest::SharedCtor() {
   _cached_size_ = 0;
+  local_ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   version_ = GOOGLE_LONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -759,6 +822,9 @@ VoteResuest::~VoteResuest() {
 }
 
 void VoteResuest::SharedDtor() {
+  if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+    delete local_ip_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -786,6 +852,11 @@ VoteResuest* VoteResuest::New() const {
 
 void VoteResuest::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_local_ip()) {
+      if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+        local_ip_->clear();
+      }
+    }
     version_ = GOOGLE_LONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -798,10 +869,27 @@ bool VoteResuest::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required sfixed64 version = 1;
+      // required string local_ip = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_local_ip()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->local_ip().data(), this->local_ip().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(17)) goto parse_version;
+        break;
+      }
+
+      // required sfixed64 version = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+         parse_version:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_SFIXED64>(
                  input, &version_)));
@@ -831,9 +919,18 @@ bool VoteResuest::MergePartialFromCodedStream(
 
 void VoteResuest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required sfixed64 version = 1;
+  // required string local_ip = 1;
+  if (has_local_ip()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->local_ip().data(), this->local_ip().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->local_ip(), output);
+  }
+
+  // required sfixed64 version = 2;
   if (has_version()) {
-    ::google::protobuf::internal::WireFormatLite::WriteSFixed64(1, this->version(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteSFixed64(2, this->version(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -844,9 +941,19 @@ void VoteResuest::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* VoteResuest::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required sfixed64 version = 1;
+  // required string local_ip = 1;
+  if (has_local_ip()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->local_ip().data(), this->local_ip().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->local_ip(), target);
+  }
+
+  // required sfixed64 version = 2;
   if (has_version()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteSFixed64ToArray(1, this->version(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteSFixed64ToArray(2, this->version(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -860,7 +967,14 @@ int VoteResuest::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required sfixed64 version = 1;
+    // required string local_ip = 1;
+    if (has_local_ip()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->local_ip());
+    }
+
+    // required sfixed64 version = 2;
     if (has_version()) {
       total_size += 1 + 8;
     }
@@ -892,6 +1006,9 @@ void VoteResuest::MergeFrom(const ::google::protobuf::Message& from) {
 void VoteResuest::MergeFrom(const VoteResuest& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_local_ip()) {
+      set_local_ip(from.local_ip());
+    }
     if (from.has_version()) {
       set_version(from.version());
     }
@@ -912,13 +1029,14 @@ void VoteResuest::CopyFrom(const VoteResuest& from) {
 }
 
 bool VoteResuest::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
 
 void VoteResuest::Swap(VoteResuest* other) {
   if (other != this) {
+    std::swap(local_ip_, other->local_ip_);
     std::swap(version_, other->version_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -1145,6 +1263,7 @@ void VoteResponse::Swap(VoteResponse* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int NodeInfoRequest::kLocalIpFieldNumber;
 const int NodeInfoRequest::kIpPortFieldNumber;
 #endif  // !_MSC_VER
 
@@ -1164,6 +1283,7 @@ NodeInfoRequest::NodeInfoRequest(const NodeInfoRequest& from)
 
 void NodeInfoRequest::SharedCtor() {
   _cached_size_ = 0;
+  local_ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1172,6 +1292,9 @@ NodeInfoRequest::~NodeInfoRequest() {
 }
 
 void NodeInfoRequest::SharedDtor() {
+  if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+    delete local_ip_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -1198,6 +1321,13 @@ NodeInfoRequest* NodeInfoRequest::New() const {
 }
 
 void NodeInfoRequest::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_local_ip()) {
+      if (local_ip_ != &::google::protobuf::internal::kEmptyString) {
+        local_ip_->clear();
+      }
+    }
+  }
   ip_port_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1209,8 +1339,24 @@ bool NodeInfoRequest::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated string ip_port = 1;
+      // required string local_ip = 1;
       case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_local_ip()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->local_ip().data(), this->local_ip().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_ip_port;
+        break;
+      }
+
+      // repeated string ip_port = 2;
+      case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_ip_port:
@@ -1223,7 +1369,7 @@ bool NodeInfoRequest::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(10)) goto parse_ip_port;
+        if (input->ExpectTag(18)) goto parse_ip_port;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1246,13 +1392,22 @@ bool NodeInfoRequest::MergePartialFromCodedStream(
 
 void NodeInfoRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated string ip_port = 1;
+  // required string local_ip = 1;
+  if (has_local_ip()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->local_ip().data(), this->local_ip().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->local_ip(), output);
+  }
+
+  // repeated string ip_port = 2;
   for (int i = 0; i < this->ip_port_size(); i++) {
   ::google::protobuf::internal::WireFormat::VerifyUTF8String(
     this->ip_port(i).data(), this->ip_port(i).length(),
     ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->ip_port(i), output);
+      2, this->ip_port(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1263,13 +1418,23 @@ void NodeInfoRequest::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* NodeInfoRequest::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated string ip_port = 1;
+  // required string local_ip = 1;
+  if (has_local_ip()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->local_ip().data(), this->local_ip().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->local_ip(), target);
+  }
+
+  // repeated string ip_port = 2;
   for (int i = 0; i < this->ip_port_size(); i++) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->ip_port(i).data(), this->ip_port(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteStringToArray(1, this->ip_port(i), target);
+      WriteStringToArray(2, this->ip_port(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1282,7 +1447,16 @@ void NodeInfoRequest::SerializeWithCachedSizes(
 int NodeInfoRequest::ByteSize() const {
   int total_size = 0;
 
-  // repeated string ip_port = 1;
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required string local_ip = 1;
+    if (has_local_ip()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->local_ip());
+    }
+
+  }
+  // repeated string ip_port = 2;
   total_size += 1 * this->ip_port_size();
   for (int i = 0; i < this->ip_port_size(); i++) {
     total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -1315,6 +1489,11 @@ void NodeInfoRequest::MergeFrom(const ::google::protobuf::Message& from) {
 void NodeInfoRequest::MergeFrom(const NodeInfoRequest& from) {
   GOOGLE_CHECK_NE(&from, this);
   ip_port_.MergeFrom(from.ip_port_);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_local_ip()) {
+      set_local_ip(from.local_ip());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -1331,12 +1510,14 @@ void NodeInfoRequest::CopyFrom(const NodeInfoRequest& from) {
 }
 
 bool NodeInfoRequest::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   return true;
 }
 
 void NodeInfoRequest::Swap(NodeInfoRequest* other) {
   if (other != this) {
+    std::swap(local_ip_, other->local_ip_);
     ip_port_.Swap(&other->ip_port_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
