@@ -1,13 +1,12 @@
 #include <brpc/server.h>
 #include "Log.h"
 #include "CNode.h"
-#include "client_rpc.pb.h"
+#include "raft_rpc.pb.h"
 #include "CListener.h"
-#include "CClientRpc.h"
 
 using namespace raft;
 
-CListener::CListener() {
+CListener::CListener(CNode* node) : _node(node) {
 
 }
 
@@ -15,34 +14,12 @@ CListener::~CListener() {
 
 }
 
-bool CListener::Init(const std::string& ip_port, CNode* node) {
-    _ip_port = ip_port;
-    _node = node;
-
-    brpc::Server server;
-    server.set_version("raft_server_1.0");
-    raft::CClientRpc client_node(this);
-    if (server.AddService(&client_node, brpc::SERVER_DOESNT_OWN_SERVICE) != 0) {
-        LOG_ERROR("fail to add service.");
-        return false;
-    }
-
-    brpc::ServerOptions options;
-    if (server.Start(_ip_port.c_str(), &options) != 0) {
-        LOG_ERROR("Fail to start storage_server. ip : %s", _ip_port.c_str());
-        return false;
-    }
-
-    server.RunUntilAskedToQuit();
-    return true;
-}
-
 void CListener::HandleClient(const std::string& ip_port, const std::string& msg, ::raft::ClientResponse* response,
     ::google::protobuf::Closure* done) {
     //judge current node is leader
     response->set_msg(msg);
     if (!_node->IsLeader()) {
-        response->set_err_code(1);
+        response->set_err_code(ERR_NotLeader);
         response->set_des("not a leader");
         response->set_leader_ip(_node->GetLeaderInfo());
         done->Run();

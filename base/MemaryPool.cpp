@@ -2,7 +2,6 @@
 #include "MemaryPool.h"
 #include "Log.h"
 
-#include <iostream>
 using namespace std;
 
 CMemoryPool::CMemoryPool() {
@@ -136,7 +135,6 @@ void* CMemoryPool::ChunkAlloc(int size, int& nums, bool is_large) {
 	//malloc failed
 	if (0 == _pool_start) {
 		throw std::exception(std::logic_error("There memary is not enough!"));
-		cout << "There memary is not enough!" << endl;
 		return nullptr;
 	}
 

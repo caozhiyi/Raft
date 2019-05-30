@@ -41,7 +41,8 @@ namespace raft {
 
     private:
         std::string        _file_name;
-        std::fstream       _file_stream;
+        std::fstream       _in_file_stream;
+        std::fstream       _out_file_stream;
         std::atomic<Time>  _newest_time;
         std::mutex		   _mutex;
     };

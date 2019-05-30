@@ -17,11 +17,9 @@ namespace raft {
     class CListener
     {
     public:
-        CListener();
+        CListener(CNode* node);
     	~CListener();
-    
-        bool Init(const std::string& ip_port, CNode* node);
-    
+ 
         void HandleClient(const std::string& ip_port, const std::string& msg, ::raft::ClientResponse* response,
             ::google::protobuf::Closure* done);
     

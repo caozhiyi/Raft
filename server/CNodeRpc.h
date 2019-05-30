@@ -25,6 +25,16 @@ namespace raft {
             const ::raft::NodeInfoRequest* request,
             ::raft::NodeInfoResponse* response,
             ::google::protobuf::Closure* done);
+
+        virtual void client_msg(::google::protobuf::RpcController* controller,
+            const ::raft::ClientRequest* request,
+            ::raft::ClientResponse* response,
+            ::google::protobuf::Closure* done);
+
+        virtual void rpc_hello(::google::protobuf::RpcController* controller,
+            const ::raft::HelloResquest* request,
+            ::raft::HelloResponse* response,
+            ::google::protobuf::Closure* done);
         
     private:
         CNode* _node;

@@ -16,7 +16,7 @@ LIBS = -L./brpc/lib
 
 CCFLAGS = -lpthread -fPIC -m64 -std=c++11 -lstdc++ -fpermissive -lbrpc -lprotobuf
 
-TAR1 = raft_brpc
+TAR1 = raft_sev
 TAR2 = raft_cli
 
 all: protoc $(TAR1) ${TAR2}
@@ -28,9 +28,7 @@ protoc:
 $(TAR1) : $(OBJS) ./exe/Server.cpp
 	$(CC) $^ -o $@ $(INCLUDES) $(LIBS) $(CCFLAGS)
 	-mkdir out_put 
-	-cp ${TAR1} out_put
-	#-cp ${TAR1} out_put1
-	#-cp ${TAR1} out_put2
+	-mv ${TAR1} out_put
 	-cp conf/server.conf out_put
 
 ${TAR2} : $(OBJS) ./exe/Client.cpp
@@ -44,6 +42,6 @@ ${TAR2} : $(OBJS) ./exe/Client.cpp
 	$(CC) -c $< $(CCFLAGS)
 
 clean:
-	rm -rf *.out *.o ${TAR1} ${TAR2} ./pb/*.h ./pb/*.cc  out_put
+	rm -rf *.out *.o ${TAR1} ${TAR2}  out_put
 
 .PHONY:clean

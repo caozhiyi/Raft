@@ -13,7 +13,7 @@ namespace brpc {
     class Controller;
 }
 namespace raft {
-    class ClientService_Stub;
+    class RaftService_Stub;
     class ClientResponse;
 
     class CClient
@@ -22,7 +22,7 @@ namespace raft {
         CClient();
         ~CClient();
 
-        bool Init(const std::string& config_file);
+        bool Init(const std::string& config_file = "");
 
         void SetCallBackFunc(const ClientCallBack& call_back);
     
@@ -30,10 +30,14 @@ namespace raft {
 
         static void RpcDone(void* param, brpc::Controller* cntl);
 
+        // test connect is valid
+        bool SayHello(RaftService_Stub* stub);
+
     private:
         std::string _leader_info;
         CConfig     _config;
-        raft::ClientService_Stub* _channel;
+        std::string _config_path;
+        raft::RaftService_Stub* _ser_stub;
         ClientCallBack _client_call_back;
     };
 }

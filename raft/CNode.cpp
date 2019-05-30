@@ -1,4 +1,5 @@
 #include <brpc/server.h>
+#include <algorithm>
 #include "Log.h"
 #include "CNode.h"
 #include "Tool.h"
@@ -11,6 +12,7 @@ using namespace raft;
 CNode::CNode(const std::string& config_path) :
     _done_msg(false),
 	_role(Follower),
+    _listener(this),
 	_config_path(config_path) {
 
 }
@@ -65,10 +67,6 @@ bool CNode::Init() {
         brpc::ChannelOptions options;
         std::string connect_node_ip;
 
-        raft::NodeInfoRequest request;
-        raft::NodeInfoResponse response;
-        request.set_local_ip(_local_ip_port);
-
         for (auto iter = node_info_list.begin(); iter != node_info_list.end(); ++iter) {
             if (*iter == _local_ip_port) {
                 continue;
@@ -77,10 +75,7 @@ bool CNode::Init() {
             channel->Init(iter->c_str(), &options);
             raft::RaftService_Stub stub(channel);
             // test if we can connect the node
-            brpc::Controller cntl;
-            cntl.set_timeout_ms(500);
-            stub.rpc_node_info(&cntl, &request, &response, NULL);
-            if (!cntl.Failed()) {
+            if (SayHello(&stub)) {
                 connect_node_ip = std::move(*iter);
                 break;
             
@@ -99,6 +94,9 @@ bool CNode::Init() {
         _channel_map[connect_node_ip] = stub;
 
         // get all node info
+        raft::NodeInfoRequest request;
+        raft::NodeInfoResponse response;
+        request.set_local_ip(_local_ip_port);
         brpc::Controller cntl;
         cntl.set_timeout_ms(500);
         stub->rpc_node_info(&cntl, &request, &response, NULL);
@@ -115,7 +113,6 @@ bool CNode::Init() {
         AddNewNode(connect_node_ip, info_vec);
 
         BroadCastNodeInfo();
-
     }
     
     // start timer
@@ -127,13 +124,7 @@ bool CNode::Init() {
     _heart.Init(step, heart_time, time_out);
     LOG_INFO("Init heart timer. timer_step:%d, heart_time:%d, time_out:%d", step, heart_time, time_out);
 
-    std::string listen_ip = ip + ":" + _config.GetStringValue("listen");
-    // init listener
-    if (!_listener.Init(listen_ip, this)) {
-        LOG_ERROR("init listener failed. listen_ip:%s", listen_ip.c_str());
-        return false;
-    }
-    //server.RunUntilAskedToQuit();
+    server.RunUntilAskedToQuit();
 	return true;
 }
 
@@ -173,11 +164,14 @@ void CNode::SendAllHeart() {
             _cur_msg.clear();
         }
 	}
-
+    if (new_version == 0) {
+        new_version = _bin_log.GetNewestTime();
+    }
     // get the pri newest version
     Time version = _bin_log.GetNewestTime();
     request.set_version(version);
 
+    bool have_data = _will_done_msg.size() > 0;
     int back_count = 1;
     {
         std::unique_lock<std::mutex> lock(_stub_mutex);
@@ -198,6 +192,7 @@ void CNode::SendAllHeart() {
             }
             // new sync
             if (response.version() != new_version) {
+                LOG_INFO("a node sync from me. ip:%s", iter->first.c_str());
                 _sync_vec.push_back(std::make_pair(iter->first, response.version()));
 
             } else {
@@ -206,7 +201,7 @@ void CNode::SendAllHeart() {
         }
     }
 	
-    if (back_count  >= _channel_map.size() / 2) {
+    if (back_count  >= _channel_map.size() / 2 && have_data) {
         _done_msg = true;
     
     } else {
@@ -280,10 +275,16 @@ void CNode::HandleHeart(const std::string& ip_port, std::vector<std::string>& ms
     }
 
 	// cur node lost message. sync from loeader
-	if (version != _bin_log.GetNewestTime() && _bin_log.GetNewestTime() != 0) {
-		Time version = _bin_log.GetNewestTime();
-		
-        new_version = version;
+    if (_cur_msg.size() > 0) {
+        BinLog bin_log = _bin_log.StrToBinLog(_cur_msg[_cur_msg.size() - 1]);
+        if (version > bin_log.first) {
+            new_version = _bin_log.GetNewestTime();
+            LOG_INFO("send a sync msg to leader : %s", ip_port.c_str());
+            return;
+        }
+        
+    } else if (version > _bin_log.GetNewestTime() && _bin_log.GetNewestTime() != 0) {
+        new_version = _bin_log.GetNewestTime();
 		LOG_INFO("send a sync msg to leader : %s", ip_port.c_str());
 		return;
 	}
@@ -292,17 +293,20 @@ void CNode::HandleHeart(const std::string& ip_port, std::vector<std::string>& ms
 	if (msg_vec.size() > 0) {
 		std::unique_lock<std::mutex> lock(_msg_mutex);
 		for (size_t i = 0; i < msg_vec.size(); i++) {
-			LOG_INFO("recv a msg from client : %s", msg_vec[i].c_str());
+			LOG_INFO("recv a msg from leader : %s", msg_vec[i].c_str());
             _cur_msg.push_back(std::move(msg_vec[i]));
 		}
 	}
 
 	// set response
-    if (_cur_msg.size()) {
+    if (_cur_msg.size() > 0) {
         BinLog bin_log = _bin_log.StrToBinLog(_cur_msg[_cur_msg.size() - 1]);
         new_version = bin_log.first;
+
+    } else {
+        new_version = _bin_log.GetNewestTime();
     }
-    LOG_INFO("send a reheart msg to leader : %s", ip_port.c_str());
+    LOG_DEBUG("send a reheart msg to leader : %s", ip_port.c_str());
 }
                       
 void CNode::HandleVote(const std::string& ip_port, long long version, bool& vote) {
@@ -319,10 +323,16 @@ void CNode::HandleVote(const std::string& ip_port, long long version, bool& vote
     } else if (_role == Follower) {
         vote = true;
         _heart.ResetTimer();
+        _leader_ip_port = ip_port;
 
     } else if (_role == Candidate) {
         // do nothing
     }
+}
+
+void CNode::HandleClient(const std::string& ip_port, const std::string& msg, ::raft::ClientResponse* response,
+    ::google::protobuf::Closure* done) {
+    _listener.HandleClient(ip_port, msg, response, done);
 }
 
 Time CNode::HandleClientMsg(const std::string& ip_port, const std::string& msg) {
@@ -355,7 +365,6 @@ void CNode::BroadCastNodeInfo() {
         if (cntl.Failed()) {
             LOG_ERROR("rpc_node_info called failed. err:", cntl.ErrorText().c_str());
         }
-        
     } 
 }
 
@@ -411,20 +420,29 @@ void CNode::AddNewNode(const std::string& ip_port, const std::vector<std::string
 }
 
 void CNode::Sync() {
-    raft::HeartResponse response;
     for (auto iter = _sync_vec.begin(); iter != _sync_vec.end(); ++iter) {
         raft::HeartRequest request;
+        raft::HeartResponse response;
         request.set_local_ip(_local_ip_port);
         request.set_done_msg(false);
         request.set_version(iter->second);
         std::vector<BinLog> log_vec;
         _bin_log.GetLog(iter->second, log_vec);
-        for (size_t i = 0; i < log_vec.size(); i++) {
-            request.add_msg(std::move(_bin_log.BinLogToStr(log_vec[i])));
+        if (log_vec.size() > 0) {
+            reverse(log_vec.begin(), log_vec.end());
+            for (size_t i = 0; i < log_vec.size(); i++) {
+                std::string msg = _bin_log.BinLogToStr(log_vec[i]);
+                request.add_msg(msg);
+            }
         }
         for (size_t i = 0; i < _will_done_msg.size(); i++) {
             request.add_msg(_will_done_msg[i]);
         }
+        
+        if (request.msg_size() == 0) {
+            continue;
+        }
+        
         auto stub = _channel_map.find(iter->first);
         if (stub->second) {
             brpc::Controller cntl;
@@ -444,6 +462,21 @@ void CNode::CleanMsg() {
     std::unique_lock<std::mutex> lock(_msg_mutex);
     _cur_msg.clear();
     _will_done_msg.clear();
+}
+
+bool CNode::SayHello(RaftService_Stub* stub) {
+    raft::HelloResquest request;
+    raft::HelloResponse response;
+    brpc::Controller cntl;
+    stub->rpc_hello(&cntl, &request, &response, NULL);
+    if (!cntl.Failed()) {
+        LOG_ERROR("connect a new node success.");
+        return true;
+
+    } else {
+        LOG_ERROR("connect a new node failed.");
+        return false;
+    }
 }
 
 // timer

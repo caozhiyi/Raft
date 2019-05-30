@@ -37,6 +37,9 @@ namespace raft {
 
         void HandleVote(const std::string& ip_port, long long version, bool& vote);
 
+        void HandleClient(const std::string& ip_port, const std::string& msg, ::raft::ClientResponse* response,
+            ::google::protobuf::Closure* done);
+
         Time HandleClientMsg(const std::string& ip_port, const std::string& msg);
         // broadcast node info to all node
         void BroadCastNodeInfo();
@@ -48,6 +51,8 @@ namespace raft {
         void Sync();
         // clean msg cache
         void CleanMsg();
+        // test connect is valid
+        bool SayHello(RaftService_Stub* stub);
 
     private:
         // timer

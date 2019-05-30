@@ -31,6 +31,22 @@ message NodeInfoResponse {
     repeated string ip_port      = 1;          // all node ip info
 }
 
+message ClientRequest {
+    required string   msg  = 1;				   // client msg
+};
+
+message ClientResponse {
+    required int32	err_code   = 1;
+	optional string des		   = 2;  
+	optional string leader_ip  = 3;
+	optional string msg        = 4;			   // if node not a leader. return msg back 
+};
+
+message HelloResquest {
+}
+message HelloResponse {
+}
+
 service RaftService {
 
     rpc rpc_heart(HeartRequest) returns (HeartResponse);
@@ -38,4 +54,8 @@ service RaftService {
     rpc rpc_vote(VoteResuest) returns (VoteResponse);
 
     rpc rpc_node_info(NodeInfoRequest) returns (NodeInfoResponse);
+
+	rpc client_msg(ClientRequest) returns (ClientResponse);
+
+	rpc rpc_hello(HelloResquest) returns (HelloResponse);
 };

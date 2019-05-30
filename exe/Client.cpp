@@ -12,7 +12,7 @@ void ResponseFunc(int status, const std::string& err) {
 
 int main() {
     CLog::Instance().SetLogName("server.log");
-    CLog::Instance().SetLogLevel(LOG_DEBUG_LEVEL);
+    CLog::Instance().SetLogLevel(LOG_ERROR_LEVEL);
     CLog::Instance().Start();
 
     raft::CClient client;

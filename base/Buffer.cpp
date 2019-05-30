@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Buffer.h"
 #include "MemaryPool.h"
 #include "LoopBuffer.h"

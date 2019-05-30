@@ -52,7 +52,7 @@ void CNodeRpc::rpc_heart(::google::protobuf::RpcController* controller,
     json.clear();
     ret = json2pb::ProtoMessageToJson(*response, &json, options, &error);
     if (ret) {
-        LOG_DEBUG("Received rpc_heart. response : %s", json.c_str());;
+        LOG_DEBUG("Received rpc_heart. response : %s", json.c_str());
     }
 }
 
@@ -62,8 +62,6 @@ void CNodeRpc::rpc_vote(::google::protobuf::RpcController* controller,
     ::google::protobuf::Closure* done) {
 
     brpc::ClosureGuard done_guard(done);
-    
-    std::cout << " a rpc vote" << std::endl;
 
     json2pb::Pb2JsonOptions options;
     options.bytes_to_base64 = true;
@@ -89,7 +87,7 @@ void CNodeRpc::rpc_vote(::google::protobuf::RpcController* controller,
     json.clear();
     ret = json2pb::ProtoMessageToJson(*response, &json, options, &error);
     if (ret) {
-        LOG_DEBUG("Received rpc_vote. response : %s", json.c_str());;
+        LOG_DEBUG("Received rpc_vote. response : %s", json.c_str());
     }
 }
 
@@ -133,6 +131,48 @@ void CNodeRpc::rpc_node_info(::google::protobuf::RpcController* controller,
     json.clear();
     ret = json2pb::ProtoMessageToJson(*response, &json, options, &error);
     if (ret) {
-        LOG_DEBUG("Received rpc_node_info. response : %s", json.c_str());;
+        LOG_DEBUG("Received rpc_node_info. response : %s", json.c_str());
     }
+}
+
+void CNodeRpc::client_msg(::google::protobuf::RpcController* controller,
+    const ::raft::ClientRequest* request,
+    ::raft::ClientResponse* response,
+    ::google::protobuf::Closure* done) {
+
+    json2pb::Pb2JsonOptions options;
+    options.bytes_to_base64 = true;
+    options.pretty_json = true;
+    std::string json;
+    std::string error;
+    bool ret = json2pb::ProtoMessageToJson(*request, &json, options, &error);
+    if (ret) {
+        LOG_DEBUG("Received client_msg. request : %s", json.c_str());;
+    }
+
+    // get client ip info
+    brpc::Controller* cntl = static_cast<brpc::Controller*>(controller);
+    std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
+    std::string msg = request->msg();
+
+    _node->HandleClient(ip, msg, response, done);
+}
+
+void CNodeRpc::rpc_hello(::google::protobuf::RpcController* controller,
+    const ::raft::HelloResquest* request,
+    ::raft::HelloResponse* response,
+    ::google::protobuf::Closure* done) {
+
+    brpc::ClosureGuard done_guard(done);
+    json2pb::Pb2JsonOptions options;
+    options.bytes_to_base64 = true;
+    options.pretty_json = true;
+    std::string json;
+    std::string error;
+    bool ret = json2pb::ProtoMessageToJson(*request, &json, options, &error);
+    if (ret) {
+        LOG_DEBUG("Received client_msg. request : %s", json.c_str());
+    }
+
+    //do nothing
 }
