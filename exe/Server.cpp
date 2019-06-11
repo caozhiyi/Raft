@@ -5,12 +5,9 @@ using namespace std;
 
 int main() {
     SetCoreFileUnlimit();
-    CLog::Instance().SetLogName("server.log");
-    CLog::Instance().SetLogLevel(LOG_ERROR_LEVEL);
-    CLog::Instance().Start();
 
     raft::CNode node("server.conf");
-    node.Init();
+    node.Init(LOG_ERROR_LEVEL);
 
     return 0;
 }     

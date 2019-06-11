@@ -1,6 +1,6 @@
 #include <iostream>
 #include <functional>
-#include "CClient.h"
+#include "CClientSDK.h"
 #include "config.h"
 #include "Log.h"
 

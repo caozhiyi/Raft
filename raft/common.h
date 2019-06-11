@@ -2,7 +2,10 @@
 #define HEADER_COMMON
 
 namespace raft {
+    const int rpc_time_out = 500; //ms
+    const std::string rpc_server_version = "raft_server_1.0";
     typedef unsigned long long Time;
+
     // node role
     enum NodeRole {
         Follower = 1,

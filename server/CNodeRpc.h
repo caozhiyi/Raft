@@ -2,13 +2,13 @@
 #define HADMAP_RPC_SERVICE_H
 
 #include "raft_rpc.pb.h"
-#include "CNode.h"
 
 namespace raft {
 
+    class CMsgRouter;
 	class CNodeRpc : public RaftService {
 	public:
-        CNodeRpc(CNode* node);
+        CNodeRpc(CMsgRouter* router);
 		virtual ~CNodeRpc();
 
         virtual void rpc_heart(::google::protobuf::RpcController* controller,
@@ -37,7 +37,7 @@ namespace raft {
             ::google::protobuf::Closure* done);
         
     private:
-        CNode* _node;
+        CMsgRouter* _msg_router;
 	}; 
 }
 #endif

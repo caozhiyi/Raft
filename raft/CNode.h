@@ -3,17 +3,19 @@
 
 #include <mutex>
 #include <atomic>
+#include <functional>
 
-#include "brpc/channel.h"
 #include "CHeart.h"
 #include "CLogReplication.h"
 #include "common.h"
 #include "config.h"
-#include "CListener.h"
+#include "CCliManager.h"
+#include "CSevManager.h"
+#include "CMsgRouter.h"
+#include "Log.h"
 
 namespace raft {
-
-    class RaftService_Stub;
+    typedef std::function<void(std::string)> MsgCallBack;
 
     class CNode
     {
@@ -21,67 +23,52 @@ namespace raft {
         CNode(const std::string& config_path);
         ~CNode();
 
-        bool Init();
-
+        bool Init(int log_level = LOG_ERROR_LEVEL);
+        // set msg call back
+        void SetMsgCallBack(MsgCallBack& func);
+        // load info from config file again
         bool LoadConfig();
-
-        // only leader send heart
-        void SendAllHeart();
-        // time out. to Candidate
-        void SendAllVote();
-
+        // the local node is leader now?
         bool IsLeader();
+        // get cur leader ip info
         std::string GetLeaderInfo();
-
+        // send heart to all node. only leader call this function
+        void SendAllHeart();
+        // handle heart request from other node
         void HandleHeart(const std::string& ip_port, std::vector<std::string>& msg_vec, long long version, bool done_msg, long long& new_version);
-
+        // handle vote request from other node
         void HandleVote(const std::string& ip_port, long long version, bool& vote);
-
-        void HandleClient(const std::string& ip_port, const std::string& msg, ::raft::ClientResponse* response,
-            ::google::protobuf::Closure* done);
-
+        // get a msg from client return the time of msg
         Time HandleClientMsg(const std::string& ip_port, const std::string& msg);
-        // broadcast node info to all node
-        void BroadCastNodeInfo();
-        // get current node's node info
-        void GetNodeInfo(const std::string& ip_port, std::vector<std::string>& node_info);
-        // add new node to connection map(_channel_map)
-        void AddNewNode(const std::string& ip_port, const std::vector<std::string>& node_info);
         // leader node sync msg to other node
-        void Sync();
+        void Sync(std::vector<std::pair<std::string, Time>>& sync_vec);
         // clean msg cache
         void CleanMsg();
-        // test connect is valid
-        bool SayHello(RaftService_Stub* stub);
 
     private:
-        // timer
+        // timer call back function
         void _HeartCallBack();
         void _TimeOutCallBack();
 
     private:
-        NodeRole	_role;
+        NodeRole	  _role;
+        std::string   _leader_ip_port;
+        std::string   _config_path;
 
-        std::string _config_path;
-        CConfig		_config;
-        CHeart		_heart;
-        CBinLog     _bin_log;
+        CMsgRouter    _msg_router;
+        CConfig		  _config;
+        CHeart		  _heart;
+        CBinLog       _bin_log;
+        CCliManager   _cli_manager;
+        CSevManager   _sev_manager;
 
-        CListener   _listener;
-
-        std::string _leader_ip_port;
-        std::string _local_ip_port;
-
+        MsgCallBack   _msg_call_back;
+    
         std::atomic<bool> _done_msg;	    // notice follower done msg to file
 
         std::mutex _msg_mutex;
         std::vector<std::string>	_cur_msg;
-        std::vector<std::string>	_will_done_msg;              // only leader use
-
-        std::vector<std::pair<std::string, Time>>       _sync_vec;
-
-        std::mutex _stub_mutex;
-        std::map<std::string, raft::RaftService_Stub*>	_channel_map;
+        std::vector<std::string>	_will_done_msg;
     };
 }
 #endif

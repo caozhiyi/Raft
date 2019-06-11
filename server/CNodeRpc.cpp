@@ -2,13 +2,12 @@
 #include <json2pb/pb_to_json.h>
 
 #include "CNodeRpc.h"
-#include "common.h"
-#include "CNode.h"
 #include "Log.h"
+#include "CMsgRouter.h"
 
 using namespace raft;
 
-CNodeRpc::CNodeRpc(CNode* node) : _node(node) {
+CNodeRpc::CNodeRpc(CMsgRouter* router) : _msg_router(router) {
 
 }
 
@@ -45,8 +44,7 @@ void CNodeRpc::rpc_heart(::google::protobuf::RpcController* controller,
     long long version = request->version();
     bool done_msg = request->done_msg();
     long long new_version = 0;
-    _node->HandleHeart(ip, msg_vec, version, done_msg, new_version);
-    
+    _msg_router->HandleHeart(ip, msg_vec, version, done_msg, new_version);
     response->set_version(new_version);
 
     json.clear();
@@ -80,8 +78,7 @@ void CNodeRpc::rpc_vote(::google::protobuf::RpcController* controller,
     long long version = request->version();
     
     bool vote = false;
-    _node->HandleVote(ip, version, vote);
-
+    _msg_router->HandleVote(ip, version, vote);
     response->set_vote(vote);
 
     json.clear();
@@ -119,13 +116,13 @@ void CNodeRpc::rpc_node_info(::google::protobuf::RpcController* controller,
     }
 
     if (info_vec.empty()) {
-        _node->GetNodeInfo(ip, info_vec);
+        _msg_router->GetNodeInfo(ip, info_vec);
         for (auto iter = info_vec.begin(); iter != info_vec.end(); ++iter) {
             response->add_ip_port(*iter);
         }
 
     } else {
-        _node->AddNewNode(ip, info_vec);
+        _msg_router->AddNewNode(ip, info_vec);
     }
 
     json.clear();
@@ -155,7 +152,7 @@ void CNodeRpc::client_msg(::google::protobuf::RpcController* controller,
     std::string ip = butil::endpoint2str(cntl->remote_side()).c_str();
     std::string msg = request->msg();
 
-    _node->HandleClient(ip, msg, response, done);
+    _msg_router->HandleClient(ip, msg, response, done);
 }
 
 void CNodeRpc::rpc_hello(::google::protobuf::RpcController* controller,
