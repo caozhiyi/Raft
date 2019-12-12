@@ -1,0 +1,28 @@
+syntax = 'proto2';
+package raft;
+
+message HeartBeatResquest {
+    required int32 term                 = 1;    // leader's term.
+    required int32 leader_id            = 2;    // leader's id, so followsers can redirect clients.
+    required int64 prev_log_index       = 3;    // the snapshort replaces all entries uo through and includeing this index.
+    required int32 prev_log_term        = 4;    // term of last include index.
+    repeated string entries             = 5;    // to add logs.
+    required int64 leader_commit        = 6;    // leader added log index. 
+}
+
+message HeartBeatResponse {
+    required int64 term                 = 1;    // now leader's term.
+    required bool success               = 2;    // add success?
+}
+
+message VoteRequest {
+    required int32 term                 = 1;    // candidate's term.
+    required int32 candidate_id         = 2;    // candidate's id.
+    required int64 last_index           = 3;    // candidata last log index.
+    required int32 last_term            = 4;    // candidate last log term.
+}
+
+message VoteResponse {
+    required int32 term                 = 1;    // now leader's term.
+    required bool vote_granted          = 2;    // is vote?
+}
