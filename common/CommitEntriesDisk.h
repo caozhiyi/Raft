@@ -1,9 +1,7 @@
 #ifndef RAFT_COMMON_COMMIYLOGNORMAL
 #define RAFT_COMMON_COMMIYLOGNORMAL
 
-#include <atomic>
 #include <fstream>
-#include <mutex>
 #include <functional>
 #include <vector>
 #include "ICommitEntries.h"
@@ -32,13 +30,13 @@ namespace raft {
         // only get one entries
         bool GetEntries(Entries& entries_vec);
         bool ReadEntries(uint64_t index, std::vector<Entries>& entries_vec, bool only_one = false);
-        bool WriteEntries(char* data, int32_t len);
+        void WriteEntries(absl::string_view entries);
 
     private:
         std::string            _file_name;
         std::fstream           _in_file_stream;
         std::fstream           _out_file_stream;
-        std::atomic<uint64_t>  _newest_index;
+        uint64_t               _newest_index;
         std::function<void(std::vector<Entries>&)> _entries_call_back;
     };
 }

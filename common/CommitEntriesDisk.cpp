@@ -1,8 +1,9 @@
-#include <cstring> // for memcpy
+#include <cstring>      // for memcpy
+#include <algorithm>    // for reverse
 #include "CommitEntriesDisk.h"
 #include "Log.h"
 
-static const int __once_step = 4096 * 2;    // read size every time
+static const int32_t __once_step = 4096 * 2;    // read size every time
 
 using namespace raft;
 
@@ -24,6 +25,7 @@ static void mmrev(char* start, char* end) {
 }
 
 CCommitEntriesDisk::CCommitEntriesDisk(const std::string& file_name) {
+    _file_name = file_name;
     _out_file_stream.open(_file_name, std::ios::binary | std::ios::app | std::ios::out);
     _in_file_stream.open(_file_name, std::ios::binary | std::ios::in);
 	if (!_in_file_stream.good() || !_out_file_stream.good()) {
@@ -49,27 +51,30 @@ CCommitEntriesDisk::~CCommitEntriesDisk() {
 }
 
 bool CCommitEntriesDisk::PushEntries(const Entries& entries) {
-    char *buf = new char[entries._entries.length()];
-    memcpy(buf, entries.data(), entries.length());
-    EntriesRef entries_ref(buf, entries.length());
-    uint32_t len = 0;
-    char* data = nullptr;
-    entries_ref.GetData(data, len);
-    mmrev(data, data + len);
-    delete[] buf;
-    return WriteEntries(data, len);
+    if (_newest_index >= entries._index && entries._index != 0) {
+        return false;
+    }
+    _newest_index = entries._index;
+    EntriesRef entries_ref(entries);
+    
+    std::string data = entries_ref.GetData();
+    std::reverse(data.begin(), data.end());
+    WriteEntries(data);
+    return true;
 }
 
 bool CCommitEntriesDisk::PushEntries(uint64_t index, uint32_t term, absl::string_view entries) {
-    char *buf = new char[entries.length()];
-    memcpy(buf, entries.data(), entries.length());
-    EntriesRef entries_ref(index, term, buf, entries.length());
-    uint32_t len = 0;
-    char* data = nullptr;
-    entries_ref.GetData(data, len);
-    mmrev(data, data + len);
-    delete[] buf;
-    return WriteEntries(data, len);
+    if (_newest_index >= index && index != 0) {
+        return false;
+    }
+    _newest_index = index;
+
+    EntriesRef entries_ref(term, index, (char*)entries.data(), entries.length());
+
+    std::string data = entries_ref.GetData();
+    std::reverse(data.begin(), data.end());
+    WriteEntries(data);
+    return true;
 }
 
 bool CCommitEntriesDisk::GetEntries(uint64_t index, std::vector<Entries>& entries_vec) {
@@ -123,10 +128,11 @@ bool CCommitEntriesDisk::ReadEntries(uint64_t index, std::vector<Entries>& entri
     char* cur_buf = nullptr;
     char* prev_buf = nullptr;
     uint32_t prev_buf_left = 0;
-    uint32_t find_rand = 0;
+    int32_t find_rand = 0;
     bool ret = true;
     
-	while (true) {
+    bool loop = true;
+	while (loop) {
         find_rand++;
         // create buf
         cur_buf = new char[__once_step];
@@ -142,7 +148,7 @@ bool CCommitEntriesDisk::ReadEntries(uint64_t index, std::vector<Entries>& entri
 		if (len == 0) {
 			break;
 		}
-        mmrev(cur_buf + prev_buf_left, cur_buf + prev_buf_left + len);
+        mmrev(cur_buf + prev_buf_left, cur_buf + prev_buf_left + len -1);
 
         uint32_t left_len = prev_buf_left + len;
         uint32_t offset = 0;
@@ -158,6 +164,7 @@ bool CCommitEntriesDisk::ReadEntries(uint64_t index, std::vector<Entries>& entri
                     // get a complete entries.
                     entries_vec.push_back(std::move(entries_ref.GetEntries()));
                     if (entries_ref.GetIndex() <= index || only_one) {
+                        loop = false;
                         break;
                     }
                     offset += entries_ref.GetTotalLen();
@@ -186,7 +193,7 @@ bool CCommitEntriesDisk::ReadEntries(uint64_t index, std::vector<Entries>& entri
     return ret;
 }
 
-bool CCommitEntriesDisk::WriteEntries(char* data, int32_t len) {
-    _out_file_stream << std::string(data, len);
+void CCommitEntriesDisk::WriteEntries(absl::string_view entries) {
+    _out_file_stream << entries;
     _out_file_stream.flush();
 }
