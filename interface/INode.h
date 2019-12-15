@@ -11,6 +11,9 @@ namespace raft {
     public:
         CNode() {}
         virtual ~CNode() {}
+        // net handle
+        virtual void SetNetHandle(absl::string_view handle) = 0;
+        virtual std::string GetNetHandle() = 0;
 
         // get send to the node next entries index
         virtual uint64_t GetNextIndex() = 0;
@@ -21,7 +24,7 @@ namespace raft {
         virtual void SendHeartRequest(HeartBeatResquest& request) = 0;
         virtual void SendHeartResponse(HeartBeatResponse& response) = 0;
         // vote
-        virtual void SendVoteRequest(VoteResquest& request) = 0;
+        virtual void SendVoteRequest(VoteRequest& request) = 0;
         virtual void SendVoteResponse(VoteResponse& response) = 0;
     };
 }
