@@ -6,22 +6,22 @@
 #include "LeaderRole.h"
 #include "CandidateRole.h"
 #include "FollowerRole.h"
-#include "Timer.h"
 #include "CommitEntriesDisk.h"
 #include "IConfig.h"
+#include "RaftTimer.h"
 
 using namespace raft;
 
 CRaftMediator::CRaftMediator() {
     
     // create timer
-    _timer.reset(new CTimerImpl());
+    _timer = std::make_shared<CTimerImpl>();
 
     // creata role data
     std::shared_ptr<CRoleData> data(new CRoleData);
     // create all role control 
     _leader_role.reset(new CLeaderRole(data, _timer, this));
-    _candidate_role.reset(new CCandidataRole(data, _timer, this));
+    _candidate_role.reset(new CCandidateRole(data, _timer, this));
     _follower_role.reset(new CFollowerRole(data, _timer, this));
 
     // set current role to follower
@@ -29,7 +29,7 @@ CRaftMediator::CRaftMediator() {
 
     // create commit entries
     std::string file = _config->GetCommitDiskFile();
-    _commit_entries.reset(CCommitEntriesDisk(file));
+    _commit_entries.reset(new CCommitEntriesDisk(file));
 }
 
 CRaftMediator::~CRaftMediator() {

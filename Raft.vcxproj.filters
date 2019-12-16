@@ -75,9 +75,6 @@
     <ClInclude Include="common\Entries.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="common\Timer.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="interface\ICommitEntries.h">
       <Filter>interface</Filter>
     </ClInclude>
@@ -114,6 +111,15 @@
     <ClInclude Include="raft\RoleData.h">
       <Filter>raft</Filter>
     </ClInclude>
+    <ClInclude Include="common\CppnetImpl.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\IConfig.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="common\RaftTimer.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\BlockMemoryPool.cpp">
@@ -143,9 +149,6 @@
     <ClCompile Include="common\Entries.cpp">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="common\Timer.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClCompile Include="utest\Ut_Entries.cpp">
       <Filter>utest</Filter>
     </ClCompile>
@@ -172,6 +175,12 @@
     </ClCompile>
     <ClCompile Include="raft\NodeImpl.cpp">
       <Filter>raft</Filter>
+    </ClCompile>
+    <ClCompile Include="common\CppnetImpl.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\RaftTimer.cpp">
+      <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

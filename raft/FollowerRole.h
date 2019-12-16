@@ -13,9 +13,9 @@ namespace raft {
         // get role type
         ROLE_TYPE GetRole();
         // need to vote?
-        void RecvVote(std::shared_ptr<CNode> node, VoteRequest& vote_request);
+        void RecvVoteRequest(std::shared_ptr<CNode> node, VoteRequest& vote_request);
         // get a heart message
-        void RecvHeartBeat(std::shared_ptr<CNode> node, HeartBeatResquest& heart_request);
+        void RecvHeartBeatRequest(std::shared_ptr<CNode> node, HeartBeatResquest& heart_request);
         // get a vote response?
         void RecvVoteResponse(std::shared_ptr<CNode> node, VoteResponse& vote_response);
         // get a heart message

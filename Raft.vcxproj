@@ -36,9 +36,11 @@
     <ClInclude Include="base\TimeTool.h" />
     <ClInclude Include="base\TSQueue.h" />
     <ClInclude Include="common\CommitEntriesDisk.h" />
+    <ClInclude Include="common\CppnetImpl.h" />
     <ClInclude Include="common\Entries.h" />
-    <ClInclude Include="common\Timer.h" />
+    <ClInclude Include="common\RaftTimer.h" />
     <ClInclude Include="interface\ICommitEntries.h" />
+    <ClInclude Include="interface\IConfig.h" />
     <ClInclude Include="interface\INet.h" />
     <ClInclude Include="interface\INode.h" />
     <ClInclude Include="interface\IRole.h" />
@@ -60,8 +62,9 @@
     <ClCompile Include="base\MemoryPool.cpp" />
     <ClCompile Include="base\TimeTool.cpp" />
     <ClCompile Include="common\CommitEntriesDisk.cpp" />
+    <ClCompile Include="common\CppnetImpl.cpp" />
     <ClCompile Include="common\Entries.cpp" />
-    <ClCompile Include="common\Timer.cpp" />
+    <ClCompile Include="common\RaftTimer.cpp" />
     <ClCompile Include="pb\message.pb.cc" />
     <ClCompile Include="raft\CandidateRole.cpp" />
     <ClCompile Include="raft\FollowerRole.cpp" />
@@ -127,19 +130,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)base;$(SolutionDir)common;$(SolutionDir)interface;$(SolutionDir)pb;$(SolutionDir)raft;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)base;$(SolutionDir)common;$(SolutionDir)interface;$(SolutionDir)pb;$(SolutionDir)raft;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(SolutionDir)third\CppNet;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)third\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)base;$(SolutionDir)common;$(SolutionDir)interface;$(SolutionDir)pb;$(SolutionDir)raft;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)base;$(SolutionDir)common;$(SolutionDir)interface;$(SolutionDir)pb;$(SolutionDir)raft;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(SolutionDir)third\CppNet;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)third\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)base;$(SolutionDir)common;$(SolutionDir)interface;$(SolutionDir)pb;$(SolutionDir)raft;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)base;$(SolutionDir)common;$(SolutionDir)interface;$(SolutionDir)pb;$(SolutionDir)raft;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(SolutionDir)third\CppNet;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)third\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)base;$(SolutionDir)common;$(SolutionDir)interface;$(SolutionDir)pb;$(SolutionDir)raft;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)base;$(SolutionDir)common;$(SolutionDir)interface;$(SolutionDir)pb;$(SolutionDir)raft;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(SolutionDir)third\CppNet;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)third\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

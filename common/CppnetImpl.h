@@ -58,11 +58,11 @@ namespace raft {
         // cppnet call back
         void Connected(const cppnet::Handle& handle, uint32_t err);
         void DisConnected(const cppnet::Handle& handle, uint32_t err);
-        void Sended(const Handle& handle, uint32_t len, uint32_t err);
-        void Recved((const Handle& handle, base::CBuffer* data, uint32_t len, uint32_t err);
+        void Sended(const cppnet::Handle& handle, uint32_t len, uint32_t err);
+        void Recved(const cppnet::Handle& handle, base::CBuffer* data, uint32_t len, uint32_t err);
         // bag about
         std::string BagToString(CppBag& bag);
-        bool StringToBag(const std::string& data, std::vector<CppBag>& bag);
+        bool StringToBag(const std::string& data, std::vector<CppBag>& bag_vec);
         // get net handle
         std::string GetNetHandle(const cppnet::Handle& handle);
         // send to net
@@ -76,7 +76,7 @@ namespace raft {
         std::map<cppnet::Handle, std::string>                                 _handle_2_net_map;
 
         // all call back
-        std::function<void(void(absl::string_view, HeartBeatResquest&)>       _heart_request_call_back;
+        std::function<void(absl::string_view, HeartBeatResquest&)>            _heart_request_call_back;
         std::function<void(absl::string_view, HeartBeatResponse&)>            _heart_response_call_back;
         std::function<void(absl::string_view, VoteRequest&)>                  _vote_request_call_back;
         std::function<void(absl::string_view, VoteResponse&)>                 _vote_response_call_back;

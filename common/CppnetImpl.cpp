@@ -15,17 +15,17 @@ CCppNet::~CCppNet() {
 
 bool CCppNet::Start(const std::string& ip, uint16_t port) {
     // set call back to cppnet
-    cppnet::SetReadCallback(std::bind(CCppNet::Recved, this, std::placeholders::_1, std::placeholders::_2, 
+    cppnet::SetReadCallback(std::bind(&CCppNet::Recved, this, std::placeholders::_1, std::placeholders::_2, 
                                               std::placeholders::_3, std::placeholders::_4));
-    cppnet::SetWriteCallback(std::bind(CCppNet::Sended, this, std::placeholders::_1, std::placeholders::_2, 
+    cppnet::SetWriteCallback(std::bind(&CCppNet::Sended, this, std::placeholders::_1, std::placeholders::_2, 
                                               std::placeholders::_3));
-    cppnet::SetDisconnectionCallback(std::bind(CCppNet::DisConnected, this, std::placeholders::_1, std::placeholders::_2));
-    cppnet::SetAcceptCallback(std::bind(CCppNet::Connected, this, std::placeholders::_1, std::placeholders::_2));
-    cppnet::SetConnectionCallback(std::bind(CCppNet::Connected, this, std::placeholders::_1, std::placeholders::_2));
+    cppnet::SetDisconnectionCallback(std::bind(&CCppNet::DisConnected, this, std::placeholders::_1, std::placeholders::_2));
+    cppnet::SetAcceptCallback(std::bind(&CCppNet::Connected, this, std::placeholders::_1, std::placeholders::_2));
+    cppnet::SetConnectionCallback(std::bind(&CCppNet::Connected, this, std::placeholders::_1, std::placeholders::_2));
 
     // start cpp net
     cppnet::Init(1); // start with 1 thread
-    cppnet::ListenAndAccept(ip, port);
+    return cppnet::ListenAndAccept(ip, port);
 }
 
 void CCppNet::Join() {
@@ -107,27 +107,27 @@ void CCppNet::DisConnected(const cppnet::Handle& handle, uint32_t err) {
     _handle_2_net_map.erase(handle);
 }
 
-void CCppNet::Sended(const Handle& handle, uint32_t len, uint32_t err) {
+void CCppNet::Sended(const cppnet::Handle& handle, uint32_t len, uint32_t err) {
     if (err != cppnet::CEC_SUCCESS) {
         DisConnected(handle, err);
     }
 }
 
-void CCppNet::Recved((const Handle& handle, base::CBuffer* data, uint32_t len, uint32_t err) {
+void CCppNet::Recved(const  cppnet::Handle& handle, base::CBuffer* data, uint32_t len, uint32_t err) {
     if (err != cppnet::CEC_SUCCESS) {
         DisConnected(handle, err);
         return;
     }
 
-    uint32_t len = data.GetCanReadLength();
-    if (len <= __header_len) {
+    uint32_t total_len = data->GetCanReadLength();
+    if (total_len <= __header_len) {
         return;
     }
     
     // parse data
-    char* buf = new char[len];
+    char* buf = new char[total_len];
 
-    uint32_t get_len = data->Read(buf, len);
+    uint32_t get_len = data->Read(buf, total_len);
     std::vector<CppBag> bag_vec;
     if (!StringToBag(std::string(buf, get_len), bag_vec)) {
         return;
@@ -138,7 +138,7 @@ void CCppNet::Recved((const Handle& handle, base::CBuffer* data, uint32_t len, u
         return;
     }
     for(auto iter : bag_vec) {
-        HandleBag(net_handle, *iter);
+        HandleBag(net_handle, iter);
     }
 
     delete []buf;
@@ -151,19 +151,21 @@ std::string CCppNet::BagToString(CppBag& bag) {
     return std::move(ret);
 }
 
-bool CCppNet::StringToBag(absl::string_view& data, std::vector<CppBag>& bag) {
-    char* start = data.data();
+bool CCppNet::StringToBag(const std::string& data, std::vector<CppBag>& bag_vec) {
+    char* start = (char*)data.c_str();
     uint32_t offset = 0;
     uint32_t left_len = data.length();
     bool ret = false;
     while(true) {
+        CppBag bag;
         absl::string_view header(start + offset, __header_len);
-        absl::SimpleAtoi<uint64_t>(header, bag._header._data);
+        absl::SimpleAtoi<uint64_t>(header, &bag._header._data);
 
         if (data.length() >= bag._header._field._len + __header_len) {
             bag._body = std::string(data.data() + __header_len, bag._header._field._len);
 
             ret = true;
+            bag_vec.push_back(std::move(bag));
 
             offset += __header_len + bag._header._field._len;
             left_len -= __header_len + bag._header._field._len;
@@ -181,16 +183,15 @@ bool CCppNet::StringToBag(absl::string_view& data, std::vector<CppBag>& bag) {
 std::string CCppNet::GetNetHandle(const cppnet::Handle& handle) {
     std::string net_handle;
     auto iter = _handle_2_net_map.find(handle);
-    if (iter != _handle_2_net_map) {
+    if (iter != _handle_2_net_map.end()) {
         net_handle = iter->second;
 
     } else {
         uint16_t port;
-        if(cppnet::GetIpAddress(handle, net_handle, port) == cppnet::CEC_SUCCESS)) {
+        if(cppnet::GetIpAddress(handle, net_handle, port) == cppnet::CEC_SUCCESS) {
             net_handle.append(":");
             net_handle.append(std::to_string(port));
         }
-        
     }
     return std::move(net_handle);
 }
@@ -211,29 +212,29 @@ void CCppNet::HandleBag(const std::string& net_handle, const CppBag& bag) {
     case heart_beat_request:
         {
             HeartBeatResquest request;
-            request.ParserFromString(bag._body);
-            _heart_request_call_back(request);
+            request.ParseFromString(bag._body);
+            _heart_request_call_back(net_handle, request);
             break;
         }
     case heart_beat_response:
         {
             HeartBeatResponse response;
-            response.ParserFromString(bag._body);
-            _heart_response_call_back(response);
+            response.ParseFromString(bag._body);
+            _heart_response_call_back(net_handle, response);
             break;
         }
     case vote_request:
         {
             VoteRequest request;
-            request.ParserFromString(bag._body);
-            _vote_request_call_back(request);
+            request.ParseFromString(bag._body);
+            _vote_request_call_back(net_handle, request);
             break;
         }
     case vote_reponse:
         {
             VoteResponse response;
-            response.ParserFromString(bag._body);
-            _vote_response_call_back(response);
+            response.ParseFromString(bag._body);
+            _vote_response_call_back(net_handle, response);
             break;
         }
     default:

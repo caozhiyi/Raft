@@ -16,7 +16,7 @@ ROLE_TYPE CLeaderRole::GetRole() {
     return leader_role;
 }
 
-void CLeaderRole::RecvVote(std::shared_ptr<CNode> node, VoteRequest& vote_request) {
+void CLeaderRole::RecvVoteRequest(std::shared_ptr<CNode> node, VoteRequest& vote_request) {
     VoteResponse response;
     response.set_term(_role_data->_current_term);
     response.set_vote_granted(true);
@@ -36,7 +36,7 @@ void CLeaderRole::RecvVote(std::shared_ptr<CNode> node, VoteRequest& vote_reques
     _role_data->_role_change_call_back(follower_role);
 }
 
-void CLeaderRole::RecvHeartBeat(std::shared_ptr<CNode> node, HeartBeatResquest& heart_request) {
+void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode> node, HeartBeatResquest& heart_request) {
     HeartBeatResponse response;
     response.set_success(true);
     if (heart_request.term() < _role_data->_current_term) {
