@@ -15,6 +15,7 @@ namespace raft {
     class CNet;
     class CNode;
     class CTimer;
+    class CConfig;
     class Entries;
     class CCommitEntries;
     class CRaftMediator {
@@ -48,7 +49,7 @@ namespace raft {
         std::shared_ptr<CNet>           _net;
         std::shared_ptr<CTimer>         _timer;
         std::shared_ptr<CCommitEntries> _commit_entries;
-
+        std::shared_ptr<CConfig>        _config;
         // role about
         std::shared_ptr<CRole>          _current_role;
         std::shared_ptr<CRole>          _leader_role;

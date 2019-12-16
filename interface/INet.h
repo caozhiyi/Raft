@@ -14,13 +14,14 @@ namespace raft {
         CNet() {}
         virtual ~CNet() {}
         // start to listen
-        virtual bool Start(absl::string_view ip, uint16_t port) = 0;
+        virtual bool Start(const std::string& ip, uint16_t port) = 0;
+        virtual void Join() = 0;
         // heart beat
-        virtual void SendHeartRequest(absl::string_view net_handle, HeartBeatResquest& request) = 0;
-        virtual void SendHeartResponse(absl::string_view net_handle, HeartBeatResponse& response) = 0;
+        virtual void SendHeartRequest(const std::string& net_handle, HeartBeatResquest& request) = 0;
+        virtual void SendHeartResponse(const std::string& net_handle, HeartBeatResponse& response) = 0;
         // vote
-        virtual void SendVoteRequest(absl::string_view net_handle, VoteRequest& request) = 0;
-        virtual void SendVoteResponse(absl::string_view net_handle, VoteResponse& response) = 0;
+        virtual void SendVoteRequest(const std::string& net_handle, VoteRequest& request) = 0;
+        virtual void SendVoteResponse(const std::string& net_handle, VoteResponse& response) = 0;
 
         // set new connect call back
         virtual void SetNewConnectCallBack(absl::FunctionRef<void(absl::string_view net_handle)> func) = 0;

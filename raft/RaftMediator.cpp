@@ -3,19 +3,33 @@
 #include "absl/strings/str_format.h"
 #include "Log.h"
 #include "CommitEntriesDisk.h"
+#include "LeaderRole.h"
+#include "CandidateRole.h"
+#include "FollowerRole.h"
+#include "Timer.h"
+#include "CommitEntriesDisk.h"
+#include "IConfig.h"
 
 using namespace raft;
 
 CRaftMediator::CRaftMediator() {
     
-    _timer;
-    _commit_entries;
+    // create timer
+    _timer.reset(new CTimerImpl());
 
+    // creata role data
+    std::shared_ptr<CRoleData> data(new CRoleData);
+    // create all role control 
+    _leader_role.reset(new CLeaderRole(data, _timer, this));
+    _candidate_role.reset(new CCandidataRole(data, _timer, this));
+    _follower_role.reset(new CFollowerRole(data, _timer, this));
 
-    _current_role;
-    _leader_role;
-    _candidate_role;
-    _follower_role;
+    // set current role to follower
+    _current_role = _follower_role;
+
+    // create commit entries
+    std::string file = _config->GetCommitDiskFile();
+    _commit_entries.reset(CCommitEntriesDisk(file));
 }
 
 CRaftMediator::~CRaftMediator() {
