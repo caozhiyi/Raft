@@ -39,6 +39,10 @@ void CCandidateRole::RecvVoteRequest(std::shared_ptr<CNode> node, VoteRequest& v
         response.set_vote_granted(false);
     }
 
+    if (response.vote_granted()) {
+        _role_data->_voted_for_id = vote_request.candidate_id();
+    }
+
     node->SendVoteResponse(response);
 }
 
@@ -58,8 +62,13 @@ void CCandidateRole::RecvHeartBeatResponse(std::shared_ptr<CNode> node, HeartBea
 }
 
 void CCandidateRole::CandidateTimeOut() {
-    // to be a candidate
-    _role_data->_role_change_call_back(candidate_role);
+    // already vote to other node 
+    if (_role_data->_voted_for_id != 0) {
+        _role_data->_voted_for_id = 0;
+        return;
+    }
+    // vote to myself
+    _role_data->_voted_for_id = _role_data->_raft_mediator->GetId();
 
     // send all node to get vote
     VoteRequest request;

@@ -80,6 +80,15 @@ void CFollowerRole::RecvHeartBeatResponse(std::shared_ptr<CNode> node, HeartBeat
 }
 
 void CFollowerRole::CandidateTimeOut() {
+    // already vote to other node 
+    if (_role_data->_voted_for_id != 0) {
+        _role_data->_voted_for_id = 0;
+        return;
+    }
+
+    // vote to myself
+    _role_data->_voted_for_id = _role_data->_raft_mediator->GetId();
+
     // to be a candidate
     _role_data->_role_change_call_back(candidate_role);
 
