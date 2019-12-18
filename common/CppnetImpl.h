@@ -12,7 +12,14 @@ namespace raft {
         heart_beat_request  = 1,
         heart_beat_response = 2,
         vote_request        = 3,
-        vote_reponse        = 4
+        vote_reponse        = 4,
+        client_type         = 5
+    };
+
+    enum ClientType {
+        unknow_type         = 1,
+        user_client         = 2,
+        raft_node           = 3
     };
 
     static const uint32_t __header_len = sizeof(uint64_t);
@@ -42,6 +49,14 @@ namespace raft {
         void SendVoteRequest(const std::string& net_handle, VoteRequest& request);
         void SendVoteResponse(const std::string& net_handle, VoteResponse& response);
 
+        // client about
+        void SendToClient(const std::string& net_handle, ClientResponse& response);
+        // client call back
+        void SetClientRecvCallBack(absl::FunctionRef<void(const std::string&, ClientRequest&)> func);
+        void SetClientConnectCallBack(absl::FunctionRef<void(const std::string&)> func);
+        void SetClientDisConnectCallBack(absl::FunctionRef<void(const std::string&)> func);
+
+        // reft about
         // set new connect call back
         void SetNewConnectCallBack(absl::FunctionRef<void(absl::string_view net_handle)> func);
         // set disconnect call back
@@ -62,26 +77,32 @@ namespace raft {
         void Recved(const cppnet::Handle& handle, base::CBuffer* data, uint32_t len, uint32_t err);
         // bag about
         std::string BagToString(CppBag& bag);
-        bool StringToBag(const std::string& data, std::vector<CppBag>& bag_vec);
+        bool StringToBag(const std::string& data, std::vector<CppBag>& bag_vec, uint32_t& used_size);
         // get net handle
-        std::string GetNetHandle(const cppnet::Handle& handle);
+        std::pair<std::string, ClientType> GetNetHandle(const cppnet::Handle& handle);
         // send to net
-        void SendToNet(const std::string& net_handle,std::string& data);
+        void SendToNet(const std::string& net_handle, std::string& data, ClientType type = raft_node);
         // handle bag
         void HandleBag(const std::string& net_handle, const CppBag& bag);
+        // check connect type
+        void CheckConnectType(const cppnet::Handle& handle, const std::string& net_handle, CppBagType type);
 
     private:
         // net handle to cppnet handle
         std::map<std::string, cppnet::Handle>                                 _net_2_handle_map;
-        std::map<cppnet::Handle, std::string>                                 _handle_2_net_map;
+        std::map<cppnet::Handle, std::pair<std::string, ClientType>>          _handle_2_net_map;
 
-        // all call back
+        // raft call back
         std::function<void(absl::string_view, HeartBeatResquest&)>            _heart_request_call_back;
         std::function<void(absl::string_view, HeartBeatResponse&)>            _heart_response_call_back;
         std::function<void(absl::string_view, VoteRequest&)>                  _vote_request_call_back;
         std::function<void(absl::string_view, VoteResponse&)>                 _vote_response_call_back;
-        std::function<void(absl::string_view)>                                _new_connect_call_back;
-        std::function<void(absl::string_view)>                                _dis_connect_call_back;
+        std::function<void(absl::string_view)>                                _raft_connect_call_back;
+        std::function<void(absl::string_view)>                                _raft_dis_connect_call_back;
+        // client about
+        std::function<void(const std::string&, ClientRequest&)>               _client_recv_call_back;
+        std::function<void(const std::string&)>                               _client_connect_call_back;
+        std::function<void(const std::string&)>                               _client_dis_connect_call_back;
     };
 }
 

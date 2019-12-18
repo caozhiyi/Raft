@@ -2,27 +2,43 @@ syntax = 'proto3';
 package raft;
 
 message HeartBeatResquest {
-    int32 term                 = 1;    // leader's term.
-    int32 leader_id            = 2;    // leader's id, so followsers can redirect clients.
-    int64 prev_log_index       = 3;    // the snapshort replaces all entries uo through and includeing this index.
-    int32 prev_log_term        = 4;    // term of last include index.
+    uint32 term                = 1;    // leader's term.
+    uint32 leader_id           = 2;    // leader's id, so followsers can redirect clients.
+    uint64 prev_log_index      = 3;    // the snapshort replaces all entries uo through and includeing this index.
+    uint32 prev_log_term       = 4;    // term of last include index.
     repeated string entries    = 5;    // to add logs.
-    int64 leader_commit        = 6;    // leader added log index. 
+    uint64 leader_commit       = 6;    // leader added log index. 
 }
 
 message HeartBeatResponse {
-    int64 term                 = 1;    // now leader's term.
+    uint32 term                = 1;    // now leader's term.
     bool success               = 2;    // add success?
 }
 
 message VoteRequest {
-    int32 term                 = 1;    // candidate's term.
-    int32 candidate_id         = 2;    // candidate's id.
-    int64 last_index           = 3;    // candidata last log index.
-    int32 last_term            = 4;    // candidate last log term.
+    uint32 term                = 1;    // candidate's term.
+    uint32 candidate_id        = 2;    // candidate's id.
+    uint64 last_index          = 3;    // candidata last log index.
+    uint32 last_term           = 4;    // candidate last log term.
 }
 
 message VoteResponse {
-    int32 term                 = 1;    // now leader's term.
+    uint32 term                = 1;    // now leader's term.
     bool vote_granted          = 2;    // is vote?
+}
+
+message ClientRequest {
+    string entries             = 1;    // commit entries.
+}
+
+enum CLIENT_RES_CODE {
+    success                    = 0;
+    not_leader                 = 1;
+    other_error                = 2;
+}
+
+message ClientResponse {
+    CLIENT_RES_CODE ret_code = 1;      // return code
+    uint32 leader_port       = 2;      // leader port
+    string leader_ip         = 3;      // leader ip  
 }

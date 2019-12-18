@@ -12,17 +12,21 @@ namespace raft {
         // get role type
         ROLE_TYPE GetRole();
         // need to vote?
-        void RecvVoteRequest(std::shared_ptr<CNode> node, VoteRequest& vote_request);
+        void RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request);
         // get a heart message
-        void RecvHeartBeatRequest(std::shared_ptr<CNode> node, HeartBeatResquest& heart_request);
+        void RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request);
         // get a vote response?
-        void RecvVoteResponse(std::shared_ptr<CNode> node, VoteResponse& vote_response);
+        void RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response);
         // get a heart message
-        void RecvHeartBeatResponse(std::shared_ptr<CNode> node, HeartBeatResponse& heart_response);
+        void RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatResponse& heart_response);
+        // get a client request
+        void RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request);
         // when candidate timer out. follower and candidate
         void CandidateTimeOut();
         // when heart beat timer out
         void HeartBeatTimerOut();
+    private:
+        std::unordered_map<uint64_t, std::string> _client_net_handle_map;
     };
 }
 

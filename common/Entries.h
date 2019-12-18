@@ -1,5 +1,5 @@
-#ifndef RAFT_COMMON_BASELOG
-#define RAFT_COMMON_BASELOG
+#ifndef RAFT_COMMON_ENTRIES
+#define RAFT_COMMON_ENTRIES
 
 #include <string>
 namespace raft {

@@ -17,7 +17,7 @@ ROLE_TYPE CFollowerRole::GetRole() {
     return follower_role;
 }
 
-void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode> node, VoteRequest& vote_request) {
+void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
     VoteResponse response;
     if (vote_request.last_term() < _role_data->_current_term) {
         response.set_vote_granted(false);
@@ -28,7 +28,7 @@ void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode> node, VoteRequest& vo
     node->SendVoteResponse(response);
 }
 
-void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode> node, HeartBeatResquest& heart_request) {
+void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
     HeartBeatResponse response;
     response.set_success(true);
     response.set_term(_role_data->_current_term);
@@ -71,12 +71,17 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode> node, HeartBeatR
     _role_data->_newest_index = _role_data->_entries_map.begin()->first;
 }
 
-void CFollowerRole::RecvVoteResponse(std::shared_ptr<CNode> node, VoteResponse& vote_response) {
+void CFollowerRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response) {
     // do nothing
 }
 
-void CFollowerRole::RecvHeartBeatResponse(std::shared_ptr<CNode> node, HeartBeatResponse& heart_response) {
+void CFollowerRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatResponse& heart_response) {
     // do nothing
+}
+
+void CFollowerRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request) {
+    // tell client send to leader.
+    // TODO
 }
 
 void CFollowerRole::CandidateTimeOut() {

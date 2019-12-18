@@ -11,6 +11,7 @@
 
 namespace raft {
 
+    class CClient;
     class CTimer;
     class CNode;
     class CRole {
@@ -23,13 +24,15 @@ namespace raft {
         // get role type
         virtual ROLE_TYPE GetRole() = 0;
         // need to vote?
-        virtual void RecvVoteRequest(std::shared_ptr<CNode> node, VoteRequest& vote_request) = 0;
+        virtual void RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) = 0;
         // get a heart message
-        virtual void RecvHeartBeatRequest(std::shared_ptr<CNode> node, HeartBeatResquest& heart_request) = 0;
+        virtual void RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) = 0;
         // get a vote response?
-        virtual void RecvVoteResponse(std::shared_ptr<CNode> node, VoteResponse& vote_response) = 0;
+        virtual void RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response) = 0;
         // get a heart message
-        virtual void RecvHeartBeatResponse(std::shared_ptr<CNode> node, HeartBeatResponse& heart_response) = 0;
+        virtual void RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatResponse& heart_response) = 0;
+        // get a client request
+        virtual void RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request) = 0;
         // when candidate timer out. follower and candidate
         virtual void CandidateTimeOut() {}
         // when heart beat timer out

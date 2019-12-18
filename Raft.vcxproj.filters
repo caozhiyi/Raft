@@ -120,6 +120,18 @@
     <ClInclude Include="common\RaftTimer.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="raft\Client.h">
+      <Filter>raft</Filter>
+    </ClInclude>
+    <ClInclude Include="raft\ClientManager.h">
+      <Filter>raft</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\IClient.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\IClientManager.h">
+      <Filter>interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\BlockMemoryPool.cpp">
@@ -181,6 +193,12 @@
     </ClCompile>
     <ClCompile Include="common\RaftTimer.cpp">
       <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="raft\Client.cpp">
+      <Filter>raft</Filter>
+    </ClCompile>
+    <ClCompile Include="raft\ClientManager.cpp">
+      <Filter>raft</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <functional>
+#include <unordered_map>
 #include "Entries.h"
 #include "message.pb.h"
 #include "absl/functional/function_ref.h"

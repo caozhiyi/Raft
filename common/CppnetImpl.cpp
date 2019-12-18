@@ -60,12 +60,31 @@ void CCppNet::SendVoteResponse(const std::string& net_handle, VoteResponse& resp
     SendToNet(net_handle, data);
 }
 
+void CCppNet::SendToClient(const std::string& net_handle, ClientResponse& response) {
+    std::string data;
+    response.SerializeToString(&data);
+
+    SendToNet(net_handle, data, user_client);
+}
+
+void CCppNet::SetClientRecvCallBack(absl::FunctionRef<void(const std::string&, ClientRequest&)> func) {
+    _client_recv_call_back = func;
+}
+
+void CCppNet::SetClientConnectCallBack(absl::FunctionRef<void(const std::string&)> func) {
+    _client_connect_call_back = func;
+}
+
+void CCppNet::SetClientDisConnectCallBack(absl::FunctionRef<void(const std::string&)> func) {
+    _client_dis_connect_call_back = func;
+}
+
 void CCppNet::SetNewConnectCallBack(absl::FunctionRef<void(absl::string_view net_handle)> func) {
-    _new_connect_call_back = func;
+    _raft_connect_call_back = func;
 }
 
 void CCppNet::SetDisConnectCallBack(absl::FunctionRef<void(absl::string_view net_handle)> func) {
-    _dis_connect_call_back = func;
+    _raft_dis_connect_call_back = func;
 }
 
 void CCppNet::SetHeartRequestRecvCallBack(absl::FunctionRef<void(absl::string_view, HeartBeatResquest&)> func) {
@@ -90,20 +109,29 @@ void CCppNet::Connected(const cppnet::Handle& handle, uint32_t err) {
         return;
     }
 
-    std::string net_handle = GetNetHandle(handle);
-    _new_connect_call_back(net_handle);
+    auto net_handle = GetNetHandle(handle);
 
-    _net_2_handle_map[net_handle] = handle;
+    _net_2_handle_map[net_handle.first] = handle;
     _handle_2_net_map[handle] = net_handle;
 }
 
 void CCppNet::DisConnected(const cppnet::Handle& handle, uint32_t err) {
 
-    std::string net_handle = GetNetHandle(handle);
+    auto net_handle = GetNetHandle(handle);
     
-    _dis_connect_call_back(net_handle);
+    // is client?
+    if (net_handle.second == user_client) {
+        _client_dis_connect_call_back(net_handle.first);
 
-    _net_2_handle_map.erase(net_handle);
+    // raft message
+    } else if (net_handle.second == raft_node) {
+        _raft_dis_connect_call_back(net_handle.first);
+    
+    } else {
+        base::LOG_WARN("unkonw connection lost.");
+    }
+
+    _net_2_handle_map.erase(net_handle.first);
     _handle_2_net_map.erase(handle);
 }
 
@@ -113,7 +141,7 @@ void CCppNet::Sended(const cppnet::Handle& handle, uint32_t len, uint32_t err) {
     }
 }
 
-void CCppNet::Recved(const  cppnet::Handle& handle, base::CBuffer* data, uint32_t len, uint32_t err) {
+void CCppNet::Recved(const cppnet::Handle& handle, base::CBuffer* data, uint32_t len, uint32_t err) {
     if (err != cppnet::CEC_SUCCESS) {
         DisConnected(handle, err);
         return;
@@ -127,18 +155,30 @@ void CCppNet::Recved(const  cppnet::Handle& handle, base::CBuffer* data, uint32_
     // parse data
     char* buf = new char[total_len];
 
-    uint32_t get_len = data->Read(buf, total_len);
+    uint32_t get_len = data->ReadNotClear(buf, total_len);
     std::vector<CppBag> bag_vec;
-    if (!StringToBag(std::string(buf, get_len), bag_vec)) {
+    uint32_t used_size = 0;
+    if (!StringToBag(std::string(buf, get_len), bag_vec, used_size)) {
+        delete []buf;
         return;
     }
-    std::string net_handle = GetNetHandle(handle);
-    if (net_handle.empty()) {
+    data->Clear(used_size);
+
+    auto net_handle = GetNetHandle(handle);
+    if (net_handle.first.empty()) {
         base::LOG_ERROR("can't get net handle when recv data.");
+        delete []buf;
         return;
     }
+
+    // check connect type
+    if (net_handle.second == unknow_type) {
+        CheckConnectType(handle, net_handle.first, (CppBagType)bag_vec[0]._header._field._type);
+    }
+
+    // handle message
     for(auto iter : bag_vec) {
-        HandleBag(net_handle, iter);
+        HandleBag(net_handle.first, iter);
     }
 
     delete []buf;
@@ -151,7 +191,7 @@ std::string CCppNet::BagToString(CppBag& bag) {
     return std::move(ret);
 }
 
-bool CCppNet::StringToBag(const std::string& data, std::vector<CppBag>& bag_vec) {
+bool CCppNet::StringToBag(const std::string& data, std::vector<CppBag>& bag_vec, uint32_t& used_size) {
     char* start = (char*)data.c_str();
     uint32_t offset = 0;
     uint32_t left_len = data.length();
@@ -177,29 +217,37 @@ bool CCppNet::StringToBag(const std::string& data, std::vector<CppBag>& bag_vec)
             break;
         }
     }
+    used_size = offset;
     return ret;
 }
 
-std::string CCppNet::GetNetHandle(const cppnet::Handle& handle) {
-    std::string net_handle;
+std::pair<std::string, ClientType> CCppNet::GetNetHandle(const cppnet::Handle& handle) {
+    std::pair<std::string, ClientType> ret;
     auto iter = _handle_2_net_map.find(handle);
     if (iter != _handle_2_net_map.end()) {
-        net_handle = iter->second;
+        ret.first = iter->second.first;
+        ret.second = iter->second.second;
 
     } else {
         uint16_t port;
-        if(cppnet::GetIpAddress(handle, net_handle, port) == cppnet::CEC_SUCCESS) {
-            net_handle.append(":");
-            net_handle.append(std::to_string(port));
+        if(cppnet::GetIpAddress(handle, ret.first, port) == cppnet::CEC_SUCCESS) {
+            ret.first.append(":");
+            ret.first.append(std::to_string(port));
         }
+        ret.second = unknow_type;
     }
-    return std::move(net_handle);
+    return std::move(ret);
 }
 
-void CCppNet::SendToNet(const std::string& net_handle, std::string& data) {
+void CCppNet::SendToNet(const std::string& net_handle, std::string& data, ClientType type) {
     auto iter = _net_2_handle_map.find(net_handle);
     if (iter == _net_2_handle_map.end()) {
-        _dis_connect_call_back(net_handle);
+        if (type == raft_node) {
+            _raft_dis_connect_call_back(net_handle);
+            
+        } else {
+            _client_dis_connect_call_back(net_handle);
+        }
         return;
     }
     
@@ -237,8 +285,29 @@ void CCppNet::HandleBag(const std::string& net_handle, const CppBag& bag) {
             _vote_response_call_back(net_handle, response);
             break;
         }
+    case client_type:
+        {
+            ClientRequest request;
+            request.ParseFromString(bag._body);
+            _client_recv_call_back(net_handle, request);
+            break;
+        }
     default:
         base::LOG_ERROR("unknow type while handle bag");
         break;
     }
+}
+
+void CCppNet::CheckConnectType(const cppnet::Handle& handle, const std::string& net_handle, CppBagType type) {
+    ClientType client_type = unknow_type;
+    if (type == client_type) {
+        client_type = user_client;
+        _client_connect_call_back(net_handle);
+
+    } else {
+        client_type = raft_node;
+        _raft_connect_call_back(net_handle);
+    }
+
+    _handle_2_net_map[handle].second = client_type;
 }

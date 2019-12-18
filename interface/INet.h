@@ -23,10 +23,17 @@ namespace raft {
         virtual void SendVoteRequest(const std::string& net_handle, VoteRequest& request) = 0;
         virtual void SendVoteResponse(const std::string& net_handle, VoteResponse& response) = 0;
 
+        // client about
+        virtual void SendToClient(const std::string& net_handle, ClientResponse& response) = 0;
+        // client call back
+        virtual void SetClientRecvCallBack(absl::FunctionRef<void(const std::string&, ClientRequest& request)> func) = 0;
+        virtual void SetClientConnectCallBack(absl::FunctionRef<void(const std::string&)> func) = 0;
+        virtual void SetClientDisConnectCallBack(absl::FunctionRef<void(const std::string&)> func) = 0;
+
         // set new connect call back
-        virtual void SetNewConnectCallBack(absl::FunctionRef<void(absl::string_view net_handle)> func) = 0;
+        virtual void SetNewConnectCallBack(absl::FunctionRef<void(absl::string_view)> func) = 0;
         // set disconnect call back
-        virtual void SetDisConnectCallBack(absl::FunctionRef<void(absl::string_view net_handle)> func) = 0;
+        virtual void SetDisConnectCallBack(absl::FunctionRef<void(absl::string_view)> func) = 0;
         // set heart request call back
         virtual void SetHeartRequestRecvCallBack(absl::FunctionRef<void(absl::string_view, HeartBeatResquest&)> func) = 0;
         // set heart response call back
