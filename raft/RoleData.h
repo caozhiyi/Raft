@@ -37,6 +37,9 @@ namespace raft {
         uint32_t                     _vote_num;
         uint32_t                     _heart_success_num;
 
+        // leader net handle
+        std::string                  _net_handle;
+
         std::function<void(ROLE_TYPE)> _role_change_call_back;
         std::function<void(Entries&)>  _commit_entries_call_back;
     public:

@@ -35,10 +35,10 @@ enum CLIENT_RES_CODE {
     success                    = 0;
     not_leader                 = 1;
     other_error                = 2;
+    send_again                 = 3;    // now don't have a leader, client try again a minute after
 }
 
 message ClientResponse {
     CLIENT_RES_CODE ret_code = 1;      // return code
-    uint32 leader_port       = 2;      // leader port
-    string leader_ip         = 3;      // leader ip  
+    string leader_net_handle = 2;      // leader net handle  
 }

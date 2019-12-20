@@ -32,6 +32,10 @@ void CCppNet::Join() {
     cppnet::Join();
 }
 
+void CCppNet::ConnectTo(const std::string& ip, uint16_t port) {
+    cppnet::Connection(ip, port);
+}
+
 void CCppNet::SendHeartRequest(const std::string& net_handle, HeartBeatResquest& request) {
     std::string data;
     request.SerializeToString(&data);

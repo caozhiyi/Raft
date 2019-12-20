@@ -13,7 +13,7 @@ namespace raft {
         virtual ~CNode() {}
         // net handle
         virtual void SetNetHandle(absl::string_view handle) = 0;
-        virtual std::string GetNetHandle() = 0;
+        virtual const std::string& GetNetHandle() = 0;
 
         // get send to the node next entries index
         virtual uint64_t GetNextIndex() = 0;

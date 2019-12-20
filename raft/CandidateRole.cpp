@@ -47,6 +47,11 @@ void CCandidateRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& 
 }
 
 void CCandidateRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
+    // set leader net handle
+    if (_role_data->_net_handle != node.GetNetHandle()) {
+        _role_data->_net_handle = node.GetNetHandle();
+    }
+
     // change role to follower
     _role_data->_role_change_call_back(follower_role);
     // recv that request again
@@ -63,7 +68,9 @@ void CCandidateRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBe
 
 void CCandidateRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request) {
     // tell client resend again, i don't know who is leader.
-    // TODO
+    ClientResponse response;
+    response.set_ret_code(send_again);
+    client->SendToClient(response);
 }
 
 void CCandidateRole::CandidateTimeOut() {

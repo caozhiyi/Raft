@@ -53,6 +53,10 @@ void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatRe
         // change role to follower
         _role_data->_role_change_call_back(follower_role);
     }
+    // set leader net handle
+    if (_role_data->_net_handle != node.GetNetHandle()) {
+        _role_data->_net_handle = node.GetNetHandle();
+    }
     // change to follower recv this request again
     _role_data->_raft_mediator->RecvHeartBeat(node, heart_request);
 }

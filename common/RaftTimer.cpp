@@ -120,8 +120,7 @@ void CTimerImpl::Run() {
             for (size_t i = 0; i < timer_vec.size(); i++) {
                 if (timer_vec[i] == vote_timer) {
                     _vote_call_back();
-                    // add timer again
-                    // TODO
+
                 } else if (timer_vec[i] == heart_timer) {
                     if (_heart_contiue.load()) {
                         _heart_call_back();

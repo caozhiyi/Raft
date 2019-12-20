@@ -29,6 +29,11 @@ void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& v
 }
 
 void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
+    // set leader net handle
+    if (_role_data->_net_handle != node.GetNetHandle()) {
+        _role_data->_net_handle = node.GetNetHandle();
+    }
+
     HeartBeatResponse response;
     response.set_success(true);
     response.set_term(_role_data->_current_term);
@@ -81,7 +86,10 @@ void CFollowerRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBea
 
 void CFollowerRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request) {
     // tell client send to leader.
-    // TODO
+    ClientResponse response;
+    response.set_ret_code(not_leader);
+    response.leader_net_handle(_role_data->_net_handle);
+    client->SendToClient(response);
 }
 
 void CFollowerRole::CandidateTimeOut() {

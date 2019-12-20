@@ -8,13 +8,15 @@ namespace raft {
     class CNet;
     class CRole;
     class CClient;
-    class CClientManagerImpl {
+    class CClientManagerImpl : public CClientManager {
     public:
         CClientManagerImpl(std::shared_ptr<CNet>& net);
         virtual ~CClientManagerImpl();
         
         void SetRole(std::shared_ptr<CRole>& role);
+        // send response to all client
         void SendToAll(ClientResponse& response);
+
         // client call back
         void RecvClientRequest(const std::string& net_handle, ClientRequest& request);
         void ClientConnect(const std::string& net_handle);

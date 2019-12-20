@@ -1,5 +1,5 @@
 #include "RaftMediator.h"
-#include "NodeImpl.h"
+#include "Node.h"
 #include "absl/strings/str_format.h"
 #include "Log.h"
 #include "CommitEntriesDisk.h"
@@ -9,6 +9,9 @@
 #include "CommitEntriesDisk.h"
 #include "IConfig.h"
 #include "RaftTimer.h"
+#include "NodeManager.h"
+#include "ClientManager.h"
+#include "CppnetImpl.h"
 
 using namespace raft;
 
@@ -24,8 +27,15 @@ CRaftMediator::CRaftMediator() {
     _candidate_role.reset(new CCandidateRole(data, _timer, this));
     _follower_role.reset(new CFollowerRole(data, _timer, this));
 
+    // create net 
+    _net.reset(new CCppNet());
+    // create node manager
+    _node_manager.reset(new CNodeManager(_net));
+    // create client manager
+    _client_manager.reset(new CClientManager(_net));
+
     // set current role to follower
-    _current_role = _follower_role;
+    ChangeRole(follower_role);
 
     // create commit entries
     std::string file = _config->GetCommitDiskFile();
@@ -38,19 +48,6 @@ CRaftMediator::~CRaftMediator() {
 
 uint32_t CRaftMediator::GetId() {
     return _id;
-}
-
-void CRaftMediator::ConnectedNode(absl::string_view ip, uint16_t port) {
-    std::shared_ptr<CNode> node(std::make_shared<NodeImpl>(_net));
-    _node_map[absl::StrFormat("%s_%d", ip.data(), port)] = node;
-}
-
-void CRaftMediator::DisConnectedNode(absl::string_view ip, uint16_t port) {
-    std::string net_handle = absl::StrFormat("%s_%d", ip.data(), port);
-    auto iter = _node_map.find(net_handle);
-    if (iter != _node_map.end()) {
-        _node_map.erase(iter);
-    }
 }
 
 void CRaftMediator::CommitEntries(Entries& entries) {
@@ -75,18 +72,16 @@ void CRaftMediator::ChangeRole(ROLE_TYPE type) {
     } else {
         base::LOG_ERROR("unknow role type.");
     }
+    _node_manager->SetRole(_current_role);
+    _client_manager->SetRole(_current_role);
 }
 
 void CRaftMediator::SendVoteToAll(VoteRequest& request) {
-    for (auto iter = _node_map.begin(); iter != _node_map.end(); ++iter) {
-        iter->second->SendVoteRequest(request);
-    }
+    _node_manager->SendVoteToAll(request);
 }
 
 void CRaftMediator::SendHeartBeatToAll(HeartBeatResquest& request) {
-    for (auto iter = _node_map.begin(); iter != _node_map.end(); ++iter) {
-        iter->second->SendHeartRequest(request);
-    }
+    _node_manager->SendHeartToAll(request);
 }
 
 void CRaftMediator::RecvHeartBeat(std::shared_ptr<CNode>& node, HeartBeatResquest& request) {

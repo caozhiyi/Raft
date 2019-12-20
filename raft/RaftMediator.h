@@ -17,6 +17,8 @@ namespace raft {
     class CTimer;
     class CConfig;
     class Entries;
+    class CNodeManager;
+    class ClientManager;
     class CCommitEntries;
     class CRaftMediator {
     public:
@@ -25,9 +27,6 @@ namespace raft {
         // get currnet node id
         uint32_t GetId();
 
-        // connect about
-        void ConnectedNode(absl::string_view ip, uint16_t port);
-        void DisConnectedNode(absl::string_view ip, uint16_t port);
         // commit entries
         void CommitEntries(Entries& entries);
         // role changed
@@ -50,13 +49,17 @@ namespace raft {
         std::shared_ptr<CTimer>         _timer;
         std::shared_ptr<CCommitEntries> _commit_entries;
         std::shared_ptr<CConfig>        _config;
+
+        // raft node manager
+        std::shared_ptr<CNodeManager>   _node_manager;
+        // client manager
+        std::shared_ptr<ClientManager>  _client_manager;
+
         // role about
         std::shared_ptr<CRole>          _current_role;
         std::shared_ptr<CRole>          _leader_role;
         std::shared_ptr<CRole>          _candidate_role;
         std::shared_ptr<CRole>          _follower_role;
-        // all node
-        std::map<std::string, std::shared_ptr<CNode>> _node_map;
     
         // commit entries call back
         std::function<void(std::string)>              _commit_call_back;
