@@ -38,6 +38,9 @@ namespace raft {
         uint32_t                     _vote_num;
         uint32_t                     _heart_success_num;
 
+        uint64_t                     _max_match_index;
+        uint64_t                     _prev_match_index;
+
         // leader net handle
         std::string                  _net_handle;
 
@@ -51,7 +54,9 @@ namespace raft {
             _newest_index(0),
             _last_applied(0),
             _vote_num(0), 
-            _heart_success_num(0) {
+            _heart_success_num(0),
+            _max_match_index(0),
+            _prev_match_index(0) {
 
         }
     };

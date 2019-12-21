@@ -13,13 +13,19 @@ namespace raft {
     public:
         CNet() {}
         virtual ~CNet() {}
+
         // start to listen
-        virtual bool Start(const std::string& ip, uint16_t port) = 0;
+        virtual bool Start(const std::string& ip, uint16_t port, uint16_t thread_num) = 0;
         virtual void Join() = 0;
+        virtual void Dealloc() = 0;
 
         // connect to
         virtual void ConnectTo(const std::string& ip, uint16_t port) = 0;
 
+        // node info
+        virtual void SendNodeInfoRequest(const std::string& net_handle, NodeInfoRequest& request) = 0;
+        virtual void SendNodeInfoResponse(const std::string& net_handle, NodeInfoResponse& response) = 0;
+    
         // heart beat
         virtual void SendHeartRequest(const std::string& net_handle, HeartBeatResquest& request) = 0;
         virtual void SendHeartResponse(const std::string& net_handle, HeartBeatResponse& response) = 0;

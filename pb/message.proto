@@ -13,6 +13,7 @@ message HeartBeatResquest {
 message HeartBeatResponse {
     uint32 term                = 1;    // now leader's term.
     bool success               = 2;    // add success?
+	uint64 next_index		   = 3;	   // the node next index
 }
 
 message VoteRequest {
@@ -30,6 +31,15 @@ message VoteResponse {
 message ClientRequest {
     string entries             = 1;    // commit entries.
 }
+
+message NodeInfoRequest {
+	repeated string net_handle = 1;    // all node net address
+}
+
+message NodeInfoResponse {
+	repeated string net_handle = 1;    // all node net address
+}
+
 
 enum CLIENT_RES_CODE {
     success                    = 0;

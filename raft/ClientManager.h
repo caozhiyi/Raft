@@ -16,6 +16,8 @@ namespace raft {
         void SetRole(std::shared_ptr<CRole>& role);
         // send response to all client
         void SendToAll(ClientResponse& response);
+        // get node numbers
+        uint32_t GetNodeCount();
         // client call back
         void RecvClientRequest(const std::string& net_handle, ClientRequest& request);
         void ClientConnect(const std::string& net_handle);

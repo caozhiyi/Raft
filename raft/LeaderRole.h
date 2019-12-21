@@ -26,7 +26,7 @@ namespace raft {
         // when heart beat timer out
         void HeartBeatTimerOut();
     private:
-        std::unordered_map<uint64_t, std::string> _client_net_handle_map;
+        std::unordered_map<uint64_t, std::shared_ptr<CClient>> _client_net_handle_map;
     };
 }
 

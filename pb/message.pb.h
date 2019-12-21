@@ -48,7 +48,7 @@ struct TableStruct_message_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[6]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[8]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -68,6 +68,12 @@ extern HeartBeatResponseDefaultTypeInternal _HeartBeatResponse_default_instance_
 class HeartBeatResquest;
 class HeartBeatResquestDefaultTypeInternal;
 extern HeartBeatResquestDefaultTypeInternal _HeartBeatResquest_default_instance_;
+class NodeInfoRequest;
+class NodeInfoRequestDefaultTypeInternal;
+extern NodeInfoRequestDefaultTypeInternal _NodeInfoRequest_default_instance_;
+class NodeInfoResponse;
+class NodeInfoResponseDefaultTypeInternal;
+extern NodeInfoResponseDefaultTypeInternal _NodeInfoResponse_default_instance_;
 class VoteRequest;
 class VoteRequestDefaultTypeInternal;
 extern VoteRequestDefaultTypeInternal _VoteRequest_default_instance_;
@@ -80,6 +86,8 @@ template<> ::raft::ClientRequest* Arena::CreateMaybeMessage<::raft::ClientReques
 template<> ::raft::ClientResponse* Arena::CreateMaybeMessage<::raft::ClientResponse>(Arena*);
 template<> ::raft::HeartBeatResponse* Arena::CreateMaybeMessage<::raft::HeartBeatResponse>(Arena*);
 template<> ::raft::HeartBeatResquest* Arena::CreateMaybeMessage<::raft::HeartBeatResquest>(Arena*);
+template<> ::raft::NodeInfoRequest* Arena::CreateMaybeMessage<::raft::NodeInfoRequest>(Arena*);
+template<> ::raft::NodeInfoResponse* Arena::CreateMaybeMessage<::raft::NodeInfoResponse>(Arena*);
 template<> ::raft::VoteRequest* Arena::CreateMaybeMessage<::raft::VoteRequest>(Arena*);
 template<> ::raft::VoteResponse* Arena::CreateMaybeMessage<::raft::VoteResponse>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
@@ -420,6 +428,7 @@ class HeartBeatResponse :
   enum : int {
     kTermFieldNumber = 1,
     kSuccessFieldNumber = 2,
+    kNextIndexFieldNumber = 3,
   };
   // uint32 term = 1;
   void clear_term();
@@ -439,6 +448,15 @@ class HeartBeatResponse :
   void _internal_set_success(bool value);
   public:
 
+  // uint64 next_index = 3;
+  void clear_next_index();
+  ::PROTOBUF_NAMESPACE_ID::uint64 next_index() const;
+  void set_next_index(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_next_index() const;
+  void _internal_set_next_index(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:raft.HeartBeatResponse)
  private:
   class _Internal;
@@ -446,6 +464,7 @@ class HeartBeatResponse :
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
   ::PROTOBUF_NAMESPACE_ID::uint32 term_;
   bool success_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 next_index_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_message_2eproto;
 };
@@ -886,6 +905,292 @@ class ClientRequest :
 };
 // -------------------------------------------------------------------
 
+class NodeInfoRequest :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:raft.NodeInfoRequest) */ {
+ public:
+  NodeInfoRequest();
+  virtual ~NodeInfoRequest();
+
+  NodeInfoRequest(const NodeInfoRequest& from);
+  NodeInfoRequest(NodeInfoRequest&& from) noexcept
+    : NodeInfoRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline NodeInfoRequest& operator=(const NodeInfoRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline NodeInfoRequest& operator=(NodeInfoRequest&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const NodeInfoRequest& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const NodeInfoRequest* internal_default_instance() {
+    return reinterpret_cast<const NodeInfoRequest*>(
+               &_NodeInfoRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(NodeInfoRequest& a, NodeInfoRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(NodeInfoRequest* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline NodeInfoRequest* New() const final {
+    return CreateMaybeMessage<NodeInfoRequest>(nullptr);
+  }
+
+  NodeInfoRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<NodeInfoRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const NodeInfoRequest& from);
+  void MergeFrom(const NodeInfoRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(NodeInfoRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "raft.NodeInfoRequest";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_message_2eproto);
+    return ::descriptor_table_message_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNetHandleFieldNumber = 1,
+  };
+  // repeated string net_handle = 1;
+  int net_handle_size() const;
+  private:
+  int _internal_net_handle_size() const;
+  public:
+  void clear_net_handle();
+  const std::string& net_handle(int index) const;
+  std::string* mutable_net_handle(int index);
+  void set_net_handle(int index, const std::string& value);
+  void set_net_handle(int index, std::string&& value);
+  void set_net_handle(int index, const char* value);
+  void set_net_handle(int index, const char* value, size_t size);
+  std::string* add_net_handle();
+  void add_net_handle(const std::string& value);
+  void add_net_handle(std::string&& value);
+  void add_net_handle(const char* value);
+  void add_net_handle(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& net_handle() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_net_handle();
+  private:
+  const std::string& _internal_net_handle(int index) const;
+  std::string* _internal_add_net_handle();
+  public:
+
+  // @@protoc_insertion_point(class_scope:raft.NodeInfoRequest)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> net_handle_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_message_2eproto;
+};
+// -------------------------------------------------------------------
+
+class NodeInfoResponse :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:raft.NodeInfoResponse) */ {
+ public:
+  NodeInfoResponse();
+  virtual ~NodeInfoResponse();
+
+  NodeInfoResponse(const NodeInfoResponse& from);
+  NodeInfoResponse(NodeInfoResponse&& from) noexcept
+    : NodeInfoResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline NodeInfoResponse& operator=(const NodeInfoResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline NodeInfoResponse& operator=(NodeInfoResponse&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const NodeInfoResponse& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const NodeInfoResponse* internal_default_instance() {
+    return reinterpret_cast<const NodeInfoResponse*>(
+               &_NodeInfoResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  friend void swap(NodeInfoResponse& a, NodeInfoResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(NodeInfoResponse* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline NodeInfoResponse* New() const final {
+    return CreateMaybeMessage<NodeInfoResponse>(nullptr);
+  }
+
+  NodeInfoResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<NodeInfoResponse>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const NodeInfoResponse& from);
+  void MergeFrom(const NodeInfoResponse& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(NodeInfoResponse* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "raft.NodeInfoResponse";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_message_2eproto);
+    return ::descriptor_table_message_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNetHandleFieldNumber = 1,
+  };
+  // repeated string net_handle = 1;
+  int net_handle_size() const;
+  private:
+  int _internal_net_handle_size() const;
+  public:
+  void clear_net_handle();
+  const std::string& net_handle(int index) const;
+  std::string* mutable_net_handle(int index);
+  void set_net_handle(int index, const std::string& value);
+  void set_net_handle(int index, std::string&& value);
+  void set_net_handle(int index, const char* value);
+  void set_net_handle(int index, const char* value, size_t size);
+  std::string* add_net_handle();
+  void add_net_handle(const std::string& value);
+  void add_net_handle(std::string&& value);
+  void add_net_handle(const char* value);
+  void add_net_handle(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& net_handle() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_net_handle();
+  private:
+  const std::string& _internal_net_handle(int index) const;
+  std::string* _internal_add_net_handle();
+  public:
+
+  // @@protoc_insertion_point(class_scope:raft.NodeInfoResponse)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> net_handle_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_message_2eproto;
+};
+// -------------------------------------------------------------------
+
 class ClientResponse :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:raft.ClientResponse) */ {
  public:
@@ -928,7 +1233,7 @@ class ClientResponse :
                &_ClientResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    7;
 
   friend void swap(ClientResponse& a, ClientResponse& b) {
     a.Swap(&b);
@@ -1259,6 +1564,26 @@ inline void HeartBeatResponse::set_success(bool value) {
   // @@protoc_insertion_point(field_set:raft.HeartBeatResponse.success)
 }
 
+// uint64 next_index = 3;
+inline void HeartBeatResponse::clear_next_index() {
+  next_index_ = PROTOBUF_ULONGLONG(0);
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 HeartBeatResponse::_internal_next_index() const {
+  return next_index_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 HeartBeatResponse::next_index() const {
+  // @@protoc_insertion_point(field_get:raft.HeartBeatResponse.next_index)
+  return _internal_next_index();
+}
+inline void HeartBeatResponse::_internal_set_next_index(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  
+  next_index_ = value;
+}
+inline void HeartBeatResponse::set_next_index(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_next_index(value);
+  // @@protoc_insertion_point(field_set:raft.HeartBeatResponse.next_index)
+}
+
 // -------------------------------------------------------------------
 
 // VoteRequest
@@ -1453,6 +1778,162 @@ inline void ClientRequest::set_allocated_entries(std::string* entries) {
 
 // -------------------------------------------------------------------
 
+// NodeInfoRequest
+
+// repeated string net_handle = 1;
+inline int NodeInfoRequest::_internal_net_handle_size() const {
+  return net_handle_.size();
+}
+inline int NodeInfoRequest::net_handle_size() const {
+  return _internal_net_handle_size();
+}
+inline void NodeInfoRequest::clear_net_handle() {
+  net_handle_.Clear();
+}
+inline std::string* NodeInfoRequest::add_net_handle() {
+  // @@protoc_insertion_point(field_add_mutable:raft.NodeInfoRequest.net_handle)
+  return _internal_add_net_handle();
+}
+inline const std::string& NodeInfoRequest::_internal_net_handle(int index) const {
+  return net_handle_.Get(index);
+}
+inline const std::string& NodeInfoRequest::net_handle(int index) const {
+  // @@protoc_insertion_point(field_get:raft.NodeInfoRequest.net_handle)
+  return _internal_net_handle(index);
+}
+inline std::string* NodeInfoRequest::mutable_net_handle(int index) {
+  // @@protoc_insertion_point(field_mutable:raft.NodeInfoRequest.net_handle)
+  return net_handle_.Mutable(index);
+}
+inline void NodeInfoRequest::set_net_handle(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:raft.NodeInfoRequest.net_handle)
+  net_handle_.Mutable(index)->assign(value);
+}
+inline void NodeInfoRequest::set_net_handle(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:raft.NodeInfoRequest.net_handle)
+  net_handle_.Mutable(index)->assign(std::move(value));
+}
+inline void NodeInfoRequest::set_net_handle(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  net_handle_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:raft.NodeInfoRequest.net_handle)
+}
+inline void NodeInfoRequest::set_net_handle(int index, const char* value, size_t size) {
+  net_handle_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:raft.NodeInfoRequest.net_handle)
+}
+inline std::string* NodeInfoRequest::_internal_add_net_handle() {
+  return net_handle_.Add();
+}
+inline void NodeInfoRequest::add_net_handle(const std::string& value) {
+  net_handle_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:raft.NodeInfoRequest.net_handle)
+}
+inline void NodeInfoRequest::add_net_handle(std::string&& value) {
+  net_handle_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:raft.NodeInfoRequest.net_handle)
+}
+inline void NodeInfoRequest::add_net_handle(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  net_handle_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:raft.NodeInfoRequest.net_handle)
+}
+inline void NodeInfoRequest::add_net_handle(const char* value, size_t size) {
+  net_handle_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:raft.NodeInfoRequest.net_handle)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+NodeInfoRequest::net_handle() const {
+  // @@protoc_insertion_point(field_list:raft.NodeInfoRequest.net_handle)
+  return net_handle_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+NodeInfoRequest::mutable_net_handle() {
+  // @@protoc_insertion_point(field_mutable_list:raft.NodeInfoRequest.net_handle)
+  return &net_handle_;
+}
+
+// -------------------------------------------------------------------
+
+// NodeInfoResponse
+
+// repeated string net_handle = 1;
+inline int NodeInfoResponse::_internal_net_handle_size() const {
+  return net_handle_.size();
+}
+inline int NodeInfoResponse::net_handle_size() const {
+  return _internal_net_handle_size();
+}
+inline void NodeInfoResponse::clear_net_handle() {
+  net_handle_.Clear();
+}
+inline std::string* NodeInfoResponse::add_net_handle() {
+  // @@protoc_insertion_point(field_add_mutable:raft.NodeInfoResponse.net_handle)
+  return _internal_add_net_handle();
+}
+inline const std::string& NodeInfoResponse::_internal_net_handle(int index) const {
+  return net_handle_.Get(index);
+}
+inline const std::string& NodeInfoResponse::net_handle(int index) const {
+  // @@protoc_insertion_point(field_get:raft.NodeInfoResponse.net_handle)
+  return _internal_net_handle(index);
+}
+inline std::string* NodeInfoResponse::mutable_net_handle(int index) {
+  // @@protoc_insertion_point(field_mutable:raft.NodeInfoResponse.net_handle)
+  return net_handle_.Mutable(index);
+}
+inline void NodeInfoResponse::set_net_handle(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:raft.NodeInfoResponse.net_handle)
+  net_handle_.Mutable(index)->assign(value);
+}
+inline void NodeInfoResponse::set_net_handle(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:raft.NodeInfoResponse.net_handle)
+  net_handle_.Mutable(index)->assign(std::move(value));
+}
+inline void NodeInfoResponse::set_net_handle(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  net_handle_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:raft.NodeInfoResponse.net_handle)
+}
+inline void NodeInfoResponse::set_net_handle(int index, const char* value, size_t size) {
+  net_handle_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:raft.NodeInfoResponse.net_handle)
+}
+inline std::string* NodeInfoResponse::_internal_add_net_handle() {
+  return net_handle_.Add();
+}
+inline void NodeInfoResponse::add_net_handle(const std::string& value) {
+  net_handle_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:raft.NodeInfoResponse.net_handle)
+}
+inline void NodeInfoResponse::add_net_handle(std::string&& value) {
+  net_handle_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:raft.NodeInfoResponse.net_handle)
+}
+inline void NodeInfoResponse::add_net_handle(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  net_handle_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:raft.NodeInfoResponse.net_handle)
+}
+inline void NodeInfoResponse::add_net_handle(const char* value, size_t size) {
+  net_handle_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:raft.NodeInfoResponse.net_handle)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+NodeInfoResponse::net_handle() const {
+  // @@protoc_insertion_point(field_list:raft.NodeInfoResponse.net_handle)
+  return net_handle_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+NodeInfoResponse::mutable_net_handle() {
+  // @@protoc_insertion_point(field_mutable_list:raft.NodeInfoResponse.net_handle)
+  return &net_handle_;
+}
+
+// -------------------------------------------------------------------
+
 // ClientResponse
 
 // .raft.CLIENT_RES_CODE ret_code = 1;
@@ -1538,6 +2019,10 @@ inline void ClientResponse::set_allocated_leader_net_handle(std::string* leader_
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

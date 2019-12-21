@@ -3,6 +3,8 @@
 #include "Node.h"
 #include "IRole.h"
 #include "NodeManager.h"
+#include "absl/strings/numbers.h"
+#include "absl/strings/str_split.h"
 
 using namespace raft;
 
@@ -35,6 +37,29 @@ void CNodeManagerImpl::SendVoteToAll(VoteRequest& request) {
     }
 }
 
+uint32_t CNodeManagerImpl::GetNodeCount() {
+    return (uint32_t)_node_map.size();
+}
+
+const std::map<std::string, std::shared_ptr<CNode>>& CNodeManagerImpl::GetAllNode() {
+    return _node_map;
+}
+
+void CNodeManagerImpl::ConnectToAll(const std::string& net_handle_list) {
+    std::vector<std::string> addr_vec = absl::StrSplit(net_handle_list, ";");
+    for (size_t i = 0; i < addr_vec.size(); i++) {
+        if (_node_map.count(addr_vec[i]) == 0) {
+            continue;
+        }
+        std::vector<std::string> handle_vec = absl::StrSplit(addr_vec[i], ":");
+        if (handle_vec.size() == 2) {
+            uint32_t port = 0;
+            absl::SimpleAtoi<uint32_t>(handle_vec[1], &port);
+            _net->ConnectTo(handle_vec[0], (uint16_t)port);
+        }
+    }
+}
+
 void CNodeManagerImpl::ConnectTo(const std::string& ip, uint16_t port) {
     _net->ConnectTo(ip, port);
 }
@@ -43,6 +68,13 @@ void CNodeManagerImpl::NewConnectCallBack(const std::string& net_handle) {
     std::shared_ptr<CNode> node(std::make_shared<NodeImpl>(_net, net_handle));
     _node_map[net_handle] = node;
     base::LOG_DEBUG("recv a new connection. handle : %s", net_handle.c_str());
+
+    // send all node info to new node
+    NodeInfoRequest request;
+    for (auto iter = _node_map.begin(); iter != _node_map.end(); ++iter) {
+        request.add_net_handle(iter->first);
+    }
+    node->SendNodeInfoRequest(request);
 }
 
 void CNodeManagerImpl::DisConnectCallBack(const std::string& net_handle) {
@@ -71,6 +103,48 @@ void CNodeManagerImpl::VoteRequestRecvCallBack(const std::string& net_handle, Vo
 void CNodeManagerImpl::VoteResponseRecvCallBack(const std::string& net_handle, VoteResponse& response) {
     std::shared_ptr<CNode> node = GetNode(net_handle);
     _current_role->RecvVoteResponse(node, response);
+}
+
+void CNodeManagerImpl::NodeInfoRequestCallBack(const std::string& net_handle, NodeInfoRequest& request) {
+    // connect all node from request
+    auto size = request.net_handle_size();
+    for (int i = 0; i < size; i++) {
+        std::string net_handle = request.net_handle(i);
+        if (_node_map.count(net_handle) == 0) {
+            continue;
+        }
+        std::vector<std::string> handle_vec = absl::StrSplit(net_handle, ":");
+        if (handle_vec.size() == 2) {
+            uint32_t port = 0;
+            absl::SimpleAtoi<uint32_t>(handle_vec[1], &port);
+            _net->ConnectTo(handle_vec[0], (uint16_t)port);
+        }
+    }
+    
+    // send response
+    NodeInfoResponse response;
+    for (auto iter = _node_map.begin(); iter != _node_map.end(); ++iter) {
+        response.add_net_handle(iter->first);
+    }
+    auto node = GetNode(net_handle);
+    node->SendNodeInfoResponse(response);
+}
+
+void CNodeManagerImpl::NodeInfoResponseCallBack(const std::string& net_handle, NodeInfoResponse& response) {
+    // connect all node from response
+    auto size = response.net_handle_size();
+    for (int i = 0; i < size; i++) {
+        std::string net_handle = response.net_handle(i);
+        if (_node_map.count(net_handle) == 0) {
+            continue;
+        }
+        std::vector<std::string> handle_vec = absl::StrSplit(net_handle, ":");
+        if (handle_vec.size() == 2) {
+            uint32_t port = 0;
+            absl::SimpleAtoi<uint32_t>(handle_vec[1], &port);
+            _net->ConnectTo(handle_vec[0], (uint16_t)port);
+        }
+    }
 }
 
 std::shared_ptr<CNode> CNodeManagerImpl::GetNode(const std::string& net_handle) {

@@ -16,9 +16,14 @@ namespace raft {
 
         // get send to the node next entries index
         virtual uint64_t GetNextIndex() = 0;
+        virtual void SetNextIndex(uint64_t index) = 0;
         // get the node newest entries index
-        virtual uint64_t GetNewestIndex() = 0;
+        virtual uint64_t GetMatchIndex() = 0;
+        virtual void SetMatchIndex(uint64_t index) = 0;
 
+        // node info
+        virtual void SendNodeInfoRequest(NodeInfoRequest& request) = 0;
+        virtual void SendNodeInfoResponse(NodeInfoResponse& response) = 0;
         // heart beat
         virtual void SendHeartRequest(HeartBeatResquest& request) = 0;
         virtual void SendHeartResponse(HeartBeatResponse& response) = 0;

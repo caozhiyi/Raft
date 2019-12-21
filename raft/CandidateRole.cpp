@@ -4,7 +4,6 @@
 #include "RaftMediator.h"
 #include "CandidateRole.h"
 
-
 using namespace raft;
 
 CCandidateRole::CCandidateRole(std::shared_ptr<CRoleData>& role_data, std::shared_ptr<CTimer>& timer, CRaftMediator* mediator) : CRole(role_data, timer, mediator) {
@@ -61,7 +60,15 @@ void CCandidateRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBea
 }
 
 void CCandidateRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response) {
-    // do nothing
+    if (vote_response.vote_granted()) {
+        _role_data->_vote_num++;
+    }
+    if (_role_data->_vote_num > _role_data->_raft_mediator->GetNodeCount() / 2) {
+        _role_data->_vote_num = 0;
+        // to be a leader
+        _role_data->_role_change_call_back(leader_role);
+        _role_data->_current_term++;
+    }
 }
 
 void CCandidateRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatResponse& heart_response) {

@@ -27,6 +27,10 @@ void CClientManagerImpl::SendToAll(ClientResponse& response) {
     }
 }
 
+uint32_t CClientManagerImpl::GetNodeCount() {
+    return (uint32_t)_client_map.size();
+}
+
 void CClientManagerImpl::RecvClientRequest(const std::string& net_handle, ClientRequest& request) {
     std::shared_ptr<CClient> client;
     auto iter = _client_map.find(net_handle);

@@ -21,3 +21,36 @@ std::pair<uint32_t, uint32_t> CConfigImpl::GetVoteTimerRandomRange() {
     ret.second = _config.GetIntValue("vote_timer_end");
     return std::move(ret);
 }
+
+
+uint32_t CConfigImpl::GetNodeId() {
+    return _config.GetIntValue("node_id");
+}
+
+uint16_t CConfigImpl::GetPort() {
+    return _config.GetIntValue("port");
+}
+
+std::string CConfigImpl::GetIp() {
+    return _config.GetStringValue("local_ip");
+}
+
+std::string CConfigImpl::GetLogFile() {
+    return _config.GetStringValue("log_file");
+}
+
+bool CConfigImpl::PrintLog() {
+    return _config.GetBoolValue("print_log");
+}
+
+bool CConfigImpl::GetThreadNum() {
+    return _config.GetIntValue("thread_num");
+}
+
+uint16_t CConfigImpl::GetLogLevel() {
+    return _config.GetIntValue("log_level");
+}
+
+std::string CConfigImpl::GetNodeInfo() {
+    return _config.GetStringValue("node_info");
+}

@@ -4,9 +4,11 @@
 #include <memory>
 #include <functional>
 #include <map>
-#include "message.pb.h"
+
 #include "IRole.h"
+#include "Single.h"
 #include "RoleData.h"
+#include "message.pb.h"
 #include "absl/strings/string_view.h"
 #include "absl/functional/function_ref.h"
 
@@ -20,10 +22,16 @@ namespace raft {
     class CNodeManager;
     class CClientManager;
     class CCommitEntries;
-    class CRaftMediator {
+    class CRaftMediator : public base::CSingle<CRaftMediator> {
     public:
         CRaftMediator();
         ~CRaftMediator();
+
+        // start work
+        void Start(const std::string& config_file);
+        void Join();
+        void Dealloc();
+  
         // get currnet node id
         uint32_t GetId();
 
@@ -42,6 +50,12 @@ namespace raft {
 
         // set commit call back
         void SetCommitCallBack(absl::FunctionRef<void(std::string)> func);
+
+        // get all node
+        const std::map<std::string, std::shared_ptr<CNode>>& GetAllNode();
+
+        // get node number
+        uint32_t GetNodeCount();
 
     private:
         uint32_t                        _id;

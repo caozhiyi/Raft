@@ -6,7 +6,8 @@ namespace raft {
     
     static const int __field_len = sizeof(uint32_t) + sizeof(uint32_t) + sizeof(uint64_t) + sizeof(char*);
 
-    struct Entries {
+    class Entries {
+    public:
         uint32_t _term;
         uint64_t _index;
         std::string _entries;

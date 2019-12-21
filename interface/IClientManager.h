@@ -12,7 +12,9 @@ namespace raft {
         virtual ~CClientManager() {}
 
         virtual void SetRole(std::shared_ptr<CRole>& role) = 0;
-        virtual void SendToAll(ClientResponse& response) = 0;      
+        virtual void SendToAll(ClientResponse& response) = 0;
+        // get client numbers
+        virtual uint32_t GetNodeCount() = 0;
         // client call back
         virtual void RecvClientRequest(const std::string& net_handle, ClientRequest& request) = 0;
         virtual void ClientConnect(const std::string& net_handle) = 0;

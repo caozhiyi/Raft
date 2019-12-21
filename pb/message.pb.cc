@@ -35,6 +35,14 @@ class ClientRequestDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<ClientRequest> _instance;
 } _ClientRequest_default_instance_;
+class NodeInfoRequestDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<NodeInfoRequest> _instance;
+} _NodeInfoRequest_default_instance_;
+class NodeInfoResponseDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<NodeInfoResponse> _instance;
+} _NodeInfoResponse_default_instance_;
 class ClientResponseDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<ClientResponse> _instance;
@@ -96,6 +104,34 @@ static void InitDefaultsscc_info_HeartBeatResquest_message_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_HeartBeatResquest_message_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_HeartBeatResquest_message_2eproto}, {}};
 
+static void InitDefaultsscc_info_NodeInfoRequest_message_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::raft::_NodeInfoRequest_default_instance_;
+    new (ptr) ::raft::NodeInfoRequest();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::raft::NodeInfoRequest::InitAsDefaultInstance();
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_NodeInfoRequest_message_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_NodeInfoRequest_message_2eproto}, {}};
+
+static void InitDefaultsscc_info_NodeInfoResponse_message_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::raft::_NodeInfoResponse_default_instance_;
+    new (ptr) ::raft::NodeInfoResponse();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::raft::NodeInfoResponse::InitAsDefaultInstance();
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_NodeInfoResponse_message_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_NodeInfoResponse_message_2eproto}, {}};
+
 static void InitDefaultsscc_info_VoteRequest_message_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -124,7 +160,7 @@ static void InitDefaultsscc_info_VoteResponse_message_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_VoteResponse_message_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_VoteResponse_message_2eproto}, {}};
 
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_message_2eproto[6];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_message_2eproto[8];
 static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_message_2eproto[1];
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_message_2eproto = nullptr;
 
@@ -147,6 +183,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_message_2eproto::offsets[] PRO
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::raft::HeartBeatResponse, term_),
   PROTOBUF_FIELD_OFFSET(::raft::HeartBeatResponse, success_),
+  PROTOBUF_FIELD_OFFSET(::raft::HeartBeatResponse, next_index_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::VoteRequest, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -170,6 +207,18 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_message_2eproto::offsets[] PRO
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::raft::ClientRequest, entries_),
   ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::raft::NodeInfoRequest, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::raft::NodeInfoRequest, net_handle_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::raft::NodeInfoResponse, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::raft::NodeInfoResponse, net_handle_),
+  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::ClientResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
@@ -180,10 +229,12 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_message_2eproto::offsets[] PRO
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::raft::HeartBeatResquest)},
   { 11, -1, sizeof(::raft::HeartBeatResponse)},
-  { 18, -1, sizeof(::raft::VoteRequest)},
-  { 27, -1, sizeof(::raft::VoteResponse)},
-  { 34, -1, sizeof(::raft::ClientRequest)},
-  { 40, -1, sizeof(::raft::ClientResponse)},
+  { 19, -1, sizeof(::raft::VoteRequest)},
+  { 28, -1, sizeof(::raft::VoteResponse)},
+  { 35, -1, sizeof(::raft::ClientRequest)},
+  { 41, -1, sizeof(::raft::NodeInfoRequest)},
+  { 47, -1, sizeof(::raft::NodeInfoResponse)},
+  { 53, -1, sizeof(::raft::ClientResponse)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -192,6 +243,8 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_VoteRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_VoteResponse_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_ClientRequest_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_NodeInfoRequest_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_NodeInfoResponse_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_ClientResponse_default_instance_),
 };
 
@@ -200,35 +253,39 @@ const char descriptor_table_protodef_message_2eproto[] PROTOBUF_SECTION_VARIABLE
   "est\022\014\n\004term\030\001 \001(\r\022\021\n\tleader_id\030\002 \001(\r\022\026\n\016"
   "prev_log_index\030\003 \001(\004\022\025\n\rprev_log_term\030\004 "
   "\001(\r\022\017\n\007entries\030\005 \003(\t\022\025\n\rleader_commit\030\006 "
-  "\001(\004\"2\n\021HeartBeatResponse\022\014\n\004term\030\001 \001(\r\022\017"
-  "\n\007success\030\002 \001(\010\"X\n\013VoteRequest\022\014\n\004term\030\001"
-  " \001(\r\022\024\n\014candidate_id\030\002 \001(\r\022\022\n\nlast_index"
-  "\030\003 \001(\004\022\021\n\tlast_term\030\004 \001(\r\"2\n\014VoteRespons"
-  "e\022\014\n\004term\030\001 \001(\r\022\024\n\014vote_granted\030\002 \001(\010\" \n"
-  "\rClientRequest\022\017\n\007entries\030\001 \001(\t\"T\n\016Clien"
-  "tResponse\022\'\n\010ret_code\030\001 \001(\0162\025.raft.CLIEN"
-  "T_RES_CODE\022\031\n\021leader_net_handle\030\002 \001(\t*O\n"
-  "\017CLIENT_RES_CODE\022\013\n\007success\020\000\022\016\n\nnot_lea"
-  "der\020\001\022\017\n\013other_error\020\002\022\016\n\nsend_again\020\003b\006"
-  "proto3"
+  "\001(\004\"F\n\021HeartBeatResponse\022\014\n\004term\030\001 \001(\r\022\017"
+  "\n\007success\030\002 \001(\010\022\022\n\nnext_index\030\003 \001(\004\"X\n\013V"
+  "oteRequest\022\014\n\004term\030\001 \001(\r\022\024\n\014candidate_id"
+  "\030\002 \001(\r\022\022\n\nlast_index\030\003 \001(\004\022\021\n\tlast_term\030"
+  "\004 \001(\r\"2\n\014VoteResponse\022\014\n\004term\030\001 \001(\r\022\024\n\014v"
+  "ote_granted\030\002 \001(\010\" \n\rClientRequest\022\017\n\007en"
+  "tries\030\001 \001(\t\"%\n\017NodeInfoRequest\022\022\n\nnet_ha"
+  "ndle\030\001 \003(\t\"&\n\020NodeInfoResponse\022\022\n\nnet_ha"
+  "ndle\030\001 \003(\t\"T\n\016ClientResponse\022\'\n\010ret_code"
+  "\030\001 \001(\0162\025.raft.CLIENT_RES_CODE\022\031\n\021leader_"
+  "net_handle\030\002 \001(\t*O\n\017CLIENT_RES_CODE\022\013\n\007s"
+  "uccess\020\000\022\016\n\nnot_leader\020\001\022\017\n\013other_error\020"
+  "\002\022\016\n\nsend_again\020\003b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_message_2eproto_deps[1] = {
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_message_2eproto_sccs[6] = {
+static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_message_2eproto_sccs[8] = {
   &scc_info_ClientRequest_message_2eproto.base,
   &scc_info_ClientResponse_message_2eproto.base,
   &scc_info_HeartBeatResponse_message_2eproto.base,
   &scc_info_HeartBeatResquest_message_2eproto.base,
+  &scc_info_NodeInfoRequest_message_2eproto.base,
+  &scc_info_NodeInfoResponse_message_2eproto.base,
   &scc_info_VoteRequest_message_2eproto.base,
   &scc_info_VoteResponse_message_2eproto.base,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_message_2eproto_once;
 static bool descriptor_table_message_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_message_2eproto = {
-  &descriptor_table_message_2eproto_initialized, descriptor_table_protodef_message_2eproto, "message.proto", 566,
-  &descriptor_table_message_2eproto_once, descriptor_table_message_2eproto_sccs, descriptor_table_message_2eproto_deps, 6, 0,
+  &descriptor_table_message_2eproto_initialized, descriptor_table_protodef_message_2eproto, "message.proto", 665,
+  &descriptor_table_message_2eproto_once, descriptor_table_message_2eproto_sccs, descriptor_table_message_2eproto_deps, 8, 0,
   schemas, file_default_instances, TableStruct_message_2eproto::offsets,
-  file_level_metadata_message_2eproto, 6, file_level_enum_descriptors_message_2eproto, file_level_service_descriptors_message_2eproto,
+  file_level_metadata_message_2eproto, 8, file_level_enum_descriptors_message_2eproto, file_level_service_descriptors_message_2eproto,
 };
 
 // Force running AddDescriptors() at dynamic initialization time.
@@ -594,15 +651,15 @@ HeartBeatResponse::HeartBeatResponse(const HeartBeatResponse& from)
       _internal_metadata_(nullptr) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&term_, &from.term_,
-    static_cast<size_t>(reinterpret_cast<char*>(&success_) -
-    reinterpret_cast<char*>(&term_)) + sizeof(success_));
+    static_cast<size_t>(reinterpret_cast<char*>(&next_index_) -
+    reinterpret_cast<char*>(&term_)) + sizeof(next_index_));
   // @@protoc_insertion_point(copy_constructor:raft.HeartBeatResponse)
 }
 
 void HeartBeatResponse::SharedCtor() {
   ::memset(&term_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&success_) -
-      reinterpret_cast<char*>(&term_)) + sizeof(success_));
+      reinterpret_cast<char*>(&next_index_) -
+      reinterpret_cast<char*>(&term_)) + sizeof(next_index_));
 }
 
 HeartBeatResponse::~HeartBeatResponse() {
@@ -629,8 +686,8 @@ void HeartBeatResponse::Clear() {
   (void) cached_has_bits;
 
   ::memset(&term_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&success_) -
-      reinterpret_cast<char*>(&term_)) + sizeof(success_));
+      reinterpret_cast<char*>(&next_index_) -
+      reinterpret_cast<char*>(&term_)) + sizeof(next_index_));
   _internal_metadata_.Clear();
 }
 
@@ -652,6 +709,13 @@ const char* HeartBeatResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
           success_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // uint64 next_index = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
+          next_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -693,6 +757,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(2, this->_internal_success(), target);
   }
 
+  // uint64 next_index = 3;
+  if (this->next_index() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(3, this->_internal_next_index(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
@@ -719,6 +789,13 @@ size_t HeartBeatResponse::ByteSizeLong() const {
   // bool success = 2;
   if (this->success() != 0) {
     total_size += 1 + 1;
+  }
+
+  // uint64 next_index = 3;
+  if (this->next_index() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64Size(
+        this->_internal_next_index());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -758,6 +835,9 @@ void HeartBeatResponse::MergeFrom(const HeartBeatResponse& from) {
   if (from.success() != 0) {
     _internal_set_success(from._internal_success());
   }
+  if (from.next_index() != 0) {
+    _internal_set_next_index(from._internal_next_index());
+  }
 }
 
 void HeartBeatResponse::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -783,6 +863,7 @@ void HeartBeatResponse::InternalSwap(HeartBeatResponse* other) {
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(term_, other->term_);
   swap(success_, other->success_);
+  swap(next_index_, other->next_index_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata HeartBeatResponse::GetMetadata() const {
@@ -1469,6 +1550,398 @@ void ClientRequest::InternalSwap(ClientRequest* other) {
 
 // ===================================================================
 
+void NodeInfoRequest::InitAsDefaultInstance() {
+}
+class NodeInfoRequest::_Internal {
+ public:
+};
+
+NodeInfoRequest::NodeInfoRequest()
+  : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:raft.NodeInfoRequest)
+}
+NodeInfoRequest::NodeInfoRequest(const NodeInfoRequest& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      _internal_metadata_(nullptr),
+      net_handle_(from.net_handle_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:raft.NodeInfoRequest)
+}
+
+void NodeInfoRequest::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_NodeInfoRequest_message_2eproto.base);
+}
+
+NodeInfoRequest::~NodeInfoRequest() {
+  // @@protoc_insertion_point(destructor:raft.NodeInfoRequest)
+  SharedDtor();
+}
+
+void NodeInfoRequest::SharedDtor() {
+}
+
+void NodeInfoRequest::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const NodeInfoRequest& NodeInfoRequest::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_NodeInfoRequest_message_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void NodeInfoRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:raft.NodeInfoRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  net_handle_.Clear();
+  _internal_metadata_.Clear();
+}
+
+const char* NodeInfoRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // repeated string net_handle = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            auto str = _internal_add_net_handle();
+            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+            CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "raft.NodeInfoRequest.net_handle"));
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag, &_internal_metadata_, ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* NodeInfoRequest::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:raft.NodeInfoRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated string net_handle = 1;
+  for (int i = 0, n = this->_internal_net_handle_size(); i < n; i++) {
+    const auto& s = this->_internal_net_handle(i);
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      s.data(), static_cast<int>(s.length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "raft.NodeInfoRequest.net_handle");
+    target = stream->WriteString(1, s, target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:raft.NodeInfoRequest)
+  return target;
+}
+
+size_t NodeInfoRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:raft.NodeInfoRequest)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated string net_handle = 1;
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(net_handle_.size());
+  for (int i = 0, n = net_handle_.size(); i < n; i++) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      net_handle_.Get(i));
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void NodeInfoRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:raft.NodeInfoRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  const NodeInfoRequest* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<NodeInfoRequest>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:raft.NodeInfoRequest)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:raft.NodeInfoRequest)
+    MergeFrom(*source);
+  }
+}
+
+void NodeInfoRequest::MergeFrom(const NodeInfoRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:raft.NodeInfoRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  net_handle_.MergeFrom(from.net_handle_);
+}
+
+void NodeInfoRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:raft.NodeInfoRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void NodeInfoRequest::CopyFrom(const NodeInfoRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:raft.NodeInfoRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool NodeInfoRequest::IsInitialized() const {
+  return true;
+}
+
+void NodeInfoRequest::InternalSwap(NodeInfoRequest* other) {
+  using std::swap;
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  net_handle_.InternalSwap(&other->net_handle_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata NodeInfoRequest::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
+// ===================================================================
+
+void NodeInfoResponse::InitAsDefaultInstance() {
+}
+class NodeInfoResponse::_Internal {
+ public:
+};
+
+NodeInfoResponse::NodeInfoResponse()
+  : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:raft.NodeInfoResponse)
+}
+NodeInfoResponse::NodeInfoResponse(const NodeInfoResponse& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      _internal_metadata_(nullptr),
+      net_handle_(from.net_handle_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:raft.NodeInfoResponse)
+}
+
+void NodeInfoResponse::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_NodeInfoResponse_message_2eproto.base);
+}
+
+NodeInfoResponse::~NodeInfoResponse() {
+  // @@protoc_insertion_point(destructor:raft.NodeInfoResponse)
+  SharedDtor();
+}
+
+void NodeInfoResponse::SharedDtor() {
+}
+
+void NodeInfoResponse::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const NodeInfoResponse& NodeInfoResponse::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_NodeInfoResponse_message_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void NodeInfoResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:raft.NodeInfoResponse)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  net_handle_.Clear();
+  _internal_metadata_.Clear();
+}
+
+const char* NodeInfoResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // repeated string net_handle = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            auto str = _internal_add_net_handle();
+            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+            CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "raft.NodeInfoResponse.net_handle"));
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag, &_internal_metadata_, ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* NodeInfoResponse::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:raft.NodeInfoResponse)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated string net_handle = 1;
+  for (int i = 0, n = this->_internal_net_handle_size(); i < n; i++) {
+    const auto& s = this->_internal_net_handle(i);
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      s.data(), static_cast<int>(s.length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "raft.NodeInfoResponse.net_handle");
+    target = stream->WriteString(1, s, target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:raft.NodeInfoResponse)
+  return target;
+}
+
+size_t NodeInfoResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:raft.NodeInfoResponse)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated string net_handle = 1;
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(net_handle_.size());
+  for (int i = 0, n = net_handle_.size(); i < n; i++) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      net_handle_.Get(i));
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void NodeInfoResponse::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:raft.NodeInfoResponse)
+  GOOGLE_DCHECK_NE(&from, this);
+  const NodeInfoResponse* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<NodeInfoResponse>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:raft.NodeInfoResponse)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:raft.NodeInfoResponse)
+    MergeFrom(*source);
+  }
+}
+
+void NodeInfoResponse::MergeFrom(const NodeInfoResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:raft.NodeInfoResponse)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  net_handle_.MergeFrom(from.net_handle_);
+}
+
+void NodeInfoResponse::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:raft.NodeInfoResponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void NodeInfoResponse::CopyFrom(const NodeInfoResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:raft.NodeInfoResponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool NodeInfoResponse::IsInitialized() const {
+  return true;
+}
+
+void NodeInfoResponse::InternalSwap(NodeInfoResponse* other) {
+  using std::swap;
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  net_handle_.InternalSwap(&other->net_handle_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata NodeInfoResponse::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
+// ===================================================================
+
 void ClientResponse::InitAsDefaultInstance() {
 }
 class ClientResponse::_Internal {
@@ -1711,6 +2184,12 @@ template<> PROTOBUF_NOINLINE ::raft::VoteResponse* Arena::CreateMaybeMessage< ::
 }
 template<> PROTOBUF_NOINLINE ::raft::ClientRequest* Arena::CreateMaybeMessage< ::raft::ClientRequest >(Arena* arena) {
   return Arena::CreateInternal< ::raft::ClientRequest >(arena);
+}
+template<> PROTOBUF_NOINLINE ::raft::NodeInfoRequest* Arena::CreateMaybeMessage< ::raft::NodeInfoRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::raft::NodeInfoRequest >(arena);
+}
+template<> PROTOBUF_NOINLINE ::raft::NodeInfoResponse* Arena::CreateMaybeMessage< ::raft::NodeInfoResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::raft::NodeInfoResponse >(arena);
 }
 template<> PROTOBUF_NOINLINE ::raft::ClientResponse* Arena::CreateMaybeMessage< ::raft::ClientResponse >(Arena* arena) {
   return Arena::CreateInternal< ::raft::ClientResponse >(arena);

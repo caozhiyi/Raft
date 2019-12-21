@@ -18,9 +18,11 @@ namespace raft {
         uint64_t GetNextIndex();
         void SetNextIndex(uint64_t index);
         // get the node newest entries index
-        uint64_t GetNewestIndex();
-        void SetNewestIndex(uint64_t index);
-
+        uint64_t GetMatchIndex();
+        void SetMatchIndex(uint64_t index);
+        // node info
+        void SendNodeInfoRequest(NodeInfoRequest& request);
+        void SendNodeInfoResponse(NodeInfoResponse& response);
         // heart beat
         void SendHeartRequest(HeartBeatResquest& request);
         void SendHeartResponse(HeartBeatResponse& response);
@@ -29,7 +31,7 @@ namespace raft {
         void SendVoteResponse(VoteResponse& response);
     private:
         std::string  _net_handle;       // ip + port
-        uint64_t     _sended_newest_index;
+        uint64_t     _match_index;
         uint64_t     _should_send_index;
         std::shared_ptr<CNet> _net;
     };

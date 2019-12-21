@@ -3,8 +3,10 @@
 
 using namespace raft;
 
-NodeImpl::NodeImpl(std::shared_ptr<CNet>& net, const std::string& handle) : _net(net), _net_handle(handle) {
-
+NodeImpl::NodeImpl(std::shared_ptr<CNet>& net, const std::string& handle) : _net(net),
+                                                                            _net_handle(handle),
+                                                                            _match_index(0),
+                                                                            _should_send_index(0) {
 }
 
 NodeImpl::~NodeImpl() {
@@ -27,12 +29,20 @@ void NodeImpl::SetNextIndex(uint64_t index) {
     _should_send_index = index;
 }
  
-uint64_t NodeImpl::GetNewestIndex() {
-    return _sended_newest_index;
+uint64_t NodeImpl::GetMatchIndex() {
+    return _match_index;
 }
 
-void NodeImpl::SetNewestIndex(uint64_t index) {
-    _sended_newest_index = index;
+void NodeImpl::SetMatchIndex(uint64_t index) {
+    _match_index = index;
+}
+
+void NodeImpl::SendNodeInfoRequest(NodeInfoRequest& request) {
+    _net->SendNodeInfoRequest(_net_handle, request);
+}
+
+void NodeImpl::SendNodeInfoResponse(NodeInfoResponse& response) {
+    _net->SendNodeInfoResponse(_net_handle, response);
 }
 
 void NodeImpl::SendHeartRequest(HeartBeatResquest& request) {

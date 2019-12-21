@@ -6,14 +6,30 @@
 
 namespace raft {
 
-    class CConfigImpl {
+    class CConfigImpl : public CConfig  {
     public:
         CConfigImpl(const std::string& config_file);
-        virtual ~CConfigImpl();
+        ~CConfigImpl();
 
         std::string GetCommitDiskFile();
 
         std::pair<uint32_t, uint32_t> GetVoteTimerRandomRange();
+
+        uint32_t GetNodeId();
+
+        uint16_t GetPort();
+
+        std::string GetIp();
+
+        std::string GetLogFile();
+
+        bool PrintLog();
+
+        bool GetThreadNum();
+
+        uint16_t GetLogLevel();
+
+        std::string GetNodeInfo();
 
     private:
         base::CConfig   _config;

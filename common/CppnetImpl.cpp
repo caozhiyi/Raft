@@ -13,7 +13,7 @@ CCppNet::~CCppNet() {
 
 }
 
-bool CCppNet::Start(const std::string& ip, uint16_t port) {
+bool CCppNet::Start(const std::string& ip, uint16_t port, uint16_t thread_num) {
     // set call back to cppnet
     cppnet::SetReadCallback(std::bind(&CCppNet::Recved, this, std::placeholders::_1, std::placeholders::_2, 
                                               std::placeholders::_3, std::placeholders::_4));
@@ -24,7 +24,7 @@ bool CCppNet::Start(const std::string& ip, uint16_t port) {
     cppnet::SetConnectionCallback(std::bind(&CCppNet::Connected, this, std::placeholders::_1, std::placeholders::_2));
 
     // start cpp net
-    cppnet::Init(1); // start with 1 thread
+    cppnet::Init(thread_num); // start with 1 thread
     return cppnet::ListenAndAccept(ip, port);
 }
 
@@ -32,8 +32,26 @@ void CCppNet::Join() {
     cppnet::Join();
 }
 
+void CCppNet::Dealloc() {
+    cppnet::Dealloc();
+}
+
 void CCppNet::ConnectTo(const std::string& ip, uint16_t port) {
     cppnet::Connection(ip, port);
+}
+
+void CCppNet::SendNodeInfoRequest(const std::string& net_handle, NodeInfoRequest& request) {
+    std::string data;
+    request.SerializeToString(&data);
+
+    SendToNet(net_handle, data);
+}
+
+void CCppNet::SendNodeInfoResponse(const std::string& net_handle, NodeInfoResponse& response) {
+    std::string data;
+    response.SerializeToString(&data);
+
+    SendToNet(net_handle, data);
 }
 
 void CCppNet::SendHeartRequest(const std::string& net_handle, HeartBeatResquest& request) {

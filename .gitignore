@@ -18,3 +18,5 @@ build/
 *.user
 *bug
 *.lib
+*.dll
+third

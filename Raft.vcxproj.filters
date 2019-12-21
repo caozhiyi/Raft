@@ -19,6 +19,9 @@
     <Filter Include="utest">
       <UniqueIdentifier>{cffbabf9-282e-49ea-a063-24bcbaa61755}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{29a35f6d-3391-4d3b-92ee-91b0652a74b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\Any.h">
@@ -141,6 +144,9 @@
     <ClInclude Include="raft\Node.h">
       <Filter>raft</Filter>
     </ClInclude>
+    <ClInclude Include="include\Raft.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\BlockMemoryPool.cpp">
@@ -213,6 +219,9 @@
       <Filter>raft</Filter>
     </ClCompile>
     <ClCompile Include="raft\Node.cpp">
+      <Filter>raft</Filter>
+    </ClCompile>
+    <ClCompile Include="raft\Raft.cpp">
       <Filter>raft</Filter>
     </ClCompile>
   </ItemGroup>

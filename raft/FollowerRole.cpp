@@ -30,11 +30,6 @@ void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& v
 }
 
 void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
-    // set leader net handle
-    if (_role_data->_net_handle != node->GetNetHandle()) {
-        _role_data->_net_handle = node->GetNetHandle();
-    }
-
     HeartBeatResponse response;
     response.set_success(true);
     response.set_term(_role_data->_current_term);
@@ -42,31 +37,50 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
     if (heart_request.term() < _role_data->_current_term) {
         response.set_success(false);
     }
-    // compare prev log index and term
+    // compare prev log term
     auto last_entries = _role_data->_entries_map.end()--;
     Entries& prev_entries = last_entries->second;
-    if (prev_entries._index != heart_request.prev_log_term() || 
-        prev_entries._term != heart_request.prev_log_term()) {
+    if (prev_entries._term != heart_request.prev_log_term()) {
+        response.set_next_index(prev_entries._index);
         response.set_success(false);
     }
+
+    // if index is the same but term is different
+    if (prev_entries._term != heart_request.prev_log_term() 
+        && prev_entries._index == heart_request.prev_log_index()) {
+        response.set_success(false);
+        response.set_next_index(prev_entries._index);
+        // delete after entries
+        auto iter = _role_data->_entries_map.find(prev_entries._index);
+        while (iter != _role_data->_entries_map.end()) {
+            iter = _role_data->_entries_map.erase(iter);
+        }
+    }
+
     // can't recv that entries
     if (!response.success()) {
         node->SendHeartResponse(response);
         return;
     }
 
+    // set leader net handle
+    if (_role_data->_net_handle != node->GetNetHandle()) {
+        _role_data->_net_handle = node->GetNetHandle();
+    }
+
     // apply entries
-    uint64_t leader_commit = heart_request.leader_commit();
-    if (leader_commit != 0) {
-        for (auto iter = _role_data->_entries_map.begin(); iter != _role_data->_entries_map.end();) {
-            if (iter->first > leader_commit) {
-                break;
+    auto leader_commit = heart_request.leader_commit();
+    if (leader_commit > 0) {
+        auto iter = _role_data->_entries_map.find(leader_commit);
+        if (iter != _role_data->_entries_map.end()) {
+            auto start = _role_data->_entries_map.begin();
+            while (start != _role_data->_entries_map.end() && start->first != leader_commit) {
+                _role_data->_commit_entries_call_back(start->second);
+                start = _role_data->_entries_map.erase(start);
             }
-            _role_data->_commit_entries_call_back(iter->second);
-            iter = _role_data->_entries_map.erase(iter);
         }
     }
-    
+
     // copy entries
     for (size_t i = 0; i < heart_request.entries_size(); i++) {
         auto entries_data = heart_request.entries(i);
@@ -74,7 +88,8 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
         _role_data->_entries_map[ref.GetIndex()] = ref.GetEntries();
     }
     _role_data->_current_term = heart_request.term();
-    _role_data->_newest_index = _role_data->_entries_map.begin()->first;
+    _role_data->_newest_index = _role_data->_entries_map.end()->first;
+    response.set_next_index(_role_data->_newest_index + 1);
 }
 
 void CFollowerRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response) {
@@ -106,6 +121,7 @@ void CFollowerRole::CandidateTimeOut() {
     // to be a candidate
     _role_data->_role_change_call_back(candidate_role);
 
+    _role_data->_vote_num = 0;
     // send all node to get vote
     VoteRequest request;
     request.set_term(_role_data->_current_term + 1);

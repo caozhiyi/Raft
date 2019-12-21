@@ -40,10 +40,14 @@ namespace raft {
         CCppNet();
         ~CCppNet();
         // start to listen
-        bool Start(const std::string& ip, uint16_t port);
+        bool Start(const std::string& ip, uint16_t port, uint16_t thread_num);
         void Join();
+        void Dealloc();
         // connect to
         void ConnectTo(const std::string& ip, uint16_t port);
+        // node info
+        void SendNodeInfoRequest(const std::string& net_handle, NodeInfoRequest& request);
+        void SendNodeInfoResponse(const std::string& net_handle, NodeInfoResponse& response);
         // heart beat
         void SendHeartRequest(const std::string& net_handle, HeartBeatResquest& request);
         void SendHeartResponse(const std::string& net_handle, HeartBeatResponse& response);

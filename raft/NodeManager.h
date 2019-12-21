@@ -20,6 +20,12 @@ namespace raft {
         void SendHeartToAll(HeartBeatResquest& request);
         void SendVoteToAll(VoteRequest& request);
 
+        // get node numbers
+        uint32_t GetNodeCount();
+        // get all node info
+        const std::map<std::string, std::shared_ptr<CNode>>& GetAllNode();
+        // connect to all
+        void ConnectToAll(const std::string& net_handle_list);
         // connect to a node
         void ConnectTo(const std::string& ip, uint16_t port);
 
@@ -35,6 +41,9 @@ namespace raft {
         void VoteRequestRecvCallBack(const std::string& net_handle, VoteRequest& request);
         // vote response call back
         void VoteResponseRecvCallBack(const std::string& net_handle, VoteResponse& response);
+        // node find about
+        void NodeInfoRequestCallBack(const std::string& net_handle, NodeInfoRequest& request);
+        void NodeInfoResponseCallBack(const std::string& net_handle, NodeInfoResponse& response);
     private:
         // get a node
         std::shared_ptr<CNode> GetNode(const std::string& net_handle);
