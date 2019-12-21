@@ -2,8 +2,8 @@
 #define RAFT_INTERFACE_NET
 
 #include <memory>
+
 #include "message.pb.h"
-#include "absl/strings/string_view.h"
 #include "absl/functional/function_ref.h"
 
 namespace raft {

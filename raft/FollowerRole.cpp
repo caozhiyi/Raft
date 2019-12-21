@@ -1,7 +1,8 @@
-#include "FollowerRole.h"
 #include "INode.h"
 #include "ITimer.h"
+#include "IClient.h"
 #include "RaftMediator.h"
+#include "FollowerRole.h"
 
 using namespace raft;
 
@@ -30,8 +31,8 @@ void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& v
 
 void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
     // set leader net handle
-    if (_role_data->_net_handle != node.GetNetHandle()) {
-        _role_data->_net_handle = node.GetNetHandle();
+    if (_role_data->_net_handle != node->GetNetHandle()) {
+        _role_data->_net_handle = node->GetNetHandle();
     }
 
     HeartBeatResponse response;
@@ -88,7 +89,7 @@ void CFollowerRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRe
     // tell client send to leader.
     ClientResponse response;
     response.set_ret_code(not_leader);
-    response.leader_net_handle(_role_data->_net_handle);
+    response.set_leader_net_handle(_role_data->_net_handle);
     client->SendToClient(response);
 }
 

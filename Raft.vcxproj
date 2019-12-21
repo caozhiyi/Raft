@@ -36,6 +36,7 @@
     <ClInclude Include="base\TimeTool.h" />
     <ClInclude Include="base\TSQueue.h" />
     <ClInclude Include="common\CommitEntriesDisk.h" />
+    <ClInclude Include="common\ConfigImpl.h" />
     <ClInclude Include="common\CppnetImpl.h" />
     <ClInclude Include="common\Entries.h" />
     <ClInclude Include="common\RaftTimer.h" />
@@ -45,6 +46,7 @@
     <ClInclude Include="interface\IConfig.h" />
     <ClInclude Include="interface\INet.h" />
     <ClInclude Include="interface\INode.h" />
+    <ClInclude Include="interface\INodeManager.h" />
     <ClInclude Include="interface\IRole.h" />
     <ClInclude Include="interface\ITimer.h" />
     <ClInclude Include="pb\message.pb.h" />
@@ -53,7 +55,8 @@
     <ClInclude Include="raft\ClientManager.h" />
     <ClInclude Include="raft\FollowerRole.h" />
     <ClInclude Include="raft\LeaderRole.h" />
-    <ClInclude Include="raft\NodeImpl.h" />
+    <ClInclude Include="raft\Node.h" />
+    <ClInclude Include="raft\NodeManager.h" />
     <ClInclude Include="raft\RaftMediator.h" />
     <ClInclude Include="raft\RoleData.h" />
   </ItemGroup>
@@ -66,6 +69,7 @@
     <ClCompile Include="base\MemoryPool.cpp" />
     <ClCompile Include="base\TimeTool.cpp" />
     <ClCompile Include="common\CommitEntriesDisk.cpp" />
+    <ClCompile Include="common\ConfigImpl.cpp" />
     <ClCompile Include="common\CppnetImpl.cpp" />
     <ClCompile Include="common\Entries.cpp" />
     <ClCompile Include="common\RaftTimer.cpp" />
@@ -75,7 +79,8 @@
     <ClCompile Include="raft\ClientManager.cpp" />
     <ClCompile Include="raft\FollowerRole.cpp" />
     <ClCompile Include="raft\LeaderRole.cpp" />
-    <ClCompile Include="raft\NodeImpl.cpp" />
+    <ClCompile Include="raft\Node.cpp" />
+    <ClCompile Include="raft\NodeManager.cpp" />
     <ClCompile Include="raft\RaftMediator.cpp" />
     <ClCompile Include="utest\Test.cpp" />
     <ClCompile Include="utest\Ut_CommitEntriesDisk.cpp" />

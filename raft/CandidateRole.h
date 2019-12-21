@@ -25,8 +25,6 @@ namespace raft {
         void CandidateTimeOut();
         // when heart beat timer out
         void HeartBeatTimerOut();
-    private:
-        
     };
 }
 

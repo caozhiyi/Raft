@@ -5,9 +5,9 @@
 
 namespace raft {
 
+    class CNet;
     class CNode;
     class CRole;
-    class CNet;
     class CNodeManagerImpl : public CNodeManager {
     public:
         CNodeManagerImpl(std::shared_ptr<CNet>& net);

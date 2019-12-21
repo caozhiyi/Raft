@@ -1,5 +1,5 @@
-#include "LeaderRole.h"
 #include "INode.h"
+#include "LeaderRole.h"
 #include "RaftMediator.h"
 
 using namespace raft;
@@ -54,8 +54,8 @@ void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatRe
         _role_data->_role_change_call_back(follower_role);
     }
     // set leader net handle
-    if (_role_data->_net_handle != node.GetNetHandle()) {
-        _role_data->_net_handle = node.GetNetHandle();
+    if (_role_data->_net_handle != node->GetNetHandle()) {
+        _role_data->_net_handle = node->GetNetHandle();
     }
     // change to follower recv this request again
     _role_data->_raft_mediator->RecvHeartBeat(node, heart_request);

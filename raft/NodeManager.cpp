@@ -1,8 +1,10 @@
-#include "NodeManager.h"
+#include "Log.h"
 #include "INet.h"
 #include "Node.h"
 #include "IRole.h"
-#include "Log.h"
+#include "NodeManager.h"
+
+using namespace raft;
 
 CNodeManagerImpl::CNodeManagerImpl(std::shared_ptr<CNet>& net) : _net(net) {
     _net->SetNewConnectCallBack(std::bind(&CNodeManagerImpl::NewConnectCallBack, this, std::placeholders::_1));
@@ -58,7 +60,7 @@ void CNodeManagerImpl::HeartRequestRecvCallBack(const std::string& net_handle, H
 
 void CNodeManagerImpl::HeartResponseRecvCallBack(const std::string& net_handle, HeartBeatResponse& response) {
     std::shared_ptr<CNode> node = GetNode(net_handle);
-    _current_role->RecvHeartBeatResponse(node, request);
+    _current_role->RecvHeartBeatResponse(node, response);
 }
 
 void CNodeManagerImpl::VoteRequestRecvCallBack(const std::string& net_handle, VoteRequest& request) {
@@ -68,7 +70,7 @@ void CNodeManagerImpl::VoteRequestRecvCallBack(const std::string& net_handle, Vo
 
 void CNodeManagerImpl::VoteResponseRecvCallBack(const std::string& net_handle, VoteResponse& response) {
     std::shared_ptr<CNode> node = GetNode(net_handle);
-    _current_role->RecvVoteResponse(node, request);
+    _current_role->RecvVoteResponse(node, response);
 }
 
 std::shared_ptr<CNode> CNodeManagerImpl::GetNode(const std::string& net_handle) {
@@ -76,8 +78,8 @@ std::shared_ptr<CNode> CNodeManagerImpl::GetNode(const std::string& net_handle) 
     auto iter = _node_map.find(net_handle);
     // create a node
     if (iter == _node_map.end()) {
-        node.reset(new CClientImpl(_net, net_handle));
-        _node_map[net_handle] = client;
+        node.reset(new NodeImpl(_net, net_handle));
+        _node_map[net_handle] = node;
         base::LOG_DEBUG("get a new node connection. handle : %s", net_handle.c_str());
 
     } else {

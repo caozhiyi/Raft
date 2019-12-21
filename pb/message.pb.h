@@ -89,12 +89,13 @@ enum CLIENT_RES_CODE : int {
   success = 0,
   not_leader = 1,
   other_error = 2,
+  send_again = 3,
   CLIENT_RES_CODE_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   CLIENT_RES_CODE_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool CLIENT_RES_CODE_IsValid(int value);
 constexpr CLIENT_RES_CODE CLIENT_RES_CODE_MIN = success;
-constexpr CLIENT_RES_CODE CLIENT_RES_CODE_MAX = other_error;
+constexpr CLIENT_RES_CODE CLIENT_RES_CODE_MAX = send_again;
 constexpr int CLIENT_RES_CODE_ARRAYSIZE = CLIENT_RES_CODE_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* CLIENT_RES_CODE_descriptor();
@@ -991,24 +992,23 @@ class ClientResponse :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kLeaderIpFieldNumber = 3,
+    kLeaderNetHandleFieldNumber = 2,
     kRetCodeFieldNumber = 1,
-    kLeaderPortFieldNumber = 2,
   };
-  // string leader_ip = 3;
-  void clear_leader_ip();
-  const std::string& leader_ip() const;
-  void set_leader_ip(const std::string& value);
-  void set_leader_ip(std::string&& value);
-  void set_leader_ip(const char* value);
-  void set_leader_ip(const char* value, size_t size);
-  std::string* mutable_leader_ip();
-  std::string* release_leader_ip();
-  void set_allocated_leader_ip(std::string* leader_ip);
+  // string leader_net_handle = 2;
+  void clear_leader_net_handle();
+  const std::string& leader_net_handle() const;
+  void set_leader_net_handle(const std::string& value);
+  void set_leader_net_handle(std::string&& value);
+  void set_leader_net_handle(const char* value);
+  void set_leader_net_handle(const char* value, size_t size);
+  std::string* mutable_leader_net_handle();
+  std::string* release_leader_net_handle();
+  void set_allocated_leader_net_handle(std::string* leader_net_handle);
   private:
-  const std::string& _internal_leader_ip() const;
-  void _internal_set_leader_ip(const std::string& value);
-  std::string* _internal_mutable_leader_ip();
+  const std::string& _internal_leader_net_handle() const;
+  void _internal_set_leader_net_handle(const std::string& value);
+  std::string* _internal_mutable_leader_net_handle();
   public:
 
   // .raft.CLIENT_RES_CODE ret_code = 1;
@@ -1020,23 +1020,13 @@ class ClientResponse :
   void _internal_set_ret_code(::raft::CLIENT_RES_CODE value);
   public:
 
-  // uint32 leader_port = 2;
-  void clear_leader_port();
-  ::PROTOBUF_NAMESPACE_ID::uint32 leader_port() const;
-  void set_leader_port(::PROTOBUF_NAMESPACE_ID::uint32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_leader_port() const;
-  void _internal_set_leader_port(::PROTOBUF_NAMESPACE_ID::uint32 value);
-  public:
-
   // @@protoc_insertion_point(class_scope:raft.ClientResponse)
  private:
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr leader_ip_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr leader_net_handle_;
   int ret_code_;
-  ::PROTOBUF_NAMESPACE_ID::uint32 leader_port_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_message_2eproto;
 };
@@ -1485,84 +1475,64 @@ inline void ClientResponse::set_ret_code(::raft::CLIENT_RES_CODE value) {
   // @@protoc_insertion_point(field_set:raft.ClientResponse.ret_code)
 }
 
-// uint32 leader_port = 2;
-inline void ClientResponse::clear_leader_port() {
-  leader_port_ = 0u;
+// string leader_net_handle = 2;
+inline void ClientResponse::clear_leader_net_handle() {
+  leader_net_handle_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 ClientResponse::_internal_leader_port() const {
-  return leader_port_;
+inline const std::string& ClientResponse::leader_net_handle() const {
+  // @@protoc_insertion_point(field_get:raft.ClientResponse.leader_net_handle)
+  return _internal_leader_net_handle();
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 ClientResponse::leader_port() const {
-  // @@protoc_insertion_point(field_get:raft.ClientResponse.leader_port)
-  return _internal_leader_port();
+inline void ClientResponse::set_leader_net_handle(const std::string& value) {
+  _internal_set_leader_net_handle(value);
+  // @@protoc_insertion_point(field_set:raft.ClientResponse.leader_net_handle)
 }
-inline void ClientResponse::_internal_set_leader_port(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+inline std::string* ClientResponse::mutable_leader_net_handle() {
+  // @@protoc_insertion_point(field_mutable:raft.ClientResponse.leader_net_handle)
+  return _internal_mutable_leader_net_handle();
+}
+inline const std::string& ClientResponse::_internal_leader_net_handle() const {
+  return leader_net_handle_.GetNoArena();
+}
+inline void ClientResponse::_internal_set_leader_net_handle(const std::string& value) {
   
-  leader_port_ = value;
+  leader_net_handle_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void ClientResponse::set_leader_port(::PROTOBUF_NAMESPACE_ID::uint32 value) {
-  _internal_set_leader_port(value);
-  // @@protoc_insertion_point(field_set:raft.ClientResponse.leader_port)
-}
-
-// string leader_ip = 3;
-inline void ClientResponse::clear_leader_ip() {
-  leader_ip_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline const std::string& ClientResponse::leader_ip() const {
-  // @@protoc_insertion_point(field_get:raft.ClientResponse.leader_ip)
-  return _internal_leader_ip();
-}
-inline void ClientResponse::set_leader_ip(const std::string& value) {
-  _internal_set_leader_ip(value);
-  // @@protoc_insertion_point(field_set:raft.ClientResponse.leader_ip)
-}
-inline std::string* ClientResponse::mutable_leader_ip() {
-  // @@protoc_insertion_point(field_mutable:raft.ClientResponse.leader_ip)
-  return _internal_mutable_leader_ip();
-}
-inline const std::string& ClientResponse::_internal_leader_ip() const {
-  return leader_ip_.GetNoArena();
-}
-inline void ClientResponse::_internal_set_leader_ip(const std::string& value) {
+inline void ClientResponse::set_leader_net_handle(std::string&& value) {
   
-  leader_ip_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
-}
-inline void ClientResponse::set_leader_ip(std::string&& value) {
-  
-  leader_ip_.SetNoArena(
+  leader_net_handle_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:raft.ClientResponse.leader_ip)
+  // @@protoc_insertion_point(field_set_rvalue:raft.ClientResponse.leader_net_handle)
 }
-inline void ClientResponse::set_leader_ip(const char* value) {
+inline void ClientResponse::set_leader_net_handle(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
-  leader_ip_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:raft.ClientResponse.leader_ip)
+  leader_net_handle_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:raft.ClientResponse.leader_net_handle)
 }
-inline void ClientResponse::set_leader_ip(const char* value, size_t size) {
+inline void ClientResponse::set_leader_net_handle(const char* value, size_t size) {
   
-  leader_ip_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+  leader_net_handle_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:raft.ClientResponse.leader_ip)
+  // @@protoc_insertion_point(field_set_pointer:raft.ClientResponse.leader_net_handle)
 }
-inline std::string* ClientResponse::_internal_mutable_leader_ip() {
+inline std::string* ClientResponse::_internal_mutable_leader_net_handle() {
   
-  return leader_ip_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  return leader_net_handle_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* ClientResponse::release_leader_ip() {
-  // @@protoc_insertion_point(field_release:raft.ClientResponse.leader_ip)
+inline std::string* ClientResponse::release_leader_net_handle() {
+  // @@protoc_insertion_point(field_release:raft.ClientResponse.leader_net_handle)
   
-  return leader_ip_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  return leader_net_handle_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void ClientResponse::set_allocated_leader_ip(std::string* leader_ip) {
-  if (leader_ip != nullptr) {
+inline void ClientResponse::set_allocated_leader_net_handle(std::string* leader_net_handle) {
+  if (leader_net_handle != nullptr) {
     
   } else {
     
   }
-  leader_ip_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), leader_ip);
-  // @@protoc_insertion_point(field_set_allocated:raft.ClientResponse.leader_ip)
+  leader_net_handle_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), leader_net_handle);
+  // @@protoc_insertion_point(field_set_allocated:raft.ClientResponse.leader_net_handle)
 }
 
 #ifdef __GNUC__

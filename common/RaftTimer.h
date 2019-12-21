@@ -3,8 +3,9 @@
 #define RAFT_COMMON_TIMER
 
 #include <map>
-#include <condition_variable>
 #include <atomic>
+#include <condition_variable>
+
 #include "ITimer.h"
 #include "Runnable.h"
 

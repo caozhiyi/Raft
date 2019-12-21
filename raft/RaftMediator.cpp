@@ -1,17 +1,16 @@
-#include "RaftMediator.h"
-#include "Node.h"
 #include "absl/strings/str_format.h"
 #include "Log.h"
-#include "CommitEntriesDisk.h"
-#include "LeaderRole.h"
-#include "CandidateRole.h"
-#include "FollowerRole.h"
-#include "CommitEntriesDisk.h"
+#include "Node.h"
 #include "IConfig.h"
 #include "RaftTimer.h"
-#include "NodeManager.h"
-#include "ClientManager.h"
 #include "CppnetImpl.h"
+#include "LeaderRole.h"
+#include "NodeManager.h"
+#include "RaftMediator.h"
+#include "FollowerRole.h"
+#include "CandidateRole.h"
+#include "ClientManager.h"
+#include "CommitEntriesDisk.h"
 
 using namespace raft;
 
@@ -30,9 +29,9 @@ CRaftMediator::CRaftMediator() {
     // create net 
     _net.reset(new CCppNet());
     // create node manager
-    _node_manager.reset(new CNodeManager(_net));
+    _node_manager.reset(new CNodeManagerImpl(_net));
     // create client manager
-    _client_manager.reset(new CClientManager(_net));
+    _client_manager.reset(new CClientManagerImpl(_net));
 
     // set current role to follower
     ChangeRole(follower_role);

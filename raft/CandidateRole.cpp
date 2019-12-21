@@ -1,7 +1,9 @@
-#include "CandidateRole.h"
 #include "INode.h"
 #include "ITimer.h"
+#include "IClient.h"
 #include "RaftMediator.h"
+#include "CandidateRole.h"
+
 
 using namespace raft;
 
@@ -48,8 +50,8 @@ void CCandidateRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& 
 
 void CCandidateRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
     // set leader net handle
-    if (_role_data->_net_handle != node.GetNetHandle()) {
-        _role_data->_net_handle = node.GetNetHandle();
+    if (_role_data->_net_handle != node->GetNetHandle()) {
+        _role_data->_net_handle = node->GetNetHandle();
     }
 
     // change role to follower

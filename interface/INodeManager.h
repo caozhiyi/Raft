@@ -2,16 +2,17 @@
 #define RAFT_INTERFACE_NODEMANAGER
 
 #include "message.pb.h"
-#include "absl/strings/string_view.h"
 #include "absl/functional/function_ref.h"
 
 namespace raft {
 
+    class CRole;
     class CNodeManager {
     public:
         CNodeManager() {}
         virtual ~CNodeManager() {}
-
+        // set current role
+        virtual void SetRole(std::shared_ptr<CRole>& role) = 0;
         // send request to all
         virtual void SendHeartToAll(HeartBeatResquest& request) = 0;
         virtual void SendVoteToAll(VoteRequest& request) = 0;

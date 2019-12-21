@@ -9,11 +9,11 @@ namespace raft {
     class NodeImpl: public CNode
     {
     public:
-        NodeImpl(std::shared_ptr<CNet>& net);
+        NodeImpl(std::shared_ptr<CNet>& net, const std::string& handle);
         ~NodeImpl();
         // net handle
-        void SetNetHandle(absl::string_view handle);
-        std::string GetNetHandle();
+        void SetNetHandle(const std::string& handle);
+        const std::string& GetNetHandle();
         // get send to the node next entries index
         uint64_t GetNextIndex();
         void SetNextIndex(uint64_t index);

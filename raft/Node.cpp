@@ -1,21 +1,21 @@
-#include "NodeImpl.h"
+#include "Node.h"
 #include "INet.h"
 
 using namespace raft;
 
-NodeImpl::NodeImpl(std::shared_ptr<CNet>& net) {
-    _net = net;
+NodeImpl::NodeImpl(std::shared_ptr<CNet>& net, const std::string& handle) : _net(net), _net_handle(handle) {
+
 }
 
 NodeImpl::~NodeImpl() {
 
 }
 
-void NodeImpl::SetNetHandle(absl::string_view handle) {
+void NodeImpl::SetNetHandle(const std::string& handle) {
     _net_handle = handle.data();
 }
 
-std::string NodeImpl::GetNetHandle() {
+const std::string& NodeImpl::GetNetHandle() {
     return _net_handle;
 }
 

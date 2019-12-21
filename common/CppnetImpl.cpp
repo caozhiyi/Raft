@@ -1,7 +1,7 @@
-#include "CppnetImpl.h"
 #include "absl/strings/numbers.h"
 #include "Log.h"
 #include "Socket.h"
+#include "CppnetImpl.h"
 
 using namespace raft;
 
@@ -83,27 +83,27 @@ void CCppNet::SetClientDisConnectCallBack(absl::FunctionRef<void(const std::stri
     _client_dis_connect_call_back = func;
 }
 
-void CCppNet::SetNewConnectCallBack(absl::FunctionRef<void(absl::string_view net_handle)> func) {
+void CCppNet::SetNewConnectCallBack(absl::FunctionRef<void(const std::string&)> func) {
     _raft_connect_call_back = func;
 }
 
-void CCppNet::SetDisConnectCallBack(absl::FunctionRef<void(absl::string_view net_handle)> func) {
+void CCppNet::SetDisConnectCallBack(absl::FunctionRef<void(const std::string&)> func) {
     _raft_dis_connect_call_back = func;
 }
 
-void CCppNet::SetHeartRequestRecvCallBack(absl::FunctionRef<void(absl::string_view, HeartBeatResquest&)> func) {
+void CCppNet::SetHeartRequestRecvCallBack(absl::FunctionRef<void(const std::string&, HeartBeatResquest&)> func) {
     _heart_request_call_back = func;
 }
 
-void CCppNet::SetHeartResponseRecvCallBack(absl::FunctionRef<void(absl::string_view, HeartBeatResponse&)> func) {
+void CCppNet::SetHeartResponseRecvCallBack(absl::FunctionRef<void(const std::string&, HeartBeatResponse&)> func) {
     _heart_response_call_back = func;
 }
 
-void CCppNet::SetVoteRequestRecvCallBack(absl::FunctionRef<void(absl::string_view, VoteRequest&)> func) {
+void CCppNet::SetVoteRequestRecvCallBack(absl::FunctionRef<void(const std::string&, VoteRequest&)> func) {
     _vote_request_call_back = func;
 }
 
-void CCppNet::SetVoteResponseRecvCallBack(absl::FunctionRef<void(absl::string_view, VoteResponse&)> func) {
+void CCppNet::SetVoteResponseRecvCallBack(absl::FunctionRef<void(const std::string&, VoteResponse&)> func) {
     _vote_response_call_back = func;
 }
 
@@ -202,7 +202,7 @@ bool CCppNet::StringToBag(const std::string& data, std::vector<CppBag>& bag_vec,
     bool ret = false;
     while(true) {
         CppBag bag;
-        absl::string_view header(start + offset, __header_len);
+        std::string header(start + offset, __header_len);
         absl::SimpleAtoi<uint64_t>(header, &bag._header._data);
 
         if (data.length() >= bag._header._field._len + __header_len) {

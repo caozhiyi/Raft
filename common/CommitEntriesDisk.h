@@ -4,9 +4,10 @@
 #include <fstream>
 #include <functional>
 #include <vector>
-#include "ICommitEntries.h"
-#include "Entries.h"
+
 #include "absl/functional/function_ref.h"
+#include "Entries.h"
+#include "ICommitEntries.h"
 
 namespace raft {
     class CCommitEntriesDisk : public CCommitEntries {
@@ -17,7 +18,7 @@ namespace raft {
         // submit entries that after merge.
         bool PushEntries(const Entries& entries);
         // submit entries with index and term
-        bool PushEntries(uint64_t index, uint32_t term, absl::string_view entries);
+        bool PushEntries(uint64_t index, uint32_t term, const std::string& entries);
         // get entries vector after index
         bool GetEntries(uint64_t index, std::vector<Entries>& entries_vec);
         // sync get entries after index.
@@ -30,7 +31,7 @@ namespace raft {
         // only get one entries
         bool GetEntries(Entries& entries_vec);
         bool ReadEntries(uint64_t index, std::vector<Entries>& entries_vec, bool only_one = false);
-        void WriteEntries(absl::string_view entries);
+        void WriteEntries(const std::string& entries);
 
     private:
         std::string            _file_name;

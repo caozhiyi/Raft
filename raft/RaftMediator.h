@@ -18,7 +18,7 @@ namespace raft {
     class CConfig;
     class Entries;
     class CNodeManager;
-    class ClientManager;
+    class CClientManager;
     class CCommitEntries;
     class CRaftMediator {
     public:
@@ -53,7 +53,7 @@ namespace raft {
         // raft node manager
         std::shared_ptr<CNodeManager>   _node_manager;
         // client manager
-        std::shared_ptr<ClientManager>  _client_manager;
+        std::shared_ptr<CClientManager> _client_manager;
 
         // role about
         std::shared_ptr<CRole>          _current_role;

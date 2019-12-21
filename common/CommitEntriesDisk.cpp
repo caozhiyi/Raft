@@ -63,7 +63,7 @@ bool CCommitEntriesDisk::PushEntries(const Entries& entries) {
     return true;
 }
 
-bool CCommitEntriesDisk::PushEntries(uint64_t index, uint32_t term, absl::string_view entries) {
+bool CCommitEntriesDisk::PushEntries(uint64_t index, uint32_t term, const std::string& entries) {
     if (_newest_index >= index && index != 0) {
         return false;
     }
@@ -193,7 +193,7 @@ bool CCommitEntriesDisk::ReadEntries(uint64_t index, std::vector<Entries>& entri
     return ret;
 }
 
-void CCommitEntriesDisk::WriteEntries(absl::string_view entries) {
+void CCommitEntriesDisk::WriteEntries(const std::string& entries) {
     _out_file_stream << entries;
     _out_file_stream.flush();
 }

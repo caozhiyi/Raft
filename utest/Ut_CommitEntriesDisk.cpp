@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "CommitEntriesDisk.h"
 #include "Entries.h"
+#include "CommitEntriesDisk.h"
 
 using namespace raft;
 
