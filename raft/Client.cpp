@@ -20,5 +20,5 @@ std::string CClientImpl::GetNetHandle() {
 }
 
 void CClientImpl::SendToClient(ClientResponse& response) {
-    _net->SendToClient(_net_handle, response);
+    _net->SendClientResponse(_net_handle, response);
 }

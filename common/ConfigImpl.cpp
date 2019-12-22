@@ -22,7 +22,6 @@ std::pair<uint32_t, uint32_t> CConfigImpl::GetVoteTimerRandomRange() {
     return std::move(ret);
 }
 
-
 uint32_t CConfigImpl::GetNodeId() {
     return _config.GetIntValue("node_id");
 }
@@ -53,4 +52,8 @@ uint16_t CConfigImpl::GetLogLevel() {
 
 std::string CConfigImpl::GetNodeInfo() {
     return _config.GetStringValue("node_info");
+}
+
+uint32_t CConfigImpl::GetHeartTime() {
+    return _config.GetIntValue("heart_time");
 }

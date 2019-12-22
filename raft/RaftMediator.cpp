@@ -38,10 +38,6 @@ CRaftMediator::CRaftMediator() {
 
     // set current role to follower
     ChangeRole(follower_role);
-
-    // create commit entries
-    std::string file = _config->GetCommitDiskFile();
-    _commit_entries.reset(new CCommitEntriesDisk(file));
 }
 
 CRaftMediator::~CRaftMediator() {
@@ -50,6 +46,10 @@ CRaftMediator::~CRaftMediator() {
 
 void CRaftMediator::Start(const std::string& config_file) {
     _config.reset(new CConfigImpl(config_file));
+
+    // create commit entries
+    std::string file = _config->GetCommitDiskFile();
+    _commit_entries.reset(new CCommitEntriesDisk(file));
 
     // print log?
     bool print_log = _config->PrintLog();
@@ -65,7 +65,8 @@ void CRaftMediator::Start(const std::string& config_file) {
     std::string ip = _config->GetIp();
     uint16_t port = _config->GetPort();
     uint16_t thread_num = _config->GetThreadNum();
-    _net->Start(ip, port, thread_num);
+    _net->Init(thread_num);
+    _net->Start(ip, port);
 
     // connect to other node
     std::string node_address = _config->GetNodeInfo();
@@ -134,4 +135,8 @@ const std::map<std::string, std::shared_ptr<CNode>>& CRaftMediator::GetAllNode()
 
 uint32_t CRaftMediator::GetNodeCount() {
     return _node_manager->GetNodeCount();
+}
+
+uint32_t CRaftMediator::GetHeartTime() {
+    return _config->GetHeartTime();
 }

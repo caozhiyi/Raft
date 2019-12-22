@@ -29,6 +29,8 @@ namespace raft {
         virtual uint16_t GetLogLevel() = 0;
 
         virtual std::string GetNodeInfo() = 0;
+
+        virtual uint32_t GetHeartTime() = 0;
     };
 }
 

@@ -2,6 +2,7 @@
 #include "IClient.h"
 #include "LeaderRole.h"
 #include "RaftMediator.h"
+#include "ITimer.h"
 
 using namespace raft;
 
@@ -15,6 +16,11 @@ CLeaderRole::~CLeaderRole() {
 
 ROLE_TYPE CLeaderRole::GetRole() {
     return leader_role;
+}
+
+void CLeaderRole::ItsMyTurn() {
+    _client_net_handle_map.clear();
+    _role_data->_timer->StartHeartTimer(_role_data->_raft_mediator->GetHeartTime());
 }
 
 void CLeaderRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {

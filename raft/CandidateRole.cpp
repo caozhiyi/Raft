@@ -18,6 +18,17 @@ ROLE_TYPE CCandidateRole::GetRole() {
     return candidate_role;
 }
 
+void CCandidateRole::ItsMyTurn() {
+    _role_data->_vote_num = 0;
+    // send all node to get vote
+    VoteRequest request;
+    request.set_term(_role_data->_current_term + 1);
+    request.set_candidate_id(_role_data->_raft_mediator->GetId());
+    request.set_last_term(_role_data->_current_term);
+    request.set_last_index(_role_data->_newest_index);
+    _role_data->_raft_mediator->SendVoteToAll(request);
+}
+
 void CCandidateRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
     VoteResponse response;
     response.set_term(_role_data->_current_term);

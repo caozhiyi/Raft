@@ -15,6 +15,8 @@ CNodeManagerImpl::CNodeManagerImpl(std::shared_ptr<CNet>& net) : _net(net) {
     _net->SetHeartResponseRecvCallBack(std::bind(&CNodeManagerImpl::HeartResponseRecvCallBack, this, std::placeholders::_1, std::placeholders::_2));
     _net->SetVoteRequestRecvCallBack(std::bind(&CNodeManagerImpl::VoteRequestRecvCallBack, this, std::placeholders::_1, std::placeholders::_2));
     _net->SetVoteResponseRecvCallBack(std::bind(&CNodeManagerImpl::VoteResponseRecvCallBack, this, std::placeholders::_1, std::placeholders::_2));
+    _net->SetNodeInfoRequestCallBack(std::bind(&CNodeManagerImpl::NodeInfoRequestCallBack, this, std::placeholders::_1, std::placeholders::_2));
+    _net->SetNodeInfoResponseCallBack(std::bind(&CNodeManagerImpl::NodeInfoResponseCallBack, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 CNodeManagerImpl::~CNodeManagerImpl() {
@@ -135,7 +137,7 @@ void CNodeManagerImpl::NodeInfoResponseCallBack(const std::string& net_handle, N
     auto size = response.net_handle_size();
     for (int i = 0; i < size; i++) {
         std::string net_handle = response.net_handle(i);
-        if (_node_map.count(net_handle) == 0) {
+        if (_node_map.count(net_handle) != 0) {
             continue;
         }
         std::vector<std::string> handle_vec = absl::StrSplit(net_handle, ":");

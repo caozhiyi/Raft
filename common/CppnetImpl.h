@@ -12,8 +12,11 @@ namespace raft {
         heart_beat_request  = 1,
         heart_beat_response = 2,
         vote_request        = 3,
-        vote_reponse        = 4,
-        client_type         = 5
+        vote_response       = 4,
+        client_requst       = 5,
+        client_response     = 6,
+        node_info_request   = 7,
+        node_info_response  = 8
     };
 
     enum ClientType {
@@ -39,12 +42,16 @@ namespace raft {
     public:
         CCppNet();
         ~CCppNet();
+
+        void Init(uint16_t thread_num);
         // start to listen
-        bool Start(const std::string& ip, uint16_t port, uint16_t thread_num);
+        bool Start(const std::string& ip, uint16_t port);
         void Join();
         void Dealloc();
         // connect to
         void ConnectTo(const std::string& ip, uint16_t port);
+        void DisConnect(const std::string& net_handle);
+
         // node info
         void SendNodeInfoRequest(const std::string& net_handle, NodeInfoRequest& request);
         void SendNodeInfoResponse(const std::string& net_handle, NodeInfoResponse& response);
@@ -56,7 +63,9 @@ namespace raft {
         void SendVoteResponse(const std::string& net_handle, VoteResponse& response);
 
         // client about
-        void SendToClient(const std::string& net_handle, ClientResponse& response);
+        void SendClientRequest(const std::string& net_handle, ClientRequest& request);
+        void SendClientResponse(const std::string& net_handle, ClientResponse& response);
+        void SetClientResponseCallBack(absl::FunctionRef<void(const std::string&, ClientResponse& response)> func);
         // client call back
         void SetClientRecvCallBack(absl::FunctionRef<void(const std::string&, ClientRequest&)> func);
         void SetClientConnectCallBack(absl::FunctionRef<void(const std::string&)> func);
@@ -75,6 +84,9 @@ namespace raft {
         void SetVoteRequestRecvCallBack(absl::FunctionRef<void(const std::string&, VoteRequest&)> func);
         // set vote response call back
         void SetVoteResponseRecvCallBack(absl::FunctionRef<void(const std::string&, VoteResponse&)> func);
+        // node info 
+        void SetNodeInfoRequestCallBack(absl::FunctionRef<void(const std::string&, NodeInfoRequest&)> func);
+        void SetNodeInfoResponseCallBack(absl::FunctionRef<void(const std::string&, NodeInfoResponse&)> func);
     private:
         // cppnet call back
         void Connected(const cppnet::Handle& handle, uint32_t err);
@@ -82,6 +94,7 @@ namespace raft {
         void Sended(const cppnet::Handle& handle, uint32_t len, uint32_t err);
         void Recved(const cppnet::Handle& handle, base::CBuffer* data, uint32_t len, uint32_t err);
         // bag about
+        std::string BuildSendData(std::string& data, CppBagType type);
         std::string BagToString(CppBag& bag);
         bool StringToBag(const std::string& data, std::vector<CppBag>& bag_vec, uint32_t& used_size);
         // get net handle
@@ -101,12 +114,15 @@ namespace raft {
         // raft call back
         std::function<void(const std::string&, HeartBeatResquest&)>           _heart_request_call_back;
         std::function<void(const std::string&, HeartBeatResponse&)>           _heart_response_call_back;
-        std::function<void(const std::string&w, VoteRequest&)>                _vote_request_call_back;
+        std::function<void(const std::string&, VoteRequest&)>                 _vote_request_call_back;
         std::function<void(const std::string&, VoteResponse&)>                _vote_response_call_back;
+        std::function<void(const std::string&, NodeInfoRequest&)>             _node_info_request_call_back;
+        std::function<void(const std::string&, NodeInfoResponse&)>            _node_info_response_call_back;
         std::function<void(const std::string&)>                               _raft_connect_call_back;
         std::function<void(const std::string&)>                               _raft_dis_connect_call_back;
         // client about
         std::function<void(const std::string&, ClientRequest&)>               _client_recv_call_back;
+        std::function<void(const std::string&, ClientResponse&)>              _client_response_call_back;
         std::function<void(const std::string&)>                               _client_connect_call_back;
         std::function<void(const std::string&)>                               _client_dis_connect_call_back;
     };

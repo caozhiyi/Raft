@@ -16,9 +16,6 @@
     <Filter Include="raft">
       <UniqueIdentifier>{81bdcc85-b75e-480f-8b08-7d26973af022}</UniqueIdentifier>
     </Filter>
-    <Filter Include="utest">
-      <UniqueIdentifier>{cffbabf9-282e-49ea-a063-24bcbaa61755}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include">
       <UniqueIdentifier>{29a35f6d-3391-4d3b-92ee-91b0652a74b9}</UniqueIdentifier>
     </Filter>
@@ -175,15 +172,6 @@
     </ClCompile>
     <ClCompile Include="common\Entries.cpp">
       <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="utest\Ut_Entries.cpp">
-      <Filter>utest</Filter>
-    </ClCompile>
-    <ClCompile Include="utest\Test.cpp">
-      <Filter>utest</Filter>
-    </ClCompile>
-    <ClCompile Include="utest\Ut_CommitEntriesDisk.cpp">
-      <Filter>utest</Filter>
     </ClCompile>
     <ClCompile Include="raft\LeaderRole.cpp">
       <Filter>raft</Filter>

@@ -13,7 +13,12 @@ CCppNet::~CCppNet() {
 
 }
 
-bool CCppNet::Start(const std::string& ip, uint16_t port, uint16_t thread_num) {
+void CCppNet::Init(uint16_t thread_num) {
+    // start cpp net
+    cppnet::Init(thread_num);
+}
+
+bool CCppNet::Start(const std::string& ip, uint16_t port) {
     // set call back to cppnet
     cppnet::SetReadCallback(std::bind(&CCppNet::Recved, this, std::placeholders::_1, std::placeholders::_2, 
                                               std::placeholders::_3, std::placeholders::_4));
@@ -23,8 +28,6 @@ bool CCppNet::Start(const std::string& ip, uint16_t port, uint16_t thread_num) {
     cppnet::SetAcceptCallback(std::bind(&CCppNet::Connected, this, std::placeholders::_1, std::placeholders::_2));
     cppnet::SetConnectionCallback(std::bind(&CCppNet::Connected, this, std::placeholders::_1, std::placeholders::_2));
 
-    // start cpp net
-    cppnet::Init(thread_num); // start with 1 thread
     return cppnet::ListenAndAccept(ip, port);
 }
 
@@ -40,53 +43,88 @@ void CCppNet::ConnectTo(const std::string& ip, uint16_t port) {
     cppnet::Connection(ip, port);
 }
 
+void CCppNet::DisConnect(const std::string& net_handle) {
+    auto iter = _net_2_handle_map.find(net_handle);
+    if (iter == _net_2_handle_map.end()) {
+        return;
+    }
+    cppnet::Close(iter->second);
+}
+
 void CCppNet::SendNodeInfoRequest(const std::string& net_handle, NodeInfoRequest& request) {
     std::string data;
     request.SerializeToString(&data);
 
-    SendToNet(net_handle, data);
+    std::string send_data = BuildSendData(data, node_info_request);
+
+    SendToNet(net_handle, send_data);
 }
 
 void CCppNet::SendNodeInfoResponse(const std::string& net_handle, NodeInfoResponse& response) {
     std::string data;
     response.SerializeToString(&data);
 
-    SendToNet(net_handle, data);
+    std::string send_data = BuildSendData(data, node_info_response);
+
+    SendToNet(net_handle, send_data);
 }
 
 void CCppNet::SendHeartRequest(const std::string& net_handle, HeartBeatResquest& request) {
     std::string data;
     request.SerializeToString(&data);
 
-    SendToNet(net_handle, data);
+    std::string send_data = BuildSendData(data, heart_beat_request);
+
+    SendToNet(net_handle, send_data);
 }
 
 void CCppNet::SendHeartResponse(const std::string& net_handle, HeartBeatResponse& response) {
     std::string data;
     response.SerializeToString(&data);
 
-    SendToNet(net_handle, data);
+    std::string send_data = BuildSendData(data, heart_beat_response);
+
+    SendToNet(net_handle, send_data);
 }
 
 void CCppNet::SendVoteRequest(const std::string& net_handle, VoteRequest& request) {
     std::string data;
     request.SerializeToString(&data);
 
-    SendToNet(net_handle, data);
+    std::string send_data = BuildSendData(data, vote_request);
+
+    SendToNet(net_handle, send_data);
 }
 
 void CCppNet::SendVoteResponse(const std::string& net_handle, VoteResponse& response) {
     std::string data;
     response.SerializeToString(&data);
 
-    SendToNet(net_handle, data);
+    std::string send_data = BuildSendData(data, vote_response);
+
+    SendToNet(net_handle, send_data);
 }
 
-void CCppNet::SendToClient(const std::string& net_handle, ClientResponse& response) {
+void CCppNet::SendClientRequest(const std::string& net_handle, ClientRequest& request) {
+    std::string data;
+    request.SerializeToString(&data);
+
+    std::string send_data = BuildSendData(data, client_requst);
+
+    SendToNet(net_handle, send_data, user_client);
+}
+
+void CCppNet::SendClientResponse(const std::string& net_handle, ClientResponse& response) {
     std::string data;
     response.SerializeToString(&data);
 
-    SendToNet(net_handle, data, user_client);
+    std::string send_data = BuildSendData(data, client_response);
+
+    SendToNet(net_handle, send_data, user_client);
+}
+
+void CCppNet::SetClientResponseCallBack(absl::FunctionRef<void(const std::string&, ClientResponse& response)> func) {
+    _client_response_call_back = func;
 }
 
 void CCppNet::SetClientRecvCallBack(absl::FunctionRef<void(const std::string&, ClientRequest&)> func) {
@@ -123,6 +161,14 @@ void CCppNet::SetVoteRequestRecvCallBack(absl::FunctionRef<void(const std::strin
 
 void CCppNet::SetVoteResponseRecvCallBack(absl::FunctionRef<void(const std::string&, VoteResponse&)> func) {
     _vote_response_call_back = func;
+}
+
+void CCppNet::SetNodeInfoRequestCallBack(absl::FunctionRef<void(const std::string&, NodeInfoRequest&)> func) {
+    _node_info_request_call_back = func;
+}
+
+void CCppNet::SetNodeInfoResponseCallBack(absl::FunctionRef<void(const std::string&, NodeInfoResponse&)> func) {
+    _node_info_response_call_back = func;
 }
 
 void CCppNet::Connected(const cppnet::Handle& handle, uint32_t err) {
@@ -204,6 +250,15 @@ void CCppNet::Recved(const cppnet::Handle& handle, base::CBuffer* data, uint32_t
     }
 
     delete []buf;
+}
+
+std::string CCppNet::BuildSendData(std::string& data, CppBagType type) {
+    CppBag bag;
+    bag._body = std::move(data);
+    bag._header._field._len = bag._body.length();
+    bag._header._field._type = type;
+    std::string ret = BagToString(bag);
+    return std::move(ret);
 }
 
 std::string CCppNet::BagToString(CppBag& bag) {
@@ -300,18 +355,39 @@ void CCppNet::HandleBag(const std::string& net_handle, const CppBag& bag) {
             _vote_request_call_back(net_handle, request);
             break;
         }
-    case vote_reponse:
+    case vote_response:
         {
             VoteResponse response;
             response.ParseFromString(bag._body);
             _vote_response_call_back(net_handle, response);
             break;
         }
-    case client_type:
+    case client_requst:
         {
             ClientRequest request;
             request.ParseFromString(bag._body);
             _client_recv_call_back(net_handle, request);
+            break;
+        }
+    case client_response:
+        {
+            ClientResponse response;
+            response.ParseFromString(bag._body);
+            _client_response_call_back(net_handle, response);
+            break;
+        }
+    case node_info_request:
+        {
+            NodeInfoRequest request;
+            request.ParseFromString(bag._body);
+            _node_info_request_call_back(net_handle, request);
+            break;
+        }
+    case node_info_response:
+        {
+            NodeInfoResponse response;
+            response.ParseFromString(bag._body);
+            _node_info_response_call_back(net_handle, response);
             break;
         }
     default:

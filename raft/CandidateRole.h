@@ -11,6 +11,8 @@ namespace raft {
         virtual ~CCandidateRole();
         // get role type
         virtual ROLE_TYPE GetRole();
+        // role init when role change
+        void ItsMyTurn();
         // need to vote?
         void RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request);
         // get a heart message

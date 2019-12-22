@@ -15,12 +15,14 @@ namespace raft {
         virtual ~CNet() {}
 
         // start to listen
-        virtual bool Start(const std::string& ip, uint16_t port, uint16_t thread_num) = 0;
+        virtual void Init(uint16_t thread_num) = 0;
+        virtual bool Start(const std::string& ip, uint16_t port) = 0;
         virtual void Join() = 0;
         virtual void Dealloc() = 0;
 
         // connect to
         virtual void ConnectTo(const std::string& ip, uint16_t port) = 0;
+        virtual void DisConnect(const std::string& net_handle) = 0;
 
         // node info
         virtual void SendNodeInfoRequest(const std::string& net_handle, NodeInfoRequest& request) = 0;
@@ -34,9 +36,11 @@ namespace raft {
         virtual void SendVoteResponse(const std::string& net_handle, VoteResponse& response) = 0;
 
         // client about
-        virtual void SendToClient(const std::string& net_handle, ClientResponse& response) = 0;
+        virtual void SendClientRequest(const std::string& net_handle, ClientRequest& request) = 0;
+        virtual void SendClientResponse(const std::string& net_handle, ClientResponse& response) = 0;
         // client call back
         virtual void SetClientRecvCallBack(absl::FunctionRef<void(const std::string&, ClientRequest& request)> func) = 0;
+        virtual void SetClientResponseCallBack(absl::FunctionRef<void(const std::string&, ClientResponse& response)> func) = 0;
         virtual void SetClientConnectCallBack(absl::FunctionRef<void(const std::string&)> func) = 0;
         virtual void SetClientDisConnectCallBack(absl::FunctionRef<void(const std::string&)> func) = 0;
 
@@ -52,6 +56,9 @@ namespace raft {
         virtual void SetVoteRequestRecvCallBack(absl::FunctionRef<void(const std::string&, VoteRequest&)> func) = 0;
         // set vote response call back
         virtual void SetVoteResponseRecvCallBack(absl::FunctionRef<void(const std::string&, VoteResponse&)> func) = 0;
+        // node info 
+        virtual void SetNodeInfoRequestCallBack(absl::FunctionRef<void(const std::string&, NodeInfoRequest&)> func) = 0;
+        virtual void SetNodeInfoResponseCallBack(absl::FunctionRef<void(const std::string&, NodeInfoResponse&)> func) = 0;
         
     };
 }

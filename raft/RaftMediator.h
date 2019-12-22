@@ -57,6 +57,9 @@ namespace raft {
         // get node number
         uint32_t GetNodeCount();
 
+        // get heart time
+        uint32_t GetHeartTime();
+
     private:
         uint32_t                        _id;
         std::shared_ptr<CNet>           _net;

@@ -18,6 +18,11 @@ ROLE_TYPE CFollowerRole::GetRole() {
     return follower_role;
 }
 
+void CFollowerRole::ItsMyTurn() {
+    // stop heart timer
+    _role_data->_timer->StopHeartTimer();
+}
+
 void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
     VoteResponse response;
     if (vote_request.last_term() < _role_data->_current_term) {
@@ -121,14 +126,6 @@ void CFollowerRole::CandidateTimeOut() {
     // to be a candidate
     _role_data->_role_change_call_back(candidate_role);
 
-    _role_data->_vote_num = 0;
-    // send all node to get vote
-    VoteRequest request;
-    request.set_term(_role_data->_current_term + 1);
-    request.set_candidate_id(_role_data->_raft_mediator->GetId());
-    request.set_last_term(_role_data->_current_term);
-    request.set_last_index(_role_data->_newest_index);
-    _role_data->_raft_mediator->SendVoteToAll(request);
     // reset candidate timer 
     uint32_t time = absl::uniform_int_distribution<uint32_t>(150, 300)(_role_data->_gen);
     _role_data->_timer->StartVoteTimer(time);

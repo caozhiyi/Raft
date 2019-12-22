@@ -31,6 +31,8 @@ namespace raft {
 
         std::string GetNodeInfo();
 
+        uint32_t GetHeartTime();
+
     private:
         base::CConfig   _config;
     };

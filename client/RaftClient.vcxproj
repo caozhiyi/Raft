@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -18,80 +18,10 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="base\Any.h" />
-    <ClInclude Include="base\BlockMemoryPool.h" />
-    <ClInclude Include="base\Buffer.h" />
-    <ClInclude Include="base\config.h" />
-    <ClInclude Include="base\Log.h" />
-    <ClInclude Include="base\LoopBuffer.h" />
-    <ClInclude Include="base\MemoryPool.h" />
-    <ClInclude Include="base\PoolSharedPtr.h" />
-    <ClInclude Include="base\Runnable.h" />
-    <ClInclude Include="base\RunnableAloneTaskList.h" />
-    <ClInclude Include="base\RunnableAloneTaskListWithPost.h" />
-    <ClInclude Include="base\RunnableShareTaskList.h" />
-    <ClInclude Include="base\Single.h" />
-    <ClInclude Include="base\TaskQueue.h" />
-    <ClInclude Include="base\TimeTool.h" />
-    <ClInclude Include="base\TSQueue.h" />
-    <ClInclude Include="common\CommitEntriesDisk.h" />
-    <ClInclude Include="common\ConfigImpl.h" />
-    <ClInclude Include="common\CppnetImpl.h" />
-    <ClInclude Include="common\Entries.h" />
-    <ClInclude Include="common\RaftTimer.h" />
-    <ClInclude Include="include\Raft.h" />
-    <ClInclude Include="interface\IClient.h" />
-    <ClInclude Include="interface\IClientManager.h" />
-    <ClInclude Include="interface\ICommitEntries.h" />
-    <ClInclude Include="interface\IConfig.h" />
-    <ClInclude Include="interface\INet.h" />
-    <ClInclude Include="interface\INode.h" />
-    <ClInclude Include="interface\INodeManager.h" />
-    <ClInclude Include="interface\IRole.h" />
-    <ClInclude Include="interface\ITimer.h" />
-    <ClInclude Include="pb\message.pb.h" />
-    <ClInclude Include="raft\CandidateRole.h" />
-    <ClInclude Include="raft\Client.h" />
-    <ClInclude Include="raft\ClientManager.h" />
-    <ClInclude Include="raft\FollowerRole.h" />
-    <ClInclude Include="raft\LeaderRole.h" />
-    <ClInclude Include="raft\Node.h" />
-    <ClInclude Include="raft\NodeManager.h" />
-    <ClInclude Include="raft\RaftMediator.h" />
-    <ClInclude Include="raft\RoleData.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="base\BlockMemoryPool.cpp" />
-    <ClCompile Include="base\Buffer.cpp" />
-    <ClCompile Include="base\config.cpp" />
-    <ClCompile Include="base\Log.cpp" />
-    <ClCompile Include="base\LoopBuffer.cpp" />
-    <ClCompile Include="base\MemoryPool.cpp" />
-    <ClCompile Include="base\TimeTool.cpp" />
-    <ClCompile Include="common\CommitEntriesDisk.cpp" />
-    <ClCompile Include="common\ConfigImpl.cpp" />
-    <ClCompile Include="common\CppnetImpl.cpp" />
-    <ClCompile Include="common\Entries.cpp" />
-    <ClCompile Include="common\RaftTimer.cpp" />
-    <ClCompile Include="pb\message.pb.cc" />
-    <ClCompile Include="raft\CandidateRole.cpp" />
-    <ClCompile Include="raft\Client.cpp" />
-    <ClCompile Include="raft\ClientManager.cpp" />
-    <ClCompile Include="raft\FollowerRole.cpp" />
-    <ClCompile Include="raft\LeaderRole.cpp" />
-    <ClCompile Include="raft\Node.cpp" />
-    <ClCompile Include="raft\NodeManager.cpp" />
-    <ClCompile Include="raft\Raft.cpp" />
-    <ClCompile Include="raft\RaftMediator.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="pb\message.proto" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{B1274794-4306-4DF7-B2B3-24CA581D57CF}</ProjectGuid>
-    <RootNamespace>Raft</RootNamespace>
+    <ProjectGuid>{B6C4A44A-DB66-4ADF-B937-0D4064746162}</ProjectGuid>
+    <RootNamespace>RaftClient</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -161,11 +91,10 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PROTOBUF_USE_DLLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>absl_win32_debug.lib;%(AdditionalDependencies);gmock_maind_win32.lib;gmockd_win32.lib;gtest_maind_win32.lib;gtestd_win32.lib;libprotobufd_win32_debug.lib;libprotocd_win32_debug.lib;CppNet_win32_debug.lib</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -175,10 +104,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>absl_win64_debug.lib;%(AdditionalDependencies);gmock_maind_win64.lib;gmockd_win64.lib;gtest_maind_win64.lib;gtestd_win64.lib;libprotobufd_win64_debug.lib;libprotobuf-lited_win64_debug.lib;libprotocd_win64_debug.lib;CppNet_win64_debug.lib</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -190,12 +118,11 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>absl_win32_release.lib;libprotobufd_win32_relase.lib;libprotobuf-lited_win32_relase.lib;libprotocd_win32_relase.lib;CppNet_win32_release.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -207,14 +134,55 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>absl_win64_release.lib;libprotobufd_win64_relase.lib;libprotobuf-lited_win64_relase.lib;libprotocd_win64_relase.lib;CppNet_win64_release.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\base\Any.h" />
+    <ClInclude Include="..\base\BlockMemoryPool.h" />
+    <ClInclude Include="..\base\Buffer.h" />
+    <ClInclude Include="..\base\config.h" />
+    <ClInclude Include="..\base\Log.h" />
+    <ClInclude Include="..\base\LoopBuffer.h" />
+    <ClInclude Include="..\base\MemoryPool.h" />
+    <ClInclude Include="..\base\PoolSharedPtr.h" />
+    <ClInclude Include="..\base\Runnable.h" />
+    <ClInclude Include="..\base\RunnableAloneTaskList.h" />
+    <ClInclude Include="..\base\RunnableAloneTaskListWithPost.h" />
+    <ClInclude Include="..\base\RunnableShareTaskList.h" />
+    <ClInclude Include="..\base\Single.h" />
+    <ClInclude Include="..\base\TaskQueue.h" />
+    <ClInclude Include="..\base\TimeTool.h" />
+    <ClInclude Include="..\base\TSQueue.h" />
+    <ClInclude Include="..\common\ConfigImpl.h" />
+    <ClInclude Include="..\common\CppnetImpl.h" />
+    <ClInclude Include="..\include\RaftClient.h" />
+    <ClInclude Include="..\interface\IConfig.h" />
+    <ClInclude Include="..\interface\INet.h" />
+    <ClInclude Include="..\pb\message.pb.h" />
+    <ClInclude Include="..\raft\ClientRaftImpl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\base\BlockMemoryPool.cpp" />
+    <ClCompile Include="..\base\Buffer.cpp" />
+    <ClCompile Include="..\base\config.cpp" />
+    <ClCompile Include="..\base\Log.cpp" />
+    <ClCompile Include="..\base\LoopBuffer.cpp" />
+    <ClCompile Include="..\base\MemoryPool.cpp" />
+    <ClCompile Include="..\base\TimeTool.cpp" />
+    <ClCompile Include="..\common\ConfigImpl.cpp" />
+    <ClCompile Include="..\common\CppnetImpl.cpp" />
+    <ClCompile Include="..\pb\message.pb.cc" />
+    <ClCompile Include="..\raft\ClientRaftImpl.cpp" />
+    <ClCompile Include="..\raft\RaftClient.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\pb\message.proto" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

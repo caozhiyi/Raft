@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 #include "Entries.h"
-
 using namespace raft;
 
 Entries entries;
