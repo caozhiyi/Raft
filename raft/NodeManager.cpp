@@ -56,7 +56,9 @@ void CNodeManagerImpl::ConnectToAll(const std::string& net_handle_list) {
         std::vector<std::string> handle_vec = absl::StrSplit(addr_vec[i], ":");
         if (handle_vec.size() == 2) {
             uint32_t port = 0;
-            absl::SimpleAtoi<uint32_t>(handle_vec[1], &port);
+            if (!absl::SimpleAtoi<uint32_t>(handle_vec[1], &port)) {
+                base::LOG_ERROR("parser net handle failed.");
+            }
             _net->ConnectTo(handle_vec[0], (uint16_t)port);
         }
     }
@@ -118,7 +120,9 @@ void CNodeManagerImpl::NodeInfoRequestCallBack(const std::string& net_handle, No
         std::vector<std::string> handle_vec = absl::StrSplit(net_handle, ":");
         if (handle_vec.size() == 2) {
             uint32_t port = 0;
-            absl::SimpleAtoi<uint32_t>(handle_vec[1], &port);
+            if (!absl::SimpleAtoi<uint32_t>(handle_vec[1], &port)) {
+                base::LOG_ERROR("parser net handle failed.");
+            }
             _net->ConnectTo(handle_vec[0], (uint16_t)port);
         }
     }
@@ -143,7 +147,9 @@ void CNodeManagerImpl::NodeInfoResponseCallBack(const std::string& net_handle, N
         std::vector<std::string> handle_vec = absl::StrSplit(net_handle, ":");
         if (handle_vec.size() == 2) {
             uint32_t port = 0;
-            absl::SimpleAtoi<uint32_t>(handle_vec[1], &port);
+            if (!absl::SimpleAtoi<uint32_t>(handle_vec[1], &port)) {
+                base::LOG_ERROR("parser net handle failed.");
+            }
             _net->ConnectTo(handle_vec[0], (uint16_t)port);
         }
     }

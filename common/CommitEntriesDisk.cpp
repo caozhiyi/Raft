@@ -114,7 +114,7 @@ bool CCommitEntriesDisk::GetEntries(Entries& entries) {
 bool CCommitEntriesDisk::ReadEntries(uint64_t index, std::vector<Entries>& entries_vec, bool only_one) {
     _in_file_stream.clear();
     _in_file_stream.seekg(0, std::ios::end);
-	size_t file_size = _in_file_stream.tellg();
+	auto file_size = _in_file_stream.tellg();
     if (file_size == 0) {
         return false;
     }
@@ -144,7 +144,7 @@ bool CCommitEntriesDisk::ReadEntries(uint64_t index, std::vector<Entries>& entri
         }
 
         _in_file_stream.read(cur_buf + prev_buf_left, __once_step - prev_buf_left);
-		int len = _in_file_stream.gcount();
+		auto len = _in_file_stream.gcount();
 		if (len == 0) {
 			break;
 		}

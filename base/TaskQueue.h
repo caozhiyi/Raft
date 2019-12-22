@@ -7,12 +7,12 @@
 
 namespace base {
 
-#define INT_MAX 2147483647
+#define QUEUE_MAX 2147483647
 
     template<typename T>
     class CTaskQueue {
     public:
-        CTaskQueue(int size = -1) :_list_size(size > 0 ? size : INT_MAX) {
+        CTaskQueue(int size = -1) :_list_size(size > 0 ? size : QUEUE_MAX) {
 
         }
 

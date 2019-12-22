@@ -1,47 +1,36 @@
-SRCS = $(wildcard ./base/*.cpp  ./raft/*.cpp ./server/*.cpp ./pb/*.cc)
-PB=$(wildcard ./pb/*.proto)
-PROTO=/usr/bin/protoc
-OBJS = $(SRCS:.c* = .o)
+SRCS = $(wildcard ./base/*.cpp ./common/*.cpp ./pb/*.cpp ./raft/*.cpp)
+
+OBJS = $(patsubst %.cpp, %.o, $(SRCS))
+
 
 CC = g++
 
-INCLUDES = -I.               \
-           -I./base          \
-           -I./brpc/include  \
-           -I./server        \
-           -I./raft          \
-           -I./pb            \
-
-LIBS = -L./brpc/lib
-
-CCFLAGS = -lpthread -fPIC -m64 -std=c++11 -lstdc++ -fpermissive -lbrpc -lprotobuf
-
-TAR1 = raft_sev
-TAR2 = raft_cli
-
-all: protoc $(TAR1) ${TAR2}
-
-protoc:
-	${PROTO} -I=./pb --cpp_out=./pb  ${PB}
+INCLUDES = -I.                 \
+           -I./base            \
+		   -I./pb              \
+		   -I./raft            \
+           -I./common          \
+           -I./include         \
+           -I./interface       \
+		   -I./third           \
+		   -I./third/CppNet    \
+		   -I./third/protobuf  \
 
 
-$(TAR1) : $(OBJS) ./exe/Server.cpp
-	$(CC) $^ -o $@ $(INCLUDES) $(LIBS) $(CCFLAGS)
-	-mkdir out_put 
-	-mv ${TAR1} out_put
-	-cp conf/server.conf out_put
+#debug
+#CCFLAGS = -lpthread -fPIC -m64 -g -pg -std=c++11 -lstdc++ -pipe 
 
-${TAR2} : $(OBJS) ./exe/Client.cpp
-	$(CC) $^ -o $@ $(INCLUDES) $(LIBS) $(CCFLAGS)
-	-mkdir out_put 
-	-mv ${TAR2}  out_put
-	-cp conf/client.conf out_put
+CCFLAGS = -lpthread -fPIC -m64 -O2 -std=c++11 -lstdc++ -pipe -march=corei7 
 
+TARGET = libraft.a
 
-%.o : %.c
-	$(CC) -c $< $(CCFLAGS)
+all:$(TARGET)
+
+$(TARGET):$(OBJS)
+	ar rcs $@ $^
+
+%.o : %.cpp
+	$(CC) -c $< -o $@ $(CCFLAGS) $(INCLUDES) 
 
 clean:
-	rm -rf *.out *.o ${TAR1} ${TAR2}  out_put
-
-.PHONY:clean
+	rm -rf $(OBJS) $(TARGET) $(SERBIN) $(CLIBIN)

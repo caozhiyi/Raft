@@ -176,9 +176,6 @@
     <ClCompile Include="raft\LeaderRole.cpp">
       <Filter>raft</Filter>
     </ClCompile>
-    <ClCompile Include="pb\message.pb.cc">
-      <Filter>pb</Filter>
-    </ClCompile>
     <ClCompile Include="raft\FollowerRole.cpp">
       <Filter>raft</Filter>
     </ClCompile>
@@ -211,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="raft\Raft.cpp">
       <Filter>raft</Filter>
+    </ClCompile>
+    <ClCompile Include="pb\message.pb.cpp">
+      <Filter>pb</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

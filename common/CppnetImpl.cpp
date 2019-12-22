@@ -276,7 +276,9 @@ bool CCppNet::StringToBag(const std::string& data, std::vector<CppBag>& bag_vec,
     while(true) {
         CppBag bag;
         std::string header(start + offset, __header_len);
-        absl::SimpleAtoi<uint64_t>(header, &bag._header._data);
+        if (!absl::SimpleAtoi<uint64_t>(header, &bag._header._data)) {
+            base::LOG_ERROR("get header failed.");
+        }
 
         if (data.length() >= bag._header._field._len + __header_len) {
             bag._body = std::string(data.data() + __header_len, bag._header._field._len);
@@ -398,7 +400,7 @@ void CCppNet::HandleBag(const std::string& net_handle, const CppBag& bag) {
 
 void CCppNet::CheckConnectType(const cppnet::Handle& handle, const std::string& net_handle, CppBagType type) {
     ClientType client_type = unknow_type;
-    if (type == client_type) {
+    if (type == client_requst || type == client_response) {
         client_type = user_client;
         _client_connect_call_back(net_handle);
 

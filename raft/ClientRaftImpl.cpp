@@ -1,3 +1,4 @@
+#include "Log.h"
 #include "Runnable.h"
 #include "CppnetImpl.h"
 #include "ConfigImpl.h"
@@ -22,6 +23,16 @@ CClientRaftImpl::~CClientRaftImpl() {
 void CClientRaftImpl::Init(const std::string& config_file) {
     _config.reset(new CConfigImpl(config_file));
 
+    // print log?
+    bool print_log = _config->PrintLog();
+    if (print_log) {
+        std::string log_file = _config->GetLogFile();
+        uint16_t log_level = _config->GetLogLevel();
+        base::CLog::Instance().SetLogLevel((base::LogLevel)log_level);
+        base::CLog::Instance().SetLogName(log_file);
+        base::CLog::Instance().Start();
+    }
+
     // start net io
     std::string ip = _config->GetIp();
     uint16_t port = _config->GetPort();
@@ -42,7 +53,9 @@ void CClientRaftImpl::Init(const std::string& config_file) {
     std::vector<std::string> handle_vec = absl::StrSplit(*iter, ":");
     if (handle_vec.size() == 2) {
         uint32_t port = 0;
-        absl::SimpleAtoi<uint32_t>(handle_vec[1], &port);
+        if (!absl::SimpleAtoi<uint32_t>(handle_vec[1], &port)) {
+            base::LOG_ERROR("parser net handle failed.");
+        }
         _net->ConnectTo(handle_vec[0], (uint16_t)port);
     }
 }
@@ -87,7 +100,9 @@ void CClientRaftImpl::ClientDisConnect(const std::string& net_handle) {
         std::vector<std::string> handle_vec = absl::StrSplit(*iter, ":");
         if (handle_vec.size() == 2) {
             uint32_t port = 0;
-            absl::SimpleAtoi<uint32_t>(handle_vec[1], &port);
+            if (!absl::SimpleAtoi<uint32_t>(handle_vec[1], &port)) {
+                base::LOG_ERROR("parser net handle failed.");
+            }
             _net->ConnectTo(handle_vec[0], (uint16_t)port);
         }
     }
@@ -105,7 +120,9 @@ void CClientRaftImpl::ClientResponseCallBack(const std::string& net_handle, Clie
         std::vector<std::string> handle_vec = absl::StrSplit(leader, ":");
         if (handle_vec.size() == 2) {
             uint32_t port = 0;
-            absl::SimpleAtoi<uint32_t>(handle_vec[1], &port);
+            if (!absl::SimpleAtoi<uint32_t>(handle_vec[1], &port)) {
+                base::LOG_ERROR("parser net handle failed.");
+            }
             _net->ConnectTo(handle_vec[0], (uint16_t)port);
         }
 

@@ -1,4 +1,5 @@
-#include <exception>
+#include <string.h>  // for memcpy
+#include <stdexcept>
 #include "Entries.h"
 using namespace raft;
 

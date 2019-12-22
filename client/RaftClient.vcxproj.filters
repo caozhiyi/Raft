@@ -125,7 +125,7 @@
     <ClCompile Include="..\common\CppnetImpl.cpp">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\pb\message.pb.cc">
+    <ClCompile Include="..\pb\message.pb.cpp">
       <Filter>pb</Filter>
     </ClCompile>
   </ItemGroup>

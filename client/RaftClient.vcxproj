@@ -176,7 +176,7 @@
     <ClCompile Include="..\base\TimeTool.cpp" />
     <ClCompile Include="..\common\ConfigImpl.cpp" />
     <ClCompile Include="..\common\CppnetImpl.cpp" />
-    <ClCompile Include="..\pb\message.pb.cc" />
+    <ClCompile Include="..\pb\message.pb.cpp" />
     <ClCompile Include="..\raft\ClientRaftImpl.cpp" />
     <ClCompile Include="..\raft\RaftClient.cpp" />
   </ItemGroup>
