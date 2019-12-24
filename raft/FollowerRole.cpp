@@ -124,7 +124,7 @@ void CFollowerRole::CandidateTimeOut() {
     _role_data->_voted_for_id = _role_data->_raft_mediator->GetId();
 
     // to be a candidate
-    _role_data->_role_change_call_back(candidate_role);
+    _role_data->_role_change_call_back(candidate_role, "");
 
     // reset candidate timer 
     uint32_t time = absl::uniform_int_distribution<uint32_t>(150, 300)(_role_data->_gen);

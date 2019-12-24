@@ -65,7 +65,7 @@ void CCandidateRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBea
     }
 
     // change role to follower
-    _role_data->_role_change_call_back(follower_role);
+    _role_data->_role_change_call_back(follower_role, node->GetNetHandle());
     // recv that request again
     _role_data->_raft_mediator->RecvHeartBeat(node, heart_request);
 }
@@ -77,7 +77,7 @@ void CCandidateRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse
     if (_role_data->_vote_num > _role_data->_raft_mediator->GetNodeCount() / 2) {
         _role_data->_vote_num = 0;
         // to be a leader
-        _role_data->_role_change_call_back(leader_role);
+        _role_data->_role_change_call_back(leader_role, _role_data->_raft_mediator->GetCurNodeHandle());
         _role_data->_current_term++;
     }
 }

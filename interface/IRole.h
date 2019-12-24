@@ -40,7 +40,7 @@ namespace raft {
         // when heart beat timer out
         virtual void HeartBeatTimerOut() {}
         // set role changed call back
-        virtual void SetRoleChangeCalBack(absl::FunctionRef<void(ROLE_TYPE)> func) {
+        virtual void SetRoleChangeCalBack(absl::FunctionRef<void(ROLE_TYPE, const std::string& net_handle)> func) {
             _role_data->_role_change_call_back = func;
         }
         // set commitentries call back

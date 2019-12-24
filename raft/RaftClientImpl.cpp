@@ -2,25 +2,25 @@
 #include "Runnable.h"
 #include "CppnetImpl.h"
 #include "ConfigImpl.h"
-#include "ClientRaftImpl.h"
+#include "RaftClientImpl.h"
 #include "absl/strings/numbers.h"
 #include "absl/strings/str_split.h"
 
 using namespace raft;
 
-CClientRaftImpl::CClientRaftImpl() {
+CRaftClientImpl::CRaftClientImpl() {
     _net.reset(new CCppNet());
-    _net->SetClientResponseCallBack(std::bind(&CClientRaftImpl::ClientResponseCallBack, this, std::placeholders::_1, std::placeholders::_2));
-    _net->SetClientConnectCallBack(std::bind(&CClientRaftImpl::ClientConnect, this, std::placeholders::_1));
-    _net->SetClientDisConnectCallBack(std::bind(&CClientRaftImpl::ClientDisConnect, this, std::placeholders::_1));
-    _net->SetNodeInfoResponseCallBack(std::bind(&CClientRaftImpl::NodeInfoResponseCallBack, this, std::placeholders::_1, std::placeholders::_2));
+    _net->SetClientResponseCallBack(std::bind(&CRaftClientImpl::ClientResponseCallBack, this, std::placeholders::_1, std::placeholders::_2));
+    _net->SetClientConnectCallBack(std::bind(&CRaftClientImpl::ClientConnect, this, std::placeholders::_1));
+    _net->SetClientDisConnectCallBack(std::bind(&CRaftClientImpl::ClientDisConnect, this, std::placeholders::_1));
+    _net->SetNodeInfoResponseCallBack(std::bind(&CRaftClientImpl::NodeInfoResponseCallBack, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-CClientRaftImpl::~CClientRaftImpl() {
+CRaftClientImpl::~CRaftClientImpl() {
 
 }
 
-void CClientRaftImpl::Init(const std::string& config_file) {
+void CRaftClientImpl::Init(const std::string& config_file) {
     _config.reset(new CConfigImpl(config_file));
 
     // print log?
@@ -60,26 +60,26 @@ void CClientRaftImpl::Init(const std::string& config_file) {
     }
 }
 
-void CClientRaftImpl::Dealloc() {
+void CRaftClientImpl::Dealloc() {
     _net->Dealloc();
 }
 
-void CClientRaftImpl::Join() {
+void CRaftClientImpl::Join() {
     _net->Join();
 }
 
-void CClientRaftImpl::SendEntries(const std::string& entries) {
+void CRaftClientImpl::SendEntries(const std::string& entries) {
     ClientRequest reqeust;
     reqeust.set_entries(entries);
     _resend_entries = entries;
     _net->SendClientRequest(_cur_net_handle, reqeust);
 }
 
-void CClientRaftImpl::SetCommitEntriesCallBack(std::function<void(ERR_CODE)> func) {
+void CRaftClientImpl::SetCommitEntriesCallBack(std::function<void(ERR_CODE)> func) {
     _response_call_back = func;
 }
 
-void CClientRaftImpl::ClientConnect(const std::string& net_handle) {
+void CRaftClientImpl::ClientConnect(const std::string& net_handle) {
     if (!_cur_net_handle.empty()) {
         _net->DisConnect(net_handle);
     }
@@ -92,7 +92,7 @@ void CClientRaftImpl::ClientConnect(const std::string& net_handle) {
     _net->SendNodeInfoRequest(_cur_net_handle, request);
 }
 
-void CClientRaftImpl::ClientDisConnect(const std::string& net_handle) {
+void CRaftClientImpl::ClientDisConnect(const std::string& net_handle) {
     _cur_net_handle.clear();
     _net_handle_set.erase(net_handle);
     if (_net_handle_set.size()) {
@@ -108,7 +108,7 @@ void CClientRaftImpl::ClientDisConnect(const std::string& net_handle) {
     }
 }
 
-void CClientRaftImpl::ClientResponseCallBack(const std::string& net_handle, ClientResponse& response) {
+void CRaftClientImpl::ClientResponseCallBack(const std::string& net_handle, ClientResponse& response) {
     auto ret_code = response.ret_code();
     if (ret_code == success) {
         _response_call_back(client_success);
@@ -136,7 +136,7 @@ void CClientRaftImpl::ClientResponseCallBack(const std::string& net_handle, Clie
     }
 }
 
-void CClientRaftImpl::NodeInfoResponseCallBack(const std::string& net_handle, NodeInfoResponse& response) {
+void CRaftClientImpl::NodeInfoResponseCallBack(const std::string& net_handle, NodeInfoResponse& response) {
     auto size = response.net_handle_size();
     for (int i = 0; i < size; i++) {
         std::string net_handle = response.net_handle(i);

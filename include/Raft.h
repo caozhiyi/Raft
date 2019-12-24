@@ -13,6 +13,8 @@ namespace raft {
     // thread join.
     void Join();
 
+    // push entries to cluser
+    void PushEntries(const std::string& entries);
     // set commit entries call back.
     void SetCommitEntriesCallBack(std::function<void(std::string)> func);
 }

@@ -1,11 +1,11 @@
 #include "Log.h"
-#include "Node.h"
 #include "IConfig.h"
 #include "RaftTimer.h"
 #include "CppnetImpl.h"
 #include "LeaderRole.h"
 #include "ConfigImpl.h"
 #include "NodeManager.h"
+#include "MountClient.h"
 #include "RaftMediator.h"
 #include "FollowerRole.h"
 #include "CandidateRole.h"
@@ -36,8 +36,11 @@ CRaftMediator::CRaftMediator() {
     // create client manager
     _client_manager.reset(new CClientManagerImpl(_net));
 
+    // create mount client 
+    _mount_client.reset(new CMountClient(_net));
+
     // set current role to follower
-    ChangeRole(follower_role);
+    ChangeRole(follower_role, "");
 }
 
 CRaftMediator::~CRaftMediator() {
@@ -65,6 +68,7 @@ void CRaftMediator::Start(const std::string& config_file) {
     std::string ip = _config->GetIp();
     uint16_t port = _config->GetPort();
     uint16_t thread_num = _config->GetThreadNum();
+    _cur_node_net = absl::StrFormat("%s:%d", ip.c_str(), port);
     _net->Init(thread_num);
     _net->Start(ip, port);
 
@@ -93,10 +97,12 @@ void CRaftMediator::CommitEntries(Entries& entries) {
     _commit_entries->PushEntries(entries);
 }
 
-void CRaftMediator::ChangeRole(ROLE_TYPE type) {
+void CRaftMediator::ChangeRole(ROLE_TYPE type, const std::string& net_handle) {
     base::LOG_DEBUG("change role to %d", type);
     _node_manager->SetRole(_current_role);
     _client_manager->SetRole(_current_role);
+    _mount_client->SetLeaderHandle(net_handle);
+    _mount_client->SetCurRole(_current_role);
     if (type == follower_role) {
         _current_role = _follower_role;
 
@@ -139,4 +145,8 @@ uint32_t CRaftMediator::GetNodeCount() {
 
 uint32_t CRaftMediator::GetHeartTime() {
     return _config->GetHeartTime();
+}
+
+std::string CRaftMediator::GetCurNodeHandle() {
+    return _cur_node_net;
 }

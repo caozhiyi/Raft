@@ -44,8 +44,8 @@ namespace raft {
         // leader net handle
         std::string                  _net_handle;
 
-        std::function<void(ROLE_TYPE)> _role_change_call_back;
-        std::function<void(Entries&)>  _commit_entries_call_back;
+        std::function<void(ROLE_TYPE, const std::string&)> _role_change_call_back;
+        std::function<void(Entries&)>                      _commit_entries_call_back;
     public:
         CRoleData() : _timer(nullptr),
             _raft_mediator(nullptr), 

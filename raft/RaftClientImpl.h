@@ -9,10 +9,10 @@ namespace raft {
 
     class CNet;
     class CConfig;
-    class CClientRaftImpl : public base::CSingle<CClientRaftImpl> {
+    class CRaftClientImpl : public base::CSingle<CRaftClientImpl> {
     public:
-        CClientRaftImpl();
-        ~CClientRaftImpl();
+        CRaftClientImpl();
+        ~CRaftClientImpl();
         // init raft library.
         // thread_num : the number of running threads.
         void Init(const std::string& config_file);

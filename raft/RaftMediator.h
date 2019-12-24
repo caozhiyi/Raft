@@ -19,6 +19,7 @@ namespace raft {
     class CTimer;
     class CConfig;
     class Entries;
+    class CMountClient;
     class CNodeManager;
     class CClientManager;
     class CCommitEntries;
@@ -38,7 +39,7 @@ namespace raft {
         // commit entries
         void CommitEntries(Entries& entries);
         // role changed
-        void ChangeRole(ROLE_TYPE type);
+        void ChangeRole(ROLE_TYPE type, const std::string& net_handle);
 
         // send vote to all node
         void SendVoteToAll(VoteRequest& request);
@@ -60,13 +61,18 @@ namespace raft {
         // get heart time
         uint32_t GetHeartTime();
 
+        // get current node net handle
+        std::string GetCurNodeHandle();
+
     private:
         uint32_t                        _id;
         std::shared_ptr<CNet>           _net;
         std::shared_ptr<CTimer>         _timer;
         std::shared_ptr<CCommitEntries> _commit_entries;
         std::shared_ptr<CConfig>        _config;
+        std::shared_ptr<CMountClient>   _mount_client;
 
+        std::string                     _cur_node_net;
         // raft node manager
         std::shared_ptr<CNodeManager>   _node_manager;
         // client manager

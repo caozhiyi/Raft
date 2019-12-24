@@ -19,11 +19,10 @@ namespace raft {
         node_info_response  = 8
     };
 
-    enum ClientType {
-        unknow_type         = 1,
-        user_client         = 2,
-        raft_node           = 3
-    };
+    
+    static const uint16_t unknow_type         = 0x01;
+    static const uint16_t user_client         = 0x02;
+    static const uint16_t raft_node           = 0x04;
 
     static const uint32_t __header_len = sizeof(uint64_t);
     struct CppBag {
@@ -98,9 +97,9 @@ namespace raft {
         std::string BagToString(CppBag& bag);
         bool StringToBag(const std::string& data, std::vector<CppBag>& bag_vec, uint32_t& used_size);
         // get net handle
-        std::pair<std::string, ClientType> GetNetHandle(const cppnet::Handle& handle);
+        std::pair<std::string, uint16_t> GetNetHandle(const cppnet::Handle& handle);
         // send to net
-        void SendToNet(const std::string& net_handle, std::string& data, ClientType type = raft_node);
+        void SendToNet(const std::string& net_handle, std::string& data, uint16_t type = raft_node);
         // handle bag
         void HandleBag(const std::string& net_handle, const CppBag& bag);
         // check connect type
@@ -109,7 +108,7 @@ namespace raft {
     private:
         // net handle to cppnet handle
         std::map<std::string, cppnet::Handle>                                 _net_2_handle_map;
-        std::map<cppnet::Handle, std::pair<std::string, ClientType>>          _handle_2_net_map;
+        std::map<cppnet::Handle, std::pair<std::string, uint16_t>>            _handle_2_net_map;
 
         // raft call back
         std::function<void(const std::string&, HeartBeatResquest&)>           _heart_request_call_back;

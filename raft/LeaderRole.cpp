@@ -40,7 +40,7 @@ void CLeaderRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vot
     
     node->SendVoteResponse(response);
     // change role to follower
-    _role_data->_role_change_call_back(follower_role);
+    _role_data->_role_change_call_back(follower_role, "");
 }
 
 void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
@@ -58,7 +58,7 @@ void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatRe
     }
     if (response.success()) {
         // change role to follower
-        _role_data->_role_change_call_back(follower_role);
+        _role_data->_role_change_call_back(follower_role, node->GetNetHandle());
     }
     // set leader net handle
     if (_role_data->_net_handle != node->GetNetHandle()) {
@@ -109,7 +109,9 @@ void CLeaderRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequ
 
     // insert entries
     _role_data->_entries_map[entries._index] = entries;
-    _client_net_handle_map[entries._index] = client;
+    if (client) {
+        _client_net_handle_map[entries._index] = client;
+    }
 }
 
 void CLeaderRole::CandidateTimeOut() {

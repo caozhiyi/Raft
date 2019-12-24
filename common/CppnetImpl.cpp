@@ -300,8 +300,8 @@ bool CCppNet::StringToBag(const std::string& data, std::vector<CppBag>& bag_vec,
     return ret;
 }
 
-std::pair<std::string, ClientType> CCppNet::GetNetHandle(const cppnet::Handle& handle) {
-    std::pair<std::string, ClientType> ret;
+std::pair<std::string, uint16_t> CCppNet::GetNetHandle(const cppnet::Handle& handle) {
+    std::pair<std::string, uint16_t> ret;
     auto iter = _handle_2_net_map.find(handle);
     if (iter != _handle_2_net_map.end()) {
         ret.first = iter->second.first;
@@ -318,7 +318,7 @@ std::pair<std::string, ClientType> CCppNet::GetNetHandle(const cppnet::Handle& h
     return std::move(ret);
 }
 
-void CCppNet::SendToNet(const std::string& net_handle, std::string& data, ClientType type) {
+void CCppNet::SendToNet(const std::string& net_handle, std::string& data, uint16_t type) {
     auto iter = _net_2_handle_map.find(net_handle);
     if (iter == _net_2_handle_map.end()) {
         if (type == raft_node) {
@@ -399,15 +399,18 @@ void CCppNet::HandleBag(const std::string& net_handle, const CppBag& bag) {
 }
 
 void CCppNet::CheckConnectType(const cppnet::Handle& handle, const std::string& net_handle, CppBagType type) {
-    ClientType client_type = unknow_type;
+    std::pair<std::string, uint16_t>& iter = _handle_2_net_map[handle];
     if (type == client_requst || type == client_response) {
-        client_type = user_client;
-        _client_connect_call_back(net_handle);
+        if (!(iter.second & user_client)) {
+            _client_connect_call_back(net_handle);
+            iter.second |= user_client;
+        }
 
     } else {
-        client_type = raft_node;
+        if (!(iter.second & raft_node)) {
+            _client_connect_call_back(net_handle);
+            iter.second |= raft_node;
+        }
         _raft_connect_call_back(net_handle);
     }
-
-    _handle_2_net_map[handle].second = client_type;
 }
