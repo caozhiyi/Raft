@@ -56,6 +56,7 @@
     <ClInclude Include="raft\ClientManager.h" />
     <ClInclude Include="raft\FollowerRole.h" />
     <ClInclude Include="raft\LeaderRole.h" />
+    <ClInclude Include="raft\MountClient.h" />
     <ClInclude Include="raft\Node.h" />
     <ClInclude Include="raft\NodeManager.h" />
     <ClInclude Include="raft\RaftMediator.h" />
@@ -80,6 +81,7 @@
     <ClCompile Include="raft\ClientManager.cpp" />
     <ClCompile Include="raft\FollowerRole.cpp" />
     <ClCompile Include="raft\LeaderRole.cpp" />
+    <ClCompile Include="raft\MountClient.cpp" />
     <ClCompile Include="raft\Node.cpp" />
     <ClCompile Include="raft\NodeManager.cpp" />
     <ClCompile Include="raft\Raft.cpp" />
@@ -142,10 +144,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)base;$(SolutionDir)common;$(SolutionDir)interface;$(SolutionDir)pb;$(SolutionDir)raft;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(SolutionDir)third\CppNet;$(SolutionDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)third\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)base;$(SolutionDir)common;$(SolutionDir)interface;$(SolutionDir)pb;$(SolutionDir)raft;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(SolutionDir)third\CppNet;$(SolutionDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)third\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)base;$(SolutionDir)common;$(SolutionDir)interface;$(SolutionDir)pb;$(SolutionDir)raft;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(SolutionDir)third\CppNet;$(SolutionDir)include;$(IncludePath)</IncludePath>
@@ -161,7 +165,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PROTOBUF_USE_DLLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -174,7 +178,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PROTOBUF_USE_DLLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -189,7 +193,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PROTOBUF_USE_DLLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -206,7 +210,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PROTOBUF_USE_DLLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>

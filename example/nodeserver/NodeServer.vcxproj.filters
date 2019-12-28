@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="http">
+      <UniqueIdentifier>{9e697f3f-f04e-454b-813d-2e473c392b75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raft">
+      <UniqueIdentifier>{167642d4-b736-4b6c-a4d4-b7a9ec58050c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="http\HttpContext.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="http\HttpResponse.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="http\HttpServer.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="http\HttpServerImpl.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="raft\server.cpp">
+      <Filter>raft</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="http\HttpContext.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="http\HttpRequest.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="http\HttpResponse.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="http\HttpServer.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="http\HttpServerImpl.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="raft\server.h">
+      <Filter>raft</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

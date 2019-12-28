@@ -64,6 +64,9 @@ namespace raft {
         // get current node net handle
         std::string GetCurNodeHandle();
 
+        // mount client send entries
+        void PushEntries(const std::string& entries);
+
     private:
         uint32_t                        _id;
         std::shared_ptr<CNet>           _net;
