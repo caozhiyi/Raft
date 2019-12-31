@@ -1,12 +1,12 @@
 #include "INode.h"
 #include "ITimer.h"
 #include "IClient.h"
-#include "RaftMediator.h"
+#include "RoleData.h"
 #include "FollowerRole.h"
 
 using namespace raft;
 
-CFollowerRole::CFollowerRole(std::shared_ptr<CRoleData>& role_data, std::shared_ptr<CTimer>& timer, CRaftMediator* mediator) : CRole(role_data, timer, mediator) {
+CFollowerRole::CFollowerRole(std::shared_ptr<CRoleData>& role_data) : CRole(role_data) {
 
 }
 
@@ -69,8 +69,8 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
     }
 
     // set leader net handle
-    if (_role_data->_net_handle != node->GetNetHandle()) {
-        _role_data->_net_handle = node->GetNetHandle();
+    if (_role_data->_leader_net_handle != node->GetNetHandle()) {
+        _role_data->_leader_net_handle = node->GetNetHandle();
     }
 
     // apply entries
@@ -109,7 +109,7 @@ void CFollowerRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRe
     // tell client send to leader.
     ClientResponse response;
     response.set_ret_code(not_leader);
-    response.set_leader_net_handle(_role_data->_net_handle);
+    response.set_leader_net_handle(_role_data->_leader_net_handle);
     client->SendToClient(response);
 }
 
@@ -121,7 +121,7 @@ void CFollowerRole::CandidateTimeOut() {
     }
 
     // vote to myself
-    _role_data->_voted_for_id = _role_data->_raft_mediator->GetId();
+    _role_data->_voted_for_id = _role_data->_cur_node_id;
 
     // to be a candidate
     _role_data->_role_change_call_back(candidate_role, "");

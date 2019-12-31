@@ -2,12 +2,12 @@
 #define RAFT_RAFT_MOUNTCLIENT
 
 #include "IClient.h"
-#include "message.pb.h"
 
 namespace raft {
 
     class CNet;
     class CRole;
+    class ClientResponse;
     class CMountClient {
     public:
         CMountClient(std::shared_ptr<CNet>& net);

@@ -8,7 +8,7 @@ namespace raft {
     class CRoleData;
     class CFollowerRole : public CRole {
     public:
-        CFollowerRole(std::shared_ptr<CRoleData>& role_data, std::shared_ptr<CTimer>& timer, CRaftMediator* mediator);
+        CFollowerRole(std::shared_ptr<CRoleData>& role_data);
         virtual ~CFollowerRole();
         // get role type
         ROLE_TYPE GetRole();

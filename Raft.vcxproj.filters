@@ -144,9 +144,6 @@
     <ClInclude Include="include\Raft.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="raft\MountClient.h">
-      <Filter>raft</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\BlockMemoryPool.cpp">
@@ -210,9 +207,6 @@
       <Filter>raft</Filter>
     </ClCompile>
     <ClCompile Include="raft\Raft.cpp">
-      <Filter>raft</Filter>
-    </ClCompile>
-    <ClCompile Include="raft\MountClient.cpp">
       <Filter>raft</Filter>
     </ClCompile>
     <ClCompile Include="pb\message.pb.cpp">

@@ -1,7 +1,8 @@
 #include <cstring>      // for memcpy
 #include <algorithm>    // for reverse
-#include "CommitEntriesDisk.h"
+
 #include "Log.h"
+#include "CommitEntriesDisk.h"
 
 static const int32_t __once_step = 4096 * 2;    // read size every time
 

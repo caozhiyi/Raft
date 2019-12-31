@@ -1,7 +1,7 @@
-#include "absl/strings/numbers.h"
 #include "Log.h"
 #include "Socket.h"
 #include "CppnetImpl.h"
+#include "absl/strings/numbers.h"
 
 using namespace raft;
 
@@ -15,19 +15,19 @@ CCppNet::~CCppNet() {
 
 void CCppNet::Init(uint16_t thread_num) {
     // start cpp net
-    cppnet::Init(thread_num);
+    uint32_t net_handle = cppnet::Init(thread_num);
+
+    // set call back to cppnet
+    cppnet::SetReadCallback(std::bind(&CCppNet::Recved, this, std::placeholders::_1, std::placeholders::_2, 
+                                              std::placeholders::_3, std::placeholders::_4), net_handle);
+    cppnet::SetWriteCallback(std::bind(&CCppNet::Sended, this, std::placeholders::_1, std::placeholders::_2, 
+                                              std::placeholders::_3), net_handle);
+    cppnet::SetDisconnectionCallback(std::bind(&CCppNet::DisConnected, this, std::placeholders::_1, std::placeholders::_2), net_handle);
+    cppnet::SetAcceptCallback(std::bind(&CCppNet::Connected, this, std::placeholders::_1, std::placeholders::_2), net_handle);
+    cppnet::SetConnectionCallback(std::bind(&CCppNet::Connected, this, std::placeholders::_1, std::placeholders::_2), net_handle);
 }
 
 bool CCppNet::Start(const std::string& ip, uint16_t port) {
-    // set call back to cppnet
-    cppnet::SetReadCallback(std::bind(&CCppNet::Recved, this, std::placeholders::_1, std::placeholders::_2, 
-                                              std::placeholders::_3, std::placeholders::_4));
-    cppnet::SetWriteCallback(std::bind(&CCppNet::Sended, this, std::placeholders::_1, std::placeholders::_2, 
-                                              std::placeholders::_3));
-    cppnet::SetDisconnectionCallback(std::bind(&CCppNet::DisConnected, this, std::placeholders::_1, std::placeholders::_2));
-    cppnet::SetAcceptCallback(std::bind(&CCppNet::Connected, this, std::placeholders::_1, std::placeholders::_2));
-    cppnet::SetConnectionCallback(std::bind(&CCppNet::Connected, this, std::placeholders::_1, std::placeholders::_2));
-
     return cppnet::ListenAndAccept(ip, port);
 }
 

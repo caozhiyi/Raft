@@ -2,6 +2,7 @@
 #define RAFT_COMMON_ENTRIES
 
 #include <string>
+
 namespace raft {
     
     static const int __field_len = sizeof(uint32_t) + sizeof(uint32_t) + sizeof(uint64_t) + sizeof(char*);

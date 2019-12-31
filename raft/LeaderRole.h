@@ -7,7 +7,7 @@ namespace raft {
 
     class CLeaderRole : public CRole {
     public:
-        CLeaderRole(std::shared_ptr<CRoleData>& role_data, std::shared_ptr<CTimer>& timer, CRaftMediator* mediator);
+        CLeaderRole(std::shared_ptr<CRoleData>& role_data);
         virtual ~CLeaderRole();
         // get role type
         ROLE_TYPE GetRole();

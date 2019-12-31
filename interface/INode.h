@@ -2,7 +2,6 @@
 #define RAFT_INTERFACE_NODE
 
 #include "message.pb.h"
-#include "absl/functional/function_ref.h"
 
 namespace raft {
 

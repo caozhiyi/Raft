@@ -1,12 +1,13 @@
 #include "INode.h"
-#include "IClient.h"
-#include "LeaderRole.h"
-#include "RaftMediator.h"
 #include "ITimer.h"
+#include "IClient.h"
+#include "RoleData.h"
+#include "LeaderRole.h"
+#include "INodeManager.h"
 
 using namespace raft;
 
-CLeaderRole::CLeaderRole(std::shared_ptr<CRoleData>& role_data, std::shared_ptr<CTimer>& timer, CRaftMediator* mediator) : CRole(role_data, timer, mediator) {
+CLeaderRole::CLeaderRole(std::shared_ptr<CRoleData>& role_data) : CRole(role_data) {
 
 }
 
@@ -20,7 +21,7 @@ ROLE_TYPE CLeaderRole::GetRole() {
 
 void CLeaderRole::ItsMyTurn() {
     _client_net_handle_map.clear();
-    _role_data->_timer->StartHeartTimer(_role_data->_raft_mediator->GetHeartTime());
+    _role_data->_timer->StartHeartTimer(_role_data->_heart_time);
 }
 
 void CLeaderRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
@@ -61,11 +62,11 @@ void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatRe
         _role_data->_role_change_call_back(follower_role, node->GetNetHandle());
     }
     // set leader net handle
-    if (_role_data->_net_handle != node->GetNetHandle()) {
-        _role_data->_net_handle = node->GetNetHandle();
+    if (_role_data->_leader_net_handle != node->GetNetHandle()) {
+        _role_data->_leader_net_handle = node->GetNetHandle();
     }
     // change to follower recv this request again
-    _role_data->_raft_mediator->RecvHeartBeat(node, heart_request);
+    _role_data->_recv_heart_again(node, heart_request);
 }
 
 void CLeaderRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response) {
@@ -81,7 +82,7 @@ void CLeaderRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatR
     }
     
     // commit entries success
-    if (_role_data->_heart_success_num > _role_data->_raft_mediator->GetNodeCount() / 2) {
+    if (_role_data->_heart_success_num > _role_data->_node_manager->GetNodeCount() / 2) {
         auto iter = _role_data->_entries_map.find(_role_data->_prev_match_index);
         ClientResponse response;
         response.set_ret_code(success);
@@ -124,7 +125,7 @@ void CLeaderRole::HeartBeatTimerOut() {
     // send heart request to all node again
     HeartBeatResquest request;
     request.set_term(_role_data->_current_term);
-    request.set_leader_id(_role_data->_raft_mediator->GetId());
+    request.set_leader_id(_role_data->_cur_node_id);
 
     // add last entries info
     if (_role_data->_entries_map.size() > 0) {
@@ -136,7 +137,7 @@ void CLeaderRole::HeartBeatTimerOut() {
     request.set_leader_commit(_role_data->_last_applied);
     
     // send request to all node
-    auto node_map = _role_data->_raft_mediator->GetAllNode();
+    auto node_map = _role_data->_node_manager->GetAllNode();
     for (auto node_iter = node_map.begin(); node_iter != node_map.end(); ++node_iter) {
         uint64_t next_index = node_iter->second->GetNextIndex();
         if (next_index > 0) {

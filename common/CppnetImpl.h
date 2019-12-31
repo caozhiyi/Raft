@@ -1,8 +1,9 @@
 #ifndef RAFT_CPMMON_CPPNETIMPL
 #define RAFT_CPMMON_CPPNETIMPL
 
-#include <functional>
 #include <map>
+#include <functional>
+
 #include "INet.h"
 #include "CppNet.h"
 #include "CppDefine.h"

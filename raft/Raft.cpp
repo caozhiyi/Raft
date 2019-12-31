@@ -13,10 +13,6 @@ void raft::Join() {
     CRaftMediator::Instance().Join();
 }
 
-void raft::PushEntries(const std::string& entries) {
-    CRaftMediator::Instance().PushEntries(entries);
-}
-
 void raft::SetCommitEntriesCallBack(std::function<void(std::string)> func) {
     CRaftMediator::Instance().SetCommitCallBack(func);
 }

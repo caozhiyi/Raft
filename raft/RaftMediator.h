@@ -3,13 +3,9 @@
 
 #include <memory>
 #include <functional>
-#include <map>
 
 #include "IRole.h"
 #include "Single.h"
-#include "RoleData.h"
-#include "message.pb.h"
-#include "absl/strings/string_view.h"
 #include "absl/functional/function_ref.h"
 
 namespace raft {
@@ -19,10 +15,13 @@ namespace raft {
     class CTimer;
     class CConfig;
     class Entries;
+    class CRoleData;
     class CMountClient;
     class CNodeManager;
     class CClientManager;
     class CCommitEntries;
+    class HeartBeatResquest;
+    class HeartBeatResquest;
     class CRaftMediator : public base::CSingle<CRaftMediator> {
     public:
         CRaftMediator();
@@ -32,9 +31,6 @@ namespace raft {
         void Start(const std::string& config_file);
         void Join();
         void Dealloc();
-  
-        // get currnet node id
-        uint32_t GetId();
 
         // commit entries
         void CommitEntries(Entries& entries);
@@ -52,32 +48,16 @@ namespace raft {
         // set commit call back
         void SetCommitCallBack(absl::FunctionRef<void(std::string)> func);
 
-        // get all node
-        const std::map<std::string, std::shared_ptr<CNode>>& GetAllNode();
-
-        // get node number
-        uint32_t GetNodeCount();
-
-        // get heart time
-        uint32_t GetHeartTime();
-
-        // get current node net handle
-        std::string GetCurNodeHandle();
-
-        // mount client send entries
-        void PushEntries(const std::string& entries);
-
     private:
         uint32_t                        _id;
         std::shared_ptr<CNet>           _net;
-        std::shared_ptr<CTimer>         _timer;
         std::shared_ptr<CCommitEntries> _commit_entries;
         std::shared_ptr<CConfig>        _config;
         std::shared_ptr<CMountClient>   _mount_client;
 
-        std::string                     _cur_node_net;
-        // raft node manager
-        std::shared_ptr<CNodeManager>   _node_manager;
+        // common data
+        std::shared_ptr<CRoleData>      _common_data;
+
         // client manager
         std::shared_ptr<CClientManager> _client_manager;
 

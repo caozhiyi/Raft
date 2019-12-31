@@ -7,7 +7,7 @@ namespace raft {
 
     class CCandidateRole : public CRole {
     public:
-        CCandidateRole(std::shared_ptr<CRoleData>& role_data, std::shared_ptr<CTimer>& timer, CRaftMediator* mediator);
+        CCandidateRole(std::shared_ptr<CRoleData>& role_data);
         virtual ~CCandidateRole();
         // get role type
         virtual ROLE_TYPE GetRole();

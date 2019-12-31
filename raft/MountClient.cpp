@@ -1,8 +1,11 @@
 #include <functional>
-#include "MountClient.h"
+
 #include "INet.h"
 #include "IRole.h"
 #include "IClient.h"
+#include "message.pb.h"
+#include "MountClient.h"
+
 
 using namespace raft;
 
@@ -28,7 +31,7 @@ void CMountClient::SetCurRole(std::shared_ptr<CRole>& role) {
 void CMountClient::SendEntries(const std::string& entries) {
     // current node is leader
     ClientRequest reqeust;
-    reqeust.set_entries(entries.c_str());
+    reqeust.set_entries(entries);
     _resend_entries = entries;
     if (_current_role && _current_role->GetRole() == leader_role) {
         std::shared_ptr<CClient> client(nullptr);

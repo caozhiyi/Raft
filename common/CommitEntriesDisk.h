@@ -5,9 +5,9 @@
 #include <functional>
 #include <vector>
 
-#include "absl/functional/function_ref.h"
 #include "Entries.h"
 #include "ICommitEntries.h"
+#include "absl/functional/function_ref.h"
 
 namespace raft {
     class CCommitEntriesDisk : public CCommitEntries {

@@ -1,9 +1,10 @@
 #include <functional>
-#include "ClientManager.h"
-#include "Client.h"
+
 #include "Log.h"
-#include "IRole.h"
 #include "INet.h"
+#include "IRole.h"
+#include "Client.h"
+#include "ClientManager.h"
 
 using namespace raft;
 

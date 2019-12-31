@@ -1,6 +1,7 @@
 #include "Log.h"
-#include "IConfig.h"
+#include "RoleData.h"
 #include "RaftTimer.h"
+#include "message.pb.h"
 #include "CppnetImpl.h"
 #include "LeaderRole.h"
 #include "ConfigImpl.h"
@@ -18,21 +19,22 @@
 using namespace raft;
 
 CRaftMediator::CRaftMediator() {
-    
-    // create timer
-    _timer = std::make_shared<CTimerImpl>();
+    // creata common data
+    _common_data.reset(new CRoleData());
+    _common_data->_node_manager.reset(new CNodeManagerImpl(_net));
+    _common_data->_timer.reset(new CTimerImpl());
+    _common_data->_recv_heart_again = std::bind(&CRaftMediator::RecvHeartBeat, this, std::placeholders::_1, std::placeholders::_2);
+    _common_data->_role_change_call_back = std::bind(&CRaftMediator::ChangeRole, this, std::placeholders::_1, std::placeholders::_2);
+    _common_data->_commit_entries_call_back = std::bind(&CRaftMediator::CommitEntries, this, std::placeholders::_1);
 
-    // creata role data
-    std::shared_ptr<CRoleData> data(new CRoleData);
     // create all role control 
-    _leader_role.reset(new CLeaderRole(data, _timer, this));
-    _candidate_role.reset(new CCandidateRole(data, _timer, this));
-    _follower_role.reset(new CFollowerRole(data, _timer, this));
+    _leader_role.reset(new CLeaderRole(_common_data));
+    _candidate_role.reset(new CCandidateRole(_common_data));
+    _follower_role.reset(new CFollowerRole(_common_data));
 
     // create net 
     _net.reset(new CCppNet());
-    // create node manager
-    _node_manager.reset(new CNodeManagerImpl(_net));
+    
     // create client manager
     _client_manager.reset(new CClientManagerImpl(_net));
 
@@ -54,6 +56,10 @@ void CRaftMediator::Start(const std::string& config_file) {
     std::string file = _config->GetCommitDiskFile();
     _commit_entries.reset(new CCommitEntriesDisk(file));
 
+    _common_data->_cur_node_id = _config->GetNodeId();
+    _common_data->_heart_time = _config->GetHeartTime();
+    _common_data->_candidate_time = _config->GetVoteTimerRandomRange();
+
     // print log?
     bool print_log = _config->PrintLog();
     if (print_log) {
@@ -68,13 +74,14 @@ void CRaftMediator::Start(const std::string& config_file) {
     std::string ip = _config->GetIp();
     uint16_t port = _config->GetPort();
     uint16_t thread_num = _config->GetThreadNum();
-    _cur_node_net = absl::StrFormat("%s:%d", ip.c_str(), port);
+    _common_data->_cur_net_handle = absl::StrFormat("%s:%d", ip.c_str(), port);
+
     _net->Init(thread_num);
     _net->Start(ip, port);
 
     // connect to other node
     std::string node_address = _config->GetNodeInfo();
-    _node_manager->ConnectToAll(node_address);
+    _common_data->_node_manager->ConnectToAll(node_address);
 }
 
 void CRaftMediator::Join() {
@@ -83,10 +90,6 @@ void CRaftMediator::Join() {
 
 void CRaftMediator::Dealloc() {
     _net->Dealloc();
-}
-
-uint32_t CRaftMediator::GetId() {
-    return _id;
 }
 
 void CRaftMediator::CommitEntries(Entries& entries) {
@@ -99,7 +102,7 @@ void CRaftMediator::CommitEntries(Entries& entries) {
 
 void CRaftMediator::ChangeRole(ROLE_TYPE type, const std::string& net_handle) {
     base::LOG_DEBUG("change role to %d", type);
-    _node_manager->SetRole(_current_role);
+    _common_data->_node_manager->SetRole(_current_role);
     _client_manager->SetRole(_current_role);
     _mount_client->SetLeaderHandle(net_handle);
     _mount_client->SetCurRole(_current_role);
@@ -119,38 +122,10 @@ void CRaftMediator::ChangeRole(ROLE_TYPE type, const std::string& net_handle) {
     }
 }
 
-void CRaftMediator::SendVoteToAll(VoteRequest& request) {
-    _node_manager->SendVoteToAll(request);
-}
-
-void CRaftMediator::SendHeartBeatToAll(HeartBeatResquest& request) {
-    _node_manager->SendHeartToAll(request);
-}
-
 void CRaftMediator::RecvHeartBeat(std::shared_ptr<CNode>& node, HeartBeatResquest& request) {
     _current_role->RecvHeartBeatRequest(node, request);
 }
 
 void CRaftMediator::SetCommitCallBack(absl::FunctionRef<void(std::string)> func) {
     _commit_call_back = func;
-}
-
-const std::map<std::string, std::shared_ptr<CNode>>& CRaftMediator::GetAllNode() {
-    return _node_manager->GetAllNode();
-}
-
-uint32_t CRaftMediator::GetNodeCount() {
-    return _node_manager->GetNodeCount();
-}
-
-uint32_t CRaftMediator::GetHeartTime() {
-    return _config->GetHeartTime();
-}
-
-std::string CRaftMediator::GetCurNodeHandle() {
-    return _cur_node_net;
-}
-
-void CRaftMediator::PushEntries(const std::string& entries) {
-    _mount_client->SendEntries(entries);
 }

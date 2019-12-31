@@ -1,4 +1,3 @@
-#include <memory>
 #include "RaftClient.h"
 #include "RaftClientImpl.h"
 

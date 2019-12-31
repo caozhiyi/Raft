@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 
-#include "absl/functional/function_ref.h"
 #include "Entries.h"
+#include "absl/functional/function_ref.h"
 
 namespace raft {
     class CCommitEntries {

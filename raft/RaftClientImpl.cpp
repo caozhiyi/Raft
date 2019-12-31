@@ -2,6 +2,7 @@
 #include "Runnable.h"
 #include "CppnetImpl.h"
 #include "ConfigImpl.h"
+#include "message.pb.h"
 #include "RaftClientImpl.h"
 #include "absl/strings/numbers.h"
 #include "absl/strings/str_split.h"

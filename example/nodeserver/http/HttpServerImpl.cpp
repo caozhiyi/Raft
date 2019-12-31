@@ -10,17 +10,17 @@
 #include "absl/strings/str_split.h"
 
 void HttpServerImpl::Init(const std::string& ip, int port) {
-    cppnet::Init(2);
+    uint32_t net_handle = cppnet::Init(2);
 
-    cppnet::SetAcceptCallback(std::bind(&CHttpServer::OnConnection, &_server, std::placeholders::_1, std::placeholders::_2));
-    cppnet::SetWriteCallback(std::bind(&CHttpServer::OnMessageSend, &_server, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    cppnet::SetAcceptCallback(std::bind(&CHttpServer::OnConnection, &_server, std::placeholders::_1, std::placeholders::_2), net_handle);
+    cppnet::SetWriteCallback(std::bind(&CHttpServer::OnMessageSend, &_server, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3), net_handle);
     cppnet::SetReadCallback(std::bind(&CHttpServer::OnMessage, &_server, std::placeholders::_1, std::placeholders::_2, 
-                                              std::placeholders::_3, std::placeholders::_4));
-    cppnet::SetDisconnectionCallback(std::bind(&HttpServerImpl::DisConnect, this, std::placeholders::_1, std::placeholders::_2));
+                                              std::placeholders::_3, std::placeholders::_4), net_handle);
+    cppnet::SetDisconnectionCallback(std::bind(&HttpServerImpl::DisConnect, this, std::placeholders::_1, std::placeholders::_2), net_handle);
 
     _server.SetHttpCallback(std::bind(&HttpServerImpl::RecvRequest, this, std::placeholders::_1, std::placeholders::_2));
 
-    cppnet::ListenAndAccept(ip, port);
+    cppnet::ListenAndAccept(ip, port, net_handle);
 }
 
 void HttpServerImpl::Join() {

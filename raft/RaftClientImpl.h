@@ -1,14 +1,18 @@
 #ifndef RAFT_RAFT_RAFTCLIENTIMPL
 #define RAFT_RAFT_RAFTCLIENTIMPL
 
+#include <set>
+#include <memory>
+
 #include "Single.h"
 #include "RaftClient.h"
-#include "message.pb.h"
 
 namespace raft {
 
     class CNet;
     class CConfig;
+    class ClientResponse;
+    class NodeInfoResponse;
     class CRaftClientImpl : public base::CSingle<CRaftClientImpl> {
     public:
         CRaftClientImpl();

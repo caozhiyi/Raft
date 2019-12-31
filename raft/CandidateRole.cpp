@@ -1,12 +1,13 @@
 #include "INode.h"
 #include "ITimer.h"
 #include "IClient.h"
-#include "RaftMediator.h"
+#include "RoleData.h"
+#include "INodeManager.h"
 #include "CandidateRole.h"
 
 using namespace raft;
 
-CCandidateRole::CCandidateRole(std::shared_ptr<CRoleData>& role_data, std::shared_ptr<CTimer>& timer, CRaftMediator* mediator) : CRole(role_data, timer, mediator) {
+CCandidateRole::CCandidateRole(std::shared_ptr<CRoleData>& role_data) : CRole(role_data) {
 
 }
 
@@ -23,10 +24,10 @@ void CCandidateRole::ItsMyTurn() {
     // send all node to get vote
     VoteRequest request;
     request.set_term(_role_data->_current_term + 1);
-    request.set_candidate_id(_role_data->_raft_mediator->GetId());
+    request.set_candidate_id(_role_data->_cur_node_id);
     request.set_last_term(_role_data->_current_term);
     request.set_last_index(_role_data->_newest_index);
-    _role_data->_raft_mediator->SendVoteToAll(request);
+    _role_data->_node_manager->SendVoteToAll(request);
 }
 
 void CCandidateRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
@@ -60,24 +61,24 @@ void CCandidateRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& 
 
 void CCandidateRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
     // set leader net handle
-    if (_role_data->_net_handle != node->GetNetHandle()) {
-        _role_data->_net_handle = node->GetNetHandle();
+    if (_role_data->_leader_net_handle != node->GetNetHandle()) {
+        _role_data->_leader_net_handle = node->GetNetHandle();
     }
 
     // change role to follower
     _role_data->_role_change_call_back(follower_role, node->GetNetHandle());
     // recv that request again
-    _role_data->_raft_mediator->RecvHeartBeat(node, heart_request);
+    _role_data->_recv_heart_again(node, heart_request);
 }
 
 void CCandidateRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response) {
     if (vote_response.vote_granted()) {
         _role_data->_vote_num++;
     }
-    if (_role_data->_vote_num > _role_data->_raft_mediator->GetNodeCount() / 2) {
+    if (_role_data->_vote_num > _role_data->_node_manager->GetNodeCount() / 2) {
         _role_data->_vote_num = 0;
         // to be a leader
-        _role_data->_role_change_call_back(leader_role, _role_data->_raft_mediator->GetCurNodeHandle());
+        _role_data->_role_change_call_back(leader_role, _role_data->_cur_net_handle);
         _role_data->_current_term++;
     }
 }
@@ -100,15 +101,15 @@ void CCandidateRole::CandidateTimeOut() {
         return;
     }
     // vote to myself
-    _role_data->_voted_for_id = _role_data->_raft_mediator->GetId();
+    _role_data->_voted_for_id = _role_data->_cur_node_id;
 
     // send all node to get vote
     VoteRequest request;
     request.set_term(_role_data->_current_term + 1);
-    request.set_candidate_id(_role_data->_raft_mediator->GetId());
+    request.set_candidate_id(_role_data->_cur_node_id);
     request.set_last_term(_role_data->_current_term);
     request.set_last_index(_role_data->_newest_index);
-    _role_data->_raft_mediator->SendVoteToAll(request);
+    _role_data->_node_manager->SendVoteToAll(request);
     // reset candidate timer 
     uint32_t time = absl::uniform_int_distribution<uint32_t>(150, 300)(_role_data->_gen);
     _role_data->_timer->StartVoteTimer(time);
