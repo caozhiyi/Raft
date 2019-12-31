@@ -150,3 +150,7 @@ uint32_t CRaftMediator::GetHeartTime() {
 std::string CRaftMediator::GetCurNodeHandle() {
     return _cur_node_net;
 }
+
+void CRaftMediator::PushEntries(const std::string& entries) {
+    _mount_client->SendEntries(entries);
+}

@@ -26,9 +26,9 @@ void CMountClient::SetCurRole(std::shared_ptr<CRole>& role) {
 }
 
 void CMountClient::SendEntries(const std::string& entries) {
-    // curent node is leader
+    // current node is leader
     ClientRequest reqeust;
-    reqeust.set_entries(entries);
+    reqeust.set_entries(entries.c_str());
     _resend_entries = entries;
     if (_current_role && _current_role->GetRole() == leader_role) {
         std::shared_ptr<CClient> client(nullptr);

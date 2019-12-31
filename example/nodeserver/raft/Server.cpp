@@ -5,8 +5,8 @@
 #include "absl/strings/str_format.h"
 
 void CServer::Init(const std::string& config_file) {
-    _http_server.Init("127.0.0.1", 8921);
     raft::Init(config_file);
+    _http_server.Init("127.0.0.1", 8921);
     
     raft::SetCommitEntriesCallBack(std::bind(&CServer::RecvEntries, this, std::placeholders::_1));
     _http_server.SetRequestCallBack(std::bind(&CServer::DoRequest, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
@@ -19,7 +19,7 @@ void CServer::Join() {
 
 std::string CServer::DoRequest(RequestType type, const std::string& key, const std::string& value) {
     if (key.empty()) {
-        return "must hava key.";
+        return "must have key.";
     }
     
     if (type == request_query) {
