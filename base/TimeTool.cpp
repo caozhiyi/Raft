@@ -1,7 +1,6 @@
 #include <ctime>
 #include <chrono>
 #include <cstring>
-
 #include "TimeTool.h"
 
 #define SECS_PER_HOUR        (60 * 60)
