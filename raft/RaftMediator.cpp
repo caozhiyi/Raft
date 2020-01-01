@@ -19,10 +19,19 @@
 using namespace raft;
 
 CRaftMediator::CRaftMediator() {
+    // create net 
+    _net.reset(new CCppNet());
+
     // creata common data
     _common_data.reset(new CRoleData());
+
     _common_data->_node_manager.reset(new CNodeManagerImpl(_net));
+
     _common_data->_timer.reset(new CTimerImpl());
+    _common_data->_timer->SetHeartCallBack(std::bind(&CRaftMediator::HeartBeatTimerOut, this));
+    _common_data->_timer->SetVoteCallBack(std::bind(&CRaftMediator::CandidateTimeOut, this));
+    _common_data->_timer->Start();
+
     _common_data->_recv_heart_again = std::bind(&CRaftMediator::RecvHeartBeat, this, std::placeholders::_1, std::placeholders::_2);
     _common_data->_role_change_call_back = std::bind(&CRaftMediator::ChangeRole, this, std::placeholders::_1, std::placeholders::_2);
     _common_data->_commit_entries_call_back = std::bind(&CRaftMediator::CommitEntries, this, std::placeholders::_1);
@@ -32,17 +41,12 @@ CRaftMediator::CRaftMediator() {
     _candidate_role.reset(new CCandidateRole(_common_data));
     _follower_role.reset(new CFollowerRole(_common_data));
 
-    // create net 
-    _net.reset(new CCppNet());
-    
+
     // create client manager
     _client_manager.reset(new CClientManagerImpl(_net));
 
     // create mount client 
     _mount_client.reset(new CMountClient(_net));
-
-    // set current role to follower
-    ChangeRole(follower_role, "");
 }
 
 CRaftMediator::~CRaftMediator() {
@@ -60,6 +64,9 @@ void CRaftMediator::Start(const std::string& config_file) {
     _common_data->_heart_time = _config->GetHeartTime();
     _common_data->_candidate_time = _config->GetVoteTimerRandomRange();
 
+    uint16_t thread_num = _config->GetThreadNum();
+    _net->Init(thread_num);
+
     // print log?
     bool print_log = _config->PrintLog();
     if (print_log) {
@@ -73,15 +80,16 @@ void CRaftMediator::Start(const std::string& config_file) {
     // start net io
     std::string ip = _config->GetIp();
     uint16_t port = _config->GetPort();
-    uint16_t thread_num = _config->GetThreadNum();
+    
     _common_data->_cur_net_handle = absl::StrFormat("%s:%d", ip.c_str(), port);
-
-    _net->Init(thread_num);
     _net->Start(ip, port);
 
     // connect to other node
     std::string node_address = _config->GetNodeInfo();
     _common_data->_node_manager->ConnectToAll(node_address);
+
+    // set current role to follower
+    ChangeRole(follower_role, "");
 }
 
 void CRaftMediator::Join() {
@@ -120,12 +128,25 @@ void CRaftMediator::ChangeRole(ROLE_TYPE type, const std::string& net_handle) {
     } else {
         base::LOG_ERROR("unknow role type.");
     }
+    _current_role->ItsMyTurn();
+}
+
+void CRaftMediator::PushEntries(const std::string& entries) {
+    _mount_client->SendEntries(entries);
 }
 
 void CRaftMediator::RecvHeartBeat(std::shared_ptr<CNode>& node, HeartBeatResquest& request) {
     _current_role->RecvHeartBeatRequest(node, request);
 }
 
-void CRaftMediator::SetCommitCallBack(absl::FunctionRef<void(std::string)> func) {
+void CRaftMediator::SetCommitCallBack(const std::function<void(std::string)>& func) {
     _commit_call_back = func;
+}
+
+void CRaftMediator::CandidateTimeOut() {
+    _current_role->CandidateTimeOut();
+}
+
+void CRaftMediator::HeartBeatTimerOut() {
+    _current_role->HeartBeatTimerOut();
 }

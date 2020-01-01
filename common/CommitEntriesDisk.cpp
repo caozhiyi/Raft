@@ -94,7 +94,7 @@ bool CCommitEntriesDisk::GetEntries(uint64_t index) {
     return false;
 }
 
-void CCommitEntriesDisk::SetEntriesCallBack(absl::FunctionRef<void(std::vector<Entries>&)> func) {
+void CCommitEntriesDisk::SetEntriesCallBack(const std::function<void(std::vector<Entries>&)>& func) {
     _entries_call_back = func;
 }
 

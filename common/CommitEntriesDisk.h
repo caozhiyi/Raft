@@ -7,7 +7,6 @@
 
 #include "Entries.h"
 #include "ICommitEntries.h"
-#include "absl/functional/function_ref.h"
 
 namespace raft {
     class CCommitEntriesDisk : public CCommitEntries {
@@ -24,7 +23,7 @@ namespace raft {
         // sync get entries after index.
         bool GetEntries(uint64_t index);
         //set get entries call back
-        void SetEntriesCallBack(absl::FunctionRef<void(std::vector<Entries>&)> func);
+        void SetEntriesCallBack(const std::function<void(std::vector<Entries>&)>& func);
         //get the newest index
         uint64_t GetNewestIndex();
     private:

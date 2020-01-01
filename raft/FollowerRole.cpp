@@ -21,6 +21,10 @@ ROLE_TYPE CFollowerRole::GetRole() {
 void CFollowerRole::ItsMyTurn() {
     // stop heart timer
     _role_data->_timer->StopHeartTimer();
+    // reset candidate timer 
+    auto range = _role_data->_candidate_time;
+    uint32_t time = absl::uniform_int_distribution<uint32_t>(range.first, range.second)(_role_data->_gen);
+    _role_data->_timer->StartVoteTimer(time);
 }
 
 void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
@@ -125,10 +129,6 @@ void CFollowerRole::CandidateTimeOut() {
 
     // to be a candidate
     _role_data->_role_change_call_back(candidate_role, "");
-
-    // reset candidate timer 
-    uint32_t time = absl::uniform_int_distribution<uint32_t>(150, 300)(_role_data->_gen);
-    _role_data->_timer->StartVoteTimer(time);
 }
 
 void CFollowerRole::HeartBeatTimerOut() {

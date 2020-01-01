@@ -65,28 +65,28 @@ namespace raft {
         // client about
         void SendClientRequest(const std::string& net_handle, ClientRequest& request);
         void SendClientResponse(const std::string& net_handle, ClientResponse& response);
-        void SetClientResponseCallBack(absl::FunctionRef<void(const std::string&, ClientResponse& response)> func);
+        void SetClientResponseCallBack(const std::function<void(const std::string&, ClientResponse& response)>& func);
         // client call back
-        void SetClientRecvCallBack(absl::FunctionRef<void(const std::string&, ClientRequest&)> func);
-        void SetClientConnectCallBack(absl::FunctionRef<void(const std::string&)> func);
-        void SetClientDisConnectCallBack(absl::FunctionRef<void(const std::string&)> func);
+        void SetClientRecvCallBack(const std::function<void(const std::string&, ClientRequest&)>& func);
+        void SetClientConnectCallBack(const std::function<void(const std::string&)>& func);
+        void SetClientDisConnectCallBack(const std::function<void(const std::string&)>& func);
 
         // reft about
         // set new connect call back
-        void SetNewConnectCallBack(absl::FunctionRef<void(const std::string&)> func);
+        void SetNewConnectCallBack(const std::function<void(const std::string&)>& func);
         // set disconnect call back
-        void SetDisConnectCallBack(absl::FunctionRef<void(const std::string&)> func);
+        void SetDisConnectCallBack(const std::function<void(const std::string&)>& func);
         // set heart request call back
-        void SetHeartRequestRecvCallBack(absl::FunctionRef<void(const std::string&, HeartBeatResquest&)> func);
+        void SetHeartRequestRecvCallBack(const std::function<void(const std::string&, HeartBeatResquest&)>& func);
         // set heart response call back
-        void SetHeartResponseRecvCallBack(absl::FunctionRef<void(const std::string&, HeartBeatResponse&)> func);
+        void SetHeartResponseRecvCallBack(const std::function<void(const std::string&, HeartBeatResponse&)>& func);
         // set vote request call back
-        void SetVoteRequestRecvCallBack(absl::FunctionRef<void(const std::string&, VoteRequest&)> func);
+        void SetVoteRequestRecvCallBack(const std::function<void(const std::string&, VoteRequest&)>& func);
         // set vote response call back
-        void SetVoteResponseRecvCallBack(absl::FunctionRef<void(const std::string&, VoteResponse&)> func);
+        void SetVoteResponseRecvCallBack(const std::function<void(const std::string&, VoteResponse&)>& func);
         // node info 
-        void SetNodeInfoRequestCallBack(absl::FunctionRef<void(const std::string&, NodeInfoRequest&)> func);
-        void SetNodeInfoResponseCallBack(absl::FunctionRef<void(const std::string&, NodeInfoResponse&)> func);
+        void SetNodeInfoRequestCallBack(const std::function<void(const std::string&, NodeInfoRequest&)>& func);
+        void SetNodeInfoResponseCallBack(const std::function<void(const std::string&, NodeInfoResponse&)>& func);
     private:
         // cppnet call back
         void Connected(const cppnet::Handle& handle, uint32_t err);
@@ -94,8 +94,7 @@ namespace raft {
         void Sended(const cppnet::Handle& handle, uint32_t len, uint32_t err);
         void Recved(const cppnet::Handle& handle, base::CBuffer* data, uint32_t len, uint32_t err);
         // bag about
-        std::string BuildSendData(std::string& data, CppBagType type);
-        std::string BagToString(CppBag& bag);
+        void BuildSendData(std::string& data, CppBagType type, std::string& ret);
         bool StringToBag(const std::string& data, std::vector<CppBag>& bag_vec, uint32_t& used_size);
         // get net handle
         std::pair<std::string, uint16_t> GetNetHandle(const cppnet::Handle& handle);

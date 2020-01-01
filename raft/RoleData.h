@@ -10,7 +10,6 @@
 #include "Entries.h"
 #include "message.pb.h"
 #include "absl/random/random.h"
-#include "absl/functional/function_ref.h"
 
 namespace raft {
 

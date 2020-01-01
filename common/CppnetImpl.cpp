@@ -55,7 +55,8 @@ void CCppNet::SendNodeInfoRequest(const std::string& net_handle, NodeInfoRequest
     std::string data;
     request.SerializeToString(&data);
 
-    std::string send_data = BuildSendData(data, node_info_request);
+    std::string send_data;
+    BuildSendData(data, node_info_request, send_data);
 
     SendToNet(net_handle, send_data);
 }
@@ -64,7 +65,8 @@ void CCppNet::SendNodeInfoResponse(const std::string& net_handle, NodeInfoRespon
     std::string data;
     response.SerializeToString(&data);
 
-    std::string send_data = BuildSendData(data, node_info_response);
+    std::string send_data;
+    BuildSendData(data, node_info_response, send_data);
 
     SendToNet(net_handle, send_data);
 }
@@ -73,7 +75,8 @@ void CCppNet::SendHeartRequest(const std::string& net_handle, HeartBeatResquest&
     std::string data;
     request.SerializeToString(&data);
 
-    std::string send_data = BuildSendData(data, heart_beat_request);
+    std::string send_data;
+    BuildSendData(data, heart_beat_request, send_data);
 
     SendToNet(net_handle, send_data);
 }
@@ -82,7 +85,8 @@ void CCppNet::SendHeartResponse(const std::string& net_handle, HeartBeatResponse
     std::string data;
     response.SerializeToString(&data);
 
-    std::string send_data = BuildSendData(data, heart_beat_response);
+    std::string send_data;
+    BuildSendData(data, heart_beat_response, send_data);
 
     SendToNet(net_handle, send_data);
 }
@@ -91,7 +95,8 @@ void CCppNet::SendVoteRequest(const std::string& net_handle, VoteRequest& reques
     std::string data;
     request.SerializeToString(&data);
 
-    std::string send_data = BuildSendData(data, vote_request);
+    std::string send_data;
+    BuildSendData(data, vote_request, send_data);
 
     SendToNet(net_handle, send_data);
 }
@@ -100,7 +105,8 @@ void CCppNet::SendVoteResponse(const std::string& net_handle, VoteResponse& resp
     std::string data;
     response.SerializeToString(&data);
 
-    std::string send_data = BuildSendData(data, vote_response);
+    std::string send_data;
+    BuildSendData(data, vote_response, send_data);
 
     SendToNet(net_handle, send_data);
 }
@@ -109,7 +115,8 @@ void CCppNet::SendClientRequest(const std::string& net_handle, ClientRequest& re
     std::string data;
     request.SerializeToString(&data);
 
-    std::string send_data = BuildSendData(data, client_requst);
+    std::string send_data;
+    BuildSendData(data, client_requst, send_data);
 
     SendToNet(net_handle, send_data, user_client);
 }
@@ -118,56 +125,57 @@ void CCppNet::SendClientResponse(const std::string& net_handle, ClientResponse& 
     std::string data;
     response.SerializeToString(&data);
 
-    std::string send_data = BuildSendData(data, client_response);
+    std::string send_data;
+    BuildSendData(data, client_response, send_data);
 
     SendToNet(net_handle, send_data, user_client);
 }
 
-void CCppNet::SetClientResponseCallBack(absl::FunctionRef<void(const std::string&, ClientResponse& response)> func) {
+void CCppNet::SetClientResponseCallBack(const std::function<void(const std::string&, ClientResponse& response)>& func) {
     _client_response_call_back = func;
 }
 
-void CCppNet::SetClientRecvCallBack(absl::FunctionRef<void(const std::string&, ClientRequest&)> func) {
+void CCppNet::SetClientRecvCallBack(const std::function<void(const std::string&, ClientRequest&)>& func) {
     _client_recv_call_back = func;
 }
 
-void CCppNet::SetClientConnectCallBack(absl::FunctionRef<void(const std::string&)> func) {
+void CCppNet::SetClientConnectCallBack(const std::function<void(const std::string&)>& func) {
     _client_connect_call_back = func;
 }
 
-void CCppNet::SetClientDisConnectCallBack(absl::FunctionRef<void(const std::string&)> func) {
+void CCppNet::SetClientDisConnectCallBack(const std::function<void(const std::string&)>& func) {
     _client_dis_connect_call_back = func;
 }
 
-void CCppNet::SetNewConnectCallBack(absl::FunctionRef<void(const std::string&)> func) {
+void CCppNet::SetNewConnectCallBack(const std::function<void(const std::string&)>& func) {
     _raft_connect_call_back = func;
 }
 
-void CCppNet::SetDisConnectCallBack(absl::FunctionRef<void(const std::string&)> func) {
+void CCppNet::SetDisConnectCallBack(const std::function<void(const std::string&)>& func) {
     _raft_dis_connect_call_back = func;
 }
 
-void CCppNet::SetHeartRequestRecvCallBack(absl::FunctionRef<void(const std::string&, HeartBeatResquest&)> func) {
+void CCppNet::SetHeartRequestRecvCallBack(const std::function<void(const std::string&, HeartBeatResquest&)>& func) {
     _heart_request_call_back = func;
 }
 
-void CCppNet::SetHeartResponseRecvCallBack(absl::FunctionRef<void(const std::string&, HeartBeatResponse&)> func) {
+void CCppNet::SetHeartResponseRecvCallBack(const std::function<void(const std::string&, HeartBeatResponse&)>& func) {
     _heart_response_call_back = func;
 }
 
-void CCppNet::SetVoteRequestRecvCallBack(absl::FunctionRef<void(const std::string&, VoteRequest&)> func) {
+void CCppNet::SetVoteRequestRecvCallBack(const std::function<void(const std::string&, VoteRequest&)>& func) {
     _vote_request_call_back = func;
 }
 
-void CCppNet::SetVoteResponseRecvCallBack(absl::FunctionRef<void(const std::string&, VoteResponse&)> func) {
+void CCppNet::SetVoteResponseRecvCallBack(const std::function<void(const std::string&, VoteResponse&)>& func) {
     _vote_response_call_back = func;
 }
 
-void CCppNet::SetNodeInfoRequestCallBack(absl::FunctionRef<void(const std::string&, NodeInfoRequest&)> func) {
+void CCppNet::SetNodeInfoRequestCallBack(const std::function<void(const std::string&, NodeInfoRequest&)>& func) {
     _node_info_request_call_back = func;
 }
 
-void CCppNet::SetNodeInfoResponseCallBack(absl::FunctionRef<void(const std::string&, NodeInfoResponse&)> func) {
+void CCppNet::SetNodeInfoResponseCallBack(const std::function<void(const std::string&, NodeInfoResponse&)>& func) {
     _node_info_response_call_back = func;
 }
 
@@ -181,6 +189,8 @@ void CCppNet::Connected(const cppnet::Handle& handle, uint32_t err) {
 
     _net_2_handle_map[net_handle.first] = handle;
     _handle_2_net_map[handle] = net_handle;
+
+    _raft_connect_call_back(net_handle.first);
 }
 
 void CCppNet::DisConnected(const cppnet::Handle& handle, uint32_t err) {
@@ -252,20 +262,13 @@ void CCppNet::Recved(const cppnet::Handle& handle, base::CBuffer* data, uint32_t
     delete []buf;
 }
 
-std::string CCppNet::BuildSendData(std::string& data, CppBagType type) {
+void CCppNet::BuildSendData(std::string& data, CppBagType type, std::string& ret) {
     CppBag bag;
-    bag._body = std::move(data);
     bag._header._field._len = bag._body.length();
     bag._header._field._type = type;
-    std::string ret = BagToString(bag);
-    return std::move(ret);
-}
 
-std::string CCppNet::BagToString(CppBag& bag) {
-    std::string ret;
     ret.append(std::to_string(bag._header._data));
-    ret.append(bag._body);
-    return std::move(ret);
+    ret.append(data);
 }
 
 bool CCppNet::StringToBag(const std::string& data, std::vector<CppBag>& bag_vec, uint32_t& used_size) {

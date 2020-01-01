@@ -2,7 +2,6 @@
 #define RAFT_INTERFACE_TIMER
 
 #include <functional>
-#include "absl/functional/function_ref.h"
 
 namespace raft {
 
@@ -12,7 +11,7 @@ namespace raft {
     };
 
     typedef std::function<void(void)> TimerSolt;
-    typedef absl::FunctionRef<void(void)> TimerSoltRef;
+    typedef const std::function<void(void)>& TimerSoltRef;
     
     class CTimer {
     public:

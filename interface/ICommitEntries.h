@@ -3,9 +3,9 @@
 
 #include <vector>
 #include <string>
+#include <functional>
 
 #include "Entries.h"
-#include "absl/functional/function_ref.h"
 
 namespace raft {
     class CCommitEntries {
@@ -22,7 +22,7 @@ namespace raft {
         // sync get log after index.
         virtual bool GetEntries(uint64_t index) = 0;
         //set get log call back
-        virtual void SetEntriesCallBack(absl::FunctionRef<void(std::vector<Entries>&)> func) = 0;
+        virtual void SetEntriesCallBack(const std::function<void(std::vector<Entries>&)>& func) = 0;
         //get the newest index
         virtual uint64_t GetNewestIndex() = 0;
     };

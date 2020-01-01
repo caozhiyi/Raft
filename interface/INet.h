@@ -2,9 +2,9 @@
 #define RAFT_INTERFACE_NET
 
 #include <memory>
+#include <functional>
 
 #include "message.pb.h"
-#include "absl/functional/function_ref.h"
 
 namespace raft {
 
@@ -39,26 +39,26 @@ namespace raft {
         virtual void SendClientRequest(const std::string& net_handle, ClientRequest& request) = 0;
         virtual void SendClientResponse(const std::string& net_handle, ClientResponse& response) = 0;
         // client call back
-        virtual void SetClientRecvCallBack(absl::FunctionRef<void(const std::string&, ClientRequest& request)> func) = 0;
-        virtual void SetClientResponseCallBack(absl::FunctionRef<void(const std::string&, ClientResponse& response)> func) = 0;
-        virtual void SetClientConnectCallBack(absl::FunctionRef<void(const std::string&)> func) = 0;
-        virtual void SetClientDisConnectCallBack(absl::FunctionRef<void(const std::string&)> func) = 0;
+        virtual void SetClientRecvCallBack(const std::function<void(const std::string&, ClientRequest& request)>& func) = 0;
+        virtual void SetClientResponseCallBack(const std::function<void(const std::string&, ClientResponse& response)>& func) = 0;
+        virtual void SetClientConnectCallBack(const std::function<void(const std::string&)>& func) = 0;
+        virtual void SetClientDisConnectCallBack(const std::function<void(const std::string&)>& func) = 0;
 
         // set new connect call back
-        virtual void SetNewConnectCallBack(absl::FunctionRef<void(const std::string&)> func) = 0;
+        virtual void SetNewConnectCallBack(const std::function<void(const std::string&)>& func) = 0;
         // set disconnect call back
-        virtual void SetDisConnectCallBack(absl::FunctionRef<void(const std::string&)> func) = 0;
+        virtual void SetDisConnectCallBack(const std::function<void(const std::string&)>& func) = 0;
         // set heart request call back
-        virtual void SetHeartRequestRecvCallBack(absl::FunctionRef<void(const std::string&, HeartBeatResquest&)> func) = 0;
+        virtual void SetHeartRequestRecvCallBack(const std::function<void(const std::string&, HeartBeatResquest&)>& func) = 0;
         // set heart response call back
-        virtual void SetHeartResponseRecvCallBack(absl::FunctionRef<void(const std::string&, HeartBeatResponse&)> func) = 0;
+        virtual void SetHeartResponseRecvCallBack(const std::function<void(const std::string&, HeartBeatResponse&)>& func) = 0;
         // set vote request call back
-        virtual void SetVoteRequestRecvCallBack(absl::FunctionRef<void(const std::string&, VoteRequest&)> func) = 0;
+        virtual void SetVoteRequestRecvCallBack(const std::function<void(const std::string&, VoteRequest&)>& func) = 0;
         // set vote response call back
-        virtual void SetVoteResponseRecvCallBack(absl::FunctionRef<void(const std::string&, VoteResponse&)> func) = 0;
+        virtual void SetVoteResponseRecvCallBack(const std::function<void(const std::string&, VoteResponse&)>& func) = 0;
         // node info 
-        virtual void SetNodeInfoRequestCallBack(absl::FunctionRef<void(const std::string&, NodeInfoRequest&)> func) = 0;
-        virtual void SetNodeInfoResponseCallBack(absl::FunctionRef<void(const std::string&, NodeInfoResponse&)> func) = 0;
+        virtual void SetNodeInfoRequestCallBack(const std::function<void(const std::string&, NodeInfoRequest&)>& func) = 0;
+        virtual void SetNodeInfoResponseCallBack(const std::function<void(const std::string&, NodeInfoResponse&)>& func) = 0;
         
     };
 }

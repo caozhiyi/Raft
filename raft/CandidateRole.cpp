@@ -20,7 +20,8 @@ ROLE_TYPE CCandidateRole::GetRole() {
 }
 
 void CCandidateRole::ItsMyTurn() {
-    _role_data->_vote_num = 0;
+    // vote for myself
+    _role_data->_vote_num = 1;
     // send all node to get vote
     VoteRequest request;
     request.set_term(_role_data->_current_term + 1);
@@ -28,6 +29,11 @@ void CCandidateRole::ItsMyTurn() {
     request.set_last_term(_role_data->_current_term);
     request.set_last_index(_role_data->_newest_index);
     _role_data->_node_manager->SendVoteToAll(request);
+
+    // start candidate timer
+    auto range = _role_data->_candidate_time;
+    uint32_t time = absl::uniform_int_distribution<uint32_t>(range.first, range.second)(_role_data->_gen);
+    _role_data->_timer->StartVoteTimer(time);
 }
 
 void CCandidateRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
@@ -95,11 +101,17 @@ void CCandidateRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientR
 }
 
 void CCandidateRole::CandidateTimeOut() {
+    // reset candidate timer 
+    auto range = _role_data->_candidate_time;
+    uint32_t time = absl::uniform_int_distribution<uint32_t>(range.first, range.second)(_role_data->_gen);
+    _role_data->_timer->StartVoteTimer(time);
+
     // already vote to other node 
-    if (_role_data->_voted_for_id != 0) {
+    if (_role_data->_voted_for_id != 0 && _role_data->_voted_for_id != _role_data->_cur_node_id) {
         _role_data->_voted_for_id = 0;
         return;
     }
+
     // vote to myself
     _role_data->_voted_for_id = _role_data->_cur_node_id;
 
@@ -110,9 +122,6 @@ void CCandidateRole::CandidateTimeOut() {
     request.set_last_term(_role_data->_current_term);
     request.set_last_index(_role_data->_newest_index);
     _role_data->_node_manager->SendVoteToAll(request);
-    // reset candidate timer 
-    uint32_t time = absl::uniform_int_distribution<uint32_t>(150, 300)(_role_data->_gen);
-    _role_data->_timer->StartVoteTimer(time);
 }
 
 void CCandidateRole::HeartBeatTimerOut() {

@@ -6,7 +6,8 @@
 
 void CServer::Init(const std::string& config_file) {
     raft::Init(config_file);
-    _http_server.Init("127.0.0.1", 8921);
+    _http_server.Init("127.0.0.1", 8900);
+    
     
     raft::SetCommitEntriesCallBack(std::bind(&CServer::RecvEntries, this, std::placeholders::_1));
     _http_server.SetRequestCallBack(std::bind(&CServer::DoRequest, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));

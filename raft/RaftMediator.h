@@ -6,7 +6,6 @@
 
 #include "IRole.h"
 #include "Single.h"
-#include "absl/functional/function_ref.h"
 
 namespace raft {
     
@@ -32,21 +31,22 @@ namespace raft {
         void Join();
         void Dealloc();
 
-        // commit entries
+        // commit entries call back
         void CommitEntries(Entries& entries);
         // role changed
         void ChangeRole(ROLE_TYPE type, const std::string& net_handle);
-
-        // send vote to all node
-        void SendVoteToAll(VoteRequest& request);
-        // send heart beat to all node
-        void SendHeartBeatToAll(HeartBeatResquest& request);
+        // mount client send entries
+        void PushEntries(const std::string& entries);
 
         // recv heart request again
         void RecvHeartBeat(std::shared_ptr<CNode>& node, HeartBeatResquest& request);
 
         // set commit call back
-        void SetCommitCallBack(absl::FunctionRef<void(std::string)> func);
+        void SetCommitCallBack(const std::function<void(std::string)>& func);
+
+        // time out call back
+        void CandidateTimeOut();
+        void HeartBeatTimerOut();
 
     private:
         uint32_t                        _id;

@@ -50,7 +50,7 @@ const std::map<std::string, std::shared_ptr<CNode>>& CNodeManagerImpl::GetAllNod
 void CNodeManagerImpl::ConnectToAll(const std::string& net_handle_list) {
     std::vector<std::string> addr_vec = absl::StrSplit(net_handle_list, ";");
     for (size_t i = 0; i < addr_vec.size(); i++) {
-        if (_node_map.count(addr_vec[i]) == 0) {
+        if (addr_vec[i] .empty() || _node_map.count(addr_vec[i]) > 0) {
             continue;
         }
         std::vector<std::string> handle_vec = absl::StrSplit(addr_vec[i], ":");
