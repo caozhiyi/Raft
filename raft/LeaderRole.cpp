@@ -1,3 +1,4 @@
+#include "Log.h"
 #include "INode.h"
 #include "ITimer.h"
 #include "IClient.h"
@@ -25,6 +26,9 @@ void CLeaderRole::ItsMyTurn() {
 }
 
 void CLeaderRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
+    base::LOG_DEBUG("leader recv vote request from node, %s, context : %s", 
+            node->GetNetHandle().c_str(), vote_request.DebugString().c_str());
+
     VoteResponse response;
     response.set_term(_role_data->_current_term);
     response.set_vote_granted(true);
@@ -45,6 +49,9 @@ void CLeaderRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vot
 }
 
 void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
+    base::LOG_DEBUG("leader recv heart request from node, %s, context : %s", 
+            node->GetNetHandle().c_str(), heart_request.DebugString().c_str());
+
     HeartBeatResponse response;
     response.set_success(true);
     if (heart_request.term() < _role_data->_current_term) {
@@ -71,9 +78,14 @@ void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatRe
 
 void CLeaderRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response) {
     // do nothing
+    base::LOG_DEBUG("leader recv vote response from node, %s, context : %s", 
+            node->GetNetHandle().c_str(), vote_response.DebugString().c_str());
 }
 
 void CLeaderRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatResponse& heart_response) {
+    base::LOG_DEBUG("leader recv heart response from node, %s, context : %s", 
+            node->GetNetHandle().c_str(), heart_response.DebugString().c_str());
+
     // send response to client
     node->SetNextIndex(heart_response.next_index());
     if (heart_response.success()) {
@@ -100,6 +112,9 @@ void CLeaderRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatR
 }
 
 void CLeaderRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request) {
+    base::LOG_DEBUG("leader recv client request from client, %s, context : %s", 
+            client->GetNetHandle().c_str(), request.DebugString().c_str());
+
     // get entries from client
     // create entries
     _role_data->_newest_index++;
@@ -135,7 +150,7 @@ void CLeaderRole::HeartBeatTimerOut() {
     }
 
     request.set_leader_commit(_role_data->_last_applied);
-    
+    base::LOG_DEBUG("leader heart time out, send context : %s", request.DebugString().c_str());
     // send request to all node
     auto node_map = _role_data->_node_manager->GetAllNode();
     for (auto node_iter = node_map.begin(); node_iter != node_map.end(); ++node_iter) {

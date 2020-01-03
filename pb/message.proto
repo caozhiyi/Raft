@@ -1,6 +1,8 @@
 syntax = 'proto3';
 package raft;
 
+option cc_generic_services = true;
+
 message HeartBeatResquest {
     uint32 term                = 1;    // leader's term.
     uint32 leader_id           = 2;    // leader's id, so followsers can redirect clients.
@@ -52,3 +54,14 @@ message ClientResponse {
     CLIENT_RES_CODE ret_code = 1;      // return code
     string leader_net_handle = 2;      // leader net handle  
 }
+
+service RaftService {
+
+    rpc RpcHeart(HeartBeatResquest) returns (HeartBeatResponse);
+
+    rpc RpcVote(VoteRequest) returns (VoteResponse);
+
+    rpc RpcNodeInfo(NodeInfoRequest) returns (NodeInfoResponse);
+
+	rpc RpcClientMsg(ClientRequest) returns (ClientResponse);
+};

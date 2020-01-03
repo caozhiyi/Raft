@@ -56,6 +56,7 @@ CRaftMediator::~CRaftMediator() {
 void CRaftMediator::Start(const std::string& config_file) {
     _config.reset(new CConfigImpl(config_file));
 
+    base::LOG_DEBUG("start with config : %s", config_file.c_str());
     // create commit entries
     std::string file = _config->GetCommitDiskFile();
     _commit_entries.reset(new CCommitEntriesDisk(file));
@@ -65,6 +66,8 @@ void CRaftMediator::Start(const std::string& config_file) {
     _common_data->_candidate_time = _config->GetVoteTimerRandomRange();
 
     uint16_t thread_num = _config->GetThreadNum();
+    base::LOG_DEBUG("cur_node_id : %d, heart_time : %d, candidate_time: [%d,%d], thread_num: %d", _common_data->_cur_node_id,
+            _common_data->_heart_time, _common_data->_candidate_time.first, _common_data->_candidate_time.second, thread_num);
     _net->Init(thread_num);
 
     // print log?

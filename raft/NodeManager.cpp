@@ -53,6 +53,8 @@ void CNodeManagerImpl::ConnectToAll(const std::string& net_handle_list) {
         if (addr_vec[i] .empty() || _node_map.count(addr_vec[i]) > 0) {
             continue;
         }
+
+        base::LOG_ERROR("try to connect to %s", addr_vec[i].c_str());
         std::vector<std::string> handle_vec = absl::StrSplit(addr_vec[i], ":");
         if (handle_vec.size() == 2) {
             uint32_t port = 0;
@@ -110,6 +112,8 @@ void CNodeManagerImpl::VoteResponseRecvCallBack(const std::string& net_handle, V
 }
 
 void CNodeManagerImpl::NodeInfoRequestCallBack(const std::string& net_handle, NodeInfoRequest& request) {
+    base::LOG_DEBUG("get a node info request from %s, context: %s", net_handle.c_str(), request.DebugString().c_str());
+
     // connect all node from request
     auto size = request.net_handle_size();
     for (int i = 0; i < size; i++) {
@@ -137,6 +141,7 @@ void CNodeManagerImpl::NodeInfoRequestCallBack(const std::string& net_handle, No
 }
 
 void CNodeManagerImpl::NodeInfoResponseCallBack(const std::string& net_handle, NodeInfoResponse& response) {
+    base::LOG_DEBUG("get a node info response from %s, context: %s", net_handle.c_str(), response.DebugString().c_str());
     // connect all node from response
     auto size = response.net_handle_size();
     for (int i = 0; i < size; i++) {

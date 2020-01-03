@@ -1,3 +1,4 @@
+#include "Log.h"
 #include "INode.h"
 #include "ITimer.h"
 #include "IClient.h"
@@ -28,6 +29,9 @@ void CFollowerRole::ItsMyTurn() {
 }
 
 void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
+    base::LOG_DEBUG("follower recv vote request from node, %s, context : %s", 
+                node->GetNetHandle().c_str(), vote_request.DebugString().c_str());
+
     VoteResponse response;
     if (vote_request.last_term() < _role_data->_current_term) {
         response.set_vote_granted(false);
@@ -39,6 +43,9 @@ void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& v
 }
 
 void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
+    base::LOG_DEBUG("follower recv heart request from node, %s, context : %s", 
+                node->GetNetHandle().c_str(), heart_request.DebugString().c_str());
+
     HeartBeatResponse response;
     response.set_success(true);
     response.set_term(_role_data->_current_term);
@@ -103,13 +110,20 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
 
 void CFollowerRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response) {
     // do nothing
+    base::LOG_DEBUG("follower recv vote response from node, %s, context : %s", 
+                node->GetNetHandle().c_str(), vote_response.DebugString().c_str());
 }
 
 void CFollowerRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatResponse& heart_response) {
     // do nothing
+    base::LOG_DEBUG("follower recv heart response from node, %s, context : %s", 
+                node->GetNetHandle().c_str(), heart_response.DebugString().c_str());
 }
 
 void CFollowerRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request) {
+    base::LOG_DEBUG("follower recv client request from client, %s, context : %s", 
+                client->GetNetHandle().c_str(), request.DebugString().c_str());
+
     // tell client send to leader.
     ClientResponse response;
     response.set_ret_code(not_leader);
@@ -118,6 +132,8 @@ void CFollowerRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRe
 }
 
 void CFollowerRole::CandidateTimeOut() {
+    base::LOG_DEBUG("follower time out to be a candidate");
+
     // already vote to other node 
     if (_role_data->_voted_for_id != 0) {
         _role_data->_voted_for_id = 0;

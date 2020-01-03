@@ -1,3 +1,4 @@
+#include "Log.h"
 #include "INode.h"
 #include "ITimer.h"
 #include "IClient.h"
@@ -29,6 +30,7 @@ void CCandidateRole::ItsMyTurn() {
     request.set_last_term(_role_data->_current_term);
     request.set_last_index(_role_data->_newest_index);
     _role_data->_node_manager->SendVoteToAll(request);
+    base::LOG_DEBUG("candidate send vote request to all node, %s", request.DebugString().c_str());
 
     // start candidate timer
     auto range = _role_data->_candidate_time;
@@ -37,6 +39,9 @@ void CCandidateRole::ItsMyTurn() {
 }
 
 void CCandidateRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
+    base::LOG_DEBUG("candidate recv vote request from node, %s, context : %s", 
+                node->GetNetHandle().c_str(), vote_request.DebugString().c_str());
+
     VoteResponse response;
     response.set_term(_role_data->_current_term);
     response.set_vote_granted(true);
@@ -66,6 +71,8 @@ void CCandidateRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& 
 }
 
 void CCandidateRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
+    base::LOG_DEBUG("candidate recv heart request from node, %s, context : %s", 
+                node->GetNetHandle().c_str(), heart_request.DebugString().c_str());
     // set leader net handle
     if (_role_data->_leader_net_handle != node->GetNetHandle()) {
         _role_data->_leader_net_handle = node->GetNetHandle();
@@ -78,6 +85,9 @@ void CCandidateRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBea
 }
 
 void CCandidateRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response) {
+    base::LOG_DEBUG("candidate recv vote response from node, %s, context : %s", 
+                node->GetNetHandle().c_str(), vote_response.DebugString().c_str());
+
     if (vote_response.vote_granted()) {
         _role_data->_vote_num++;
     }
@@ -91,9 +101,14 @@ void CCandidateRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse
 
 void CCandidateRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatResponse& heart_response) {
     // do nothing
+    base::LOG_DEBUG("candidate recv heart response from node, %s, context : %s", 
+                node->GetNetHandle().c_str(), heart_response.DebugString().c_str());
 }
 
 void CCandidateRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request) {
+    base::LOG_DEBUG("candidate recv client request from node, %s, context : %s", 
+                client->GetNetHandle().c_str(), request.DebugString().c_str());
+
     // tell client resend again, i don't know who is leader.
     ClientResponse response;
     response.set_ret_code(send_again);
@@ -122,6 +137,7 @@ void CCandidateRole::CandidateTimeOut() {
     request.set_last_term(_role_data->_current_term);
     request.set_last_index(_role_data->_newest_index);
     _role_data->_node_manager->SendVoteToAll(request);
+    base::LOG_DEBUG("candidate time out, send context : %s", request.DebugString().c_str());
 }
 
 void CCandidateRole::HeartBeatTimerOut() {

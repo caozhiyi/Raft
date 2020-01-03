@@ -51,12 +51,12 @@ void CMountClient::ClientResponseCallBack(const std::string& net_handle, ClientR
         _resend_entries.clear();
     
     } else if (ret_code == not_leader) {
-        // do nothing, current wait header from leader
+        // do nothing, current node wait heart from leader
 
     } else if (ret_code == other_error) {
-        // do nothing, current wait header from leader
+        // do nothing, current node wait heart from leader
         
     } else if (ret_code == send_again) {
-        // do nothing, current wait header from leader
+        // do nothing, current node wait heart from leader
     }
 }
