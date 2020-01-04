@@ -6,7 +6,7 @@
 using namespace raft;
 static const uint32_t __timer_empty_wait = 100000000;
 
-CTimerImpl::CTimerImpl() : _heart_contiue(false), _wait_time(0) {
+CTimerImpl::CTimerImpl() : _heart_time(0), _wait_time(0) {
 
 }
 
@@ -38,49 +38,16 @@ void CTimerImpl::SetHeartCallBack(TimerSoltRef func) {
 }
 
 bool CTimerImpl::StartVoteTimer(uint32_t time) {
-    uint64_t now_time = absl::ToUnixMillis(absl::Now());
-    uint64_t expiration_time = time + now_time;
-
-    std::unique_lock<std::mutex> lock(_mutex);
-    auto iter = _timer_map.find(expiration_time);
-    // add to timer map
-    if (iter == _timer_map.end()) {
-        _timer_map[expiration_time] = vote_timer;
-
-    // add same time
-    } else {
-        return false;
-    }
-    if (time < _wait_time) {
-        _notify.notify_one();
-    }
-    return true;
+    return AddTimer(time, vote_timer);
 }
 
 bool CTimerImpl::StartHeartTimer(uint32_t time) {
-    uint64_t now_time = absl::ToUnixMillis(absl::Now());
-    uint64_t expiration_time = time + now_time;
-
-
-    std::unique_lock<std::mutex> lock(_mutex);
-    auto iter = _timer_map.find(expiration_time);
-    // add to timer map
-    if (iter == _timer_map.end()) {
-        _timer_map[expiration_time] = heart_timer;
-
-    // add same time
-    } else {
-        return false;
-    }
-    if (time < _wait_time) {
-        _notify.notify_one();
-    }
-    _heart_contiue = true;
-    return true;
+    _heart_time = time;
+    return AddTimer(time, heart_timer);
 }
 
 void CTimerImpl::StopHeartTimer() {
-    _heart_contiue = false;
+    _heart_time = 0;
 }
 
 void CTimerImpl::Run() {
@@ -89,6 +56,7 @@ void CTimerImpl::Run() {
     bool timer_out = false;
     while (!_stop) {
         {
+            iter = _timer_map.end();
             timer_out = false;
             std::unique_lock<std::mutex> lock(_mutex);
             if (_timer_map.empty()) {
@@ -109,25 +77,47 @@ void CTimerImpl::Run() {
             if (_wait_time > 0) {
                 timer_out = _notify.wait_for(lock, std::chrono::milliseconds(_wait_time)) == std::cv_status::timeout;
             }
-
-            // if timer out
-            if (timer_out) {
-                _timer_map.erase(iter);
-            } 
         }
 
         if (timer_vec.size() > 0) {
             for (size_t i = 0; i < timer_vec.size(); i++) {
                 if (timer_vec[i] == vote_timer) {
+                    if (iter != _timer_map.end()) {
+                        _timer_map.erase(iter);
+                    }
                     _vote_call_back();
 
                 } else if (timer_vec[i] == heart_timer) {
-                    if (_heart_contiue.load()) {
-                        _heart_call_back();
+                    _heart_call_back();
+                    if (iter != _timer_map.end()) {
+                        _timer_map.erase(iter);
+                    }
+                    if (_heart_time > 0) {
+                        AddTimer(_heart_time, heart_timer);
                     }
                 }
             }
             timer_vec.clear();
         }
     }
+}
+
+bool CTimerImpl::AddTimer(uint32_t time, TimerType type) {
+    uint64_t now_time = absl::ToUnixMillis(absl::Now());
+    uint64_t expiration_time = time + now_time;
+
+    std::unique_lock<std::mutex> lock(_mutex);
+    auto iter = _timer_map.find(expiration_time);
+    // add to timer map
+    if (iter == _timer_map.end()) {
+        _timer_map[expiration_time] = type;
+
+    // add same time
+    } else {
+        return false;
+    }
+    if (time < _wait_time) {
+        _notify.notify_one();
+    }
+    return true;
 }

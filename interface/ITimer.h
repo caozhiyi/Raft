@@ -5,7 +5,7 @@
 
 namespace raft {
 
-    enum TimerType{
+    enum TimerType {
             vote_timer  = 0x01,
             heart_timer = 0x02
     };

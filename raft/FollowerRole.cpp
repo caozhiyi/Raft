@@ -33,11 +33,13 @@ void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& v
                 node->GetNetHandle().c_str(), vote_request.DebugString().c_str());
 
     VoteResponse response;
-    if (vote_request.last_term() < _role_data->_current_term) {
+    if (vote_request.last_term() <= _role_data->_current_term) {
         response.set_vote_granted(false);
-        
+
+    } else {
+        response.set_vote_granted(true);
     }
-    response.set_vote_granted(true);
+    
     response.set_term(_role_data->_current_term);
     node->SendVoteResponse(response);
 }
@@ -54,22 +56,24 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
         response.set_success(false);
     }
     // compare prev log term
-    auto last_entries = _role_data->_entries_map.end()--;
-    Entries& prev_entries = last_entries->second;
-    if (prev_entries._term != heart_request.prev_log_term()) {
-        response.set_next_index(prev_entries._index);
-        response.set_success(false);
-    }
+    if (_role_data->_entries_map.size() > 0) {
+        auto last_entries = _role_data->_entries_map.end()--;
+        Entries& prev_entries = last_entries->second;
+        if (prev_entries._term != heart_request.prev_log_term()) {
+            response.set_next_index(prev_entries._index);
+            response.set_success(false);
+        }
 
-    // if index is the same but term is different
-    if (prev_entries._term != heart_request.prev_log_term() 
-        && prev_entries._index == heart_request.prev_log_index()) {
-        response.set_success(false);
-        response.set_next_index(prev_entries._index);
-        // delete after entries
-        auto iter = _role_data->_entries_map.find(prev_entries._index);
-        while (iter != _role_data->_entries_map.end()) {
-            iter = _role_data->_entries_map.erase(iter);
+        // if index is the same but term is different
+        if (prev_entries._term != heart_request.prev_log_term()
+            && prev_entries._index == heart_request.prev_log_index()) {
+            response.set_success(false);
+            response.set_next_index(prev_entries._index);
+            // delete after entries
+            auto iter = _role_data->_entries_map.find(prev_entries._index);
+            while (iter != _role_data->_entries_map.end()) {
+                iter = _role_data->_entries_map.erase(iter);
+            }
         }
     }
 
@@ -104,8 +108,11 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
         _role_data->_entries_map[ref.GetIndex()] = ref.GetEntries();
     }
     _role_data->_current_term = heart_request.term();
-    _role_data->_newest_index = _role_data->_entries_map.end()->first;
+    if (_role_data->_entries_map.size() > 0) {
+        _role_data->_newest_index = _role_data->_entries_map.end()->first;
+    }
     response.set_next_index(_role_data->_newest_index + 1);
+    node->SendHeartResponse(response);
 }
 
 void CFollowerRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response) {

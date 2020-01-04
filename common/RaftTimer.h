@@ -33,12 +33,15 @@ namespace raft {
     private:
         // thread function
         void Run();
+        // add timer event
+        bool AddTimer(uint32_t time, TimerType type);
+
     private:
         // all expiration in list
         std::map<uint64_t, TimerType>    _timer_map;
         TimerSolt                        _vote_call_back;
         TimerSolt                        _heart_call_back;
-        std::atomic_bool                 _heart_contiue;
+        uint32_t                         _heart_time;
         // cur wait time
         uint64_t                         _wait_time;
         // thread safe

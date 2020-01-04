@@ -51,11 +51,13 @@ void CCandidateRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& 
     }
 
     // compare prev log index and term
-    auto last_entries = _role_data->_entries_map.end()--;
-    Entries& prev_entries = last_entries->second;
-    if (prev_entries._index > vote_request.last_index() ||
-        prev_entries._term > vote_request.last_term()) {
-        response.set_vote_granted(false);
+    if (_role_data->_entries_map.size() > 0) {
+        auto last_entries = _role_data->_entries_map.end()--;
+        Entries& prev_entries = last_entries->second;
+        if (prev_entries._index > vote_request.last_index() ||
+            prev_entries._term > vote_request.last_term()) {
+            response.set_vote_granted(false);
+        }
     }
 
     // already vote to other node
@@ -73,15 +75,34 @@ void CCandidateRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& 
 void CCandidateRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
     base::LOG_DEBUG("candidate recv heart request from node, %s, context : %s", 
                 node->GetNetHandle().c_str(), heart_request.DebugString().c_str());
-    // set leader net handle
-    if (_role_data->_leader_net_handle != node->GetNetHandle()) {
-        _role_data->_leader_net_handle = node->GetNetHandle();
+
+
+    HeartBeatResponse response;
+    response.set_success(true);
+    if (heart_request.term() < _role_data->_current_term) {
+        response.set_success(false);
     }
 
-    // change role to follower
-    _role_data->_role_change_call_back(follower_role, node->GetNetHandle());
-    // recv that request again
-    _role_data->_recv_heart_again(node, heart_request);
+    // compare prev log index and term
+    if (_role_data->_entries_map.size() > 0) {
+        auto last_entries = _role_data->_entries_map.end()--;
+        Entries& prev_entries = last_entries->second;
+        if (prev_entries._index < heart_request.prev_log_term() ||
+            prev_entries._term < heart_request.prev_log_term()) {
+            response.set_success(false);
+        }
+    }
+
+    if (response.success()) {
+        // change role to follower
+        _role_data->_role_change_call_back(follower_role, node->GetNetHandle());
+        // set leader net handle
+        if (_role_data->_leader_net_handle != node->GetNetHandle()) {
+            _role_data->_leader_net_handle = node->GetNetHandle();
+        }
+        // change to follower recv this request again
+        _role_data->_recv_heart_again(node, heart_request);
+    }
 }
 
 void CCandidateRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response) {

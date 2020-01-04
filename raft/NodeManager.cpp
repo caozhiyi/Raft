@@ -71,6 +71,9 @@ void CNodeManagerImpl::ConnectTo(const std::string& ip, uint16_t port) {
 }
 
 void CNodeManagerImpl::NewConnectCallBack(const std::string& net_handle) {
+    if (_node_map.count(net_handle) > 0) {
+        return;
+    }
     std::shared_ptr<CNode> node(std::make_shared<NodeImpl>(_net, net_handle));
     _node_map[net_handle] = node;
     base::LOG_DEBUG("recv a new connection. handle : %s", net_handle.c_str());

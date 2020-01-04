@@ -113,10 +113,7 @@ void CRaftMediator::CommitEntries(Entries& entries) {
 
 void CRaftMediator::ChangeRole(ROLE_TYPE type, const std::string& net_handle) {
     base::LOG_DEBUG("change role to %d", type);
-    _common_data->_node_manager->SetRole(_current_role);
-    _client_manager->SetRole(_current_role);
     _mount_client->SetLeaderHandle(net_handle);
-    _mount_client->SetCurRole(_current_role);
     if (type == follower_role) {
         _current_role = _follower_role;
 
@@ -131,6 +128,9 @@ void CRaftMediator::ChangeRole(ROLE_TYPE type, const std::string& net_handle) {
     } else {
         base::LOG_ERROR("unknow role type.");
     }
+    _common_data->_node_manager->SetRole(_current_role);
+    _client_manager->SetRole(_current_role);
+    _mount_client->SetCurRole(_current_role);
     _current_role->ItsMyTurn();
 }
 

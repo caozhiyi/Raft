@@ -264,10 +264,13 @@ void CCppNet::Recved(const cppnet::Handle& handle, base::CBuffer* data, uint32_t
 
 void CCppNet::BuildSendData(std::string& data, CppBagType type, std::string& ret) {
     CppBag bag;
-    bag._header._field._len = bag._body.length();
+    bag._header._field._len = data.length();
     bag._header._field._type = type;
-
-    ret.append(std::to_string(bag._header._data));
+    
+    int  size = sizeof(bag._header._data);
+    char header_buf[__header_len];
+    memcpy(header_buf, &bag._header._data, __header_len);
+    ret.append(header_buf, __header_len);
     ret.append(data);
 }
 
@@ -278,10 +281,7 @@ bool CCppNet::StringToBag(const std::string& data, std::vector<CppBag>& bag_vec,
     bool ret = false;
     while(true) {
         CppBag bag;
-        std::string header(start + offset, __header_len);
-        if (!absl::SimpleAtoi<uint64_t>(header, &bag._header._data)) {
-            base::LOG_ERROR("get header failed.");
-        }
+        memcpy(&bag._header._data, start + offset, __header_len);
 
         if (data.length() >= bag._header._field._len + __header_len) {
             bag._body = std::string(data.data() + __header_len, bag._header._field._len);

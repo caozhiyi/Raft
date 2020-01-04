@@ -177,7 +177,8 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PROTOBUF_USE_DLLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <AdditionalDependencies>absl_win64_debug.lib;%(AdditionalDependencies);gmock_maind_win64.lib;gmockd_win64.lib;gtest_maind_win64.lib;gtestd_win64.lib;libprotobufd_win64_debug.lib;libprotobuf-lited_win64_debug.lib;libprotocd_win64_debug.lib;CppNet_win64_debug.lib</AdditionalDependencies>
