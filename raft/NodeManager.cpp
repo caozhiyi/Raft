@@ -8,7 +8,7 @@
 
 using namespace raft;
 
-CNodeManagerImpl::CNodeManagerImpl(std::shared_ptr<CNet>& net) : _net(net) {
+CNodeManagerImpl::CNodeManagerImpl(std::shared_ptr<CNet>& net, const std::string& net_handle) : _net(net), _cur_net_handle(net_handle) {
     _net->SetNewConnectCallBack(std::bind(&CNodeManagerImpl::NewConnectCallBack, this, std::placeholders::_1));
     _net->SetDisConnectCallBack(std::bind(&CNodeManagerImpl::DisConnectCallBack, this, std::placeholders::_1));
     _net->SetHeartRequestRecvCallBack(std::bind(&CNodeManagerImpl::HeartRequestRecvCallBack, this, std::placeholders::_1, std::placeholders::_2));
@@ -121,7 +121,7 @@ void CNodeManagerImpl::NodeInfoRequestCallBack(const std::string& net_handle, No
     auto size = request.net_handle_size();
     for (int i = 0; i < size; i++) {
         std::string net_handle = request.net_handle(i);
-        if (_node_map.count(net_handle) == 0) {
+        if (_node_map.count(net_handle) != 0 || net_handle == _cur_net_handle) {
             continue;
         }
         std::vector<std::string> handle_vec = absl::StrSplit(net_handle, ":");
@@ -149,7 +149,7 @@ void CNodeManagerImpl::NodeInfoResponseCallBack(const std::string& net_handle, N
     auto size = response.net_handle_size();
     for (int i = 0; i < size; i++) {
         std::string net_handle = response.net_handle(i);
-        if (_node_map.count(net_handle) != 0) {
+        if (_node_map.count(net_handle) != 0 || net_handle == _cur_net_handle) {
             continue;
         }
         std::vector<std::string> handle_vec = absl::StrSplit(net_handle, ":");

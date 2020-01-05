@@ -44,6 +44,7 @@ namespace raft {
         uint32_t                         _heart_time;
         // cur wait time
         uint64_t                         _wait_time;
+        std::atomic_bool                 _reset;
         // thread safe
         std::mutex					     _mutex;
         std::condition_variable  	     _notify;

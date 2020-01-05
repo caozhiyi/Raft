@@ -28,6 +28,8 @@ namespace raft {
         void CandidateTimeOut();
         // when heart beat timer out
         void HeartBeatTimerOut();
+    private:
+        uint64_t    _turn_time;
     };
 }
 

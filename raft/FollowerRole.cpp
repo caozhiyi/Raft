@@ -4,10 +4,12 @@
 #include "IClient.h"
 #include "RoleData.h"
 #include "FollowerRole.h"
+#include "absl/time/time.h"
+#include "absl/time/clock.h"
 
 using namespace raft;
 
-CFollowerRole::CFollowerRole(std::shared_ptr<CRoleData>& role_data) : CRole(role_data) {
+CFollowerRole::CFollowerRole(std::shared_ptr<CRoleData>& role_data) : CRole(role_data), _turn_time(0) {
 
 }
 
@@ -20,8 +22,9 @@ ROLE_TYPE CFollowerRole::GetRole() {
 }
 
 void CFollowerRole::ItsMyTurn() {
+    _role_data->_voted_for_id = 0;
     // stop heart timer
-    _role_data->_timer->StopHeartTimer();
+    _role_data->_timer->ResetTimer();
     // reset candidate timer 
     auto range = _role_data->_candidate_time;
     uint32_t time = absl::uniform_int_distribution<uint32_t>(range.first, range.second)(_role_data->_gen);
@@ -33,11 +36,35 @@ void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& v
                 node->GetNetHandle().c_str(), vote_request.DebugString().c_str());
 
     VoteResponse response;
-    if (vote_request.last_term() <= _role_data->_current_term) {
+    response.set_vote_granted(true);
+    // compare term
+    if (vote_request.term() < _role_data->_current_term) {
         response.set_vote_granted(false);
+    }
 
-    } else {
-        response.set_vote_granted(true);
+    // compare prev log index and term
+    if (_role_data->_entries_map.size() > 0 && response.vote_granted()) {
+        auto last_entries = _role_data->_entries_map.end()--;
+        Entries& prev_entries = last_entries->second;
+        if (prev_entries._index > vote_request.last_index() ||
+            prev_entries._term > vote_request.last_term()) {
+            response.set_vote_granted(false);
+        }
+    }
+    
+    if (response.vote_granted()) {
+        auto range = _role_data->_candidate_time;
+        uint64_t now = absl::ToUnixMillis(absl::Now());
+        if (_role_data->_voted_for_id != 0 && now - _turn_time <= range.first) {
+            response.set_vote_granted(false);
+
+        } else {
+            _role_data->_voted_for_id = vote_request.candidate_id();
+            // reset candidate timer 
+            uint32_t time = absl::uniform_int_distribution<uint32_t>(range.first, range.second)(_role_data->_gen);
+            _role_data->_timer->StartVoteTimer(time);
+        }
+        _turn_time = now;
     }
     
     response.set_term(_role_data->_current_term);
@@ -48,6 +75,12 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
     base::LOG_DEBUG("follower recv heart request from node, %s, context : %s", 
                 node->GetNetHandle().c_str(), heart_request.DebugString().c_str());
 
+    // set leader net handle
+    if (_role_data->_leader_net_handle != node->GetNetHandle()) {
+        _role_data->_leader_net_handle = node->GetNetHandle();
+    }
+    _role_data->_current_term = heart_request.term();
+
     HeartBeatResponse response;
     response.set_success(true);
     response.set_term(_role_data->_current_term);
@@ -56,17 +89,13 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
         response.set_success(false);
     }
     // compare prev log term
-    if (_role_data->_entries_map.size() > 0) {
+    if (_role_data->_entries_map.size() > 0 && response.success()) {
         auto last_entries = _role_data->_entries_map.end()--;
         Entries& prev_entries = last_entries->second;
-        if (prev_entries._term != heart_request.prev_log_term()) {
-            response.set_next_index(prev_entries._index);
-            response.set_success(false);
-        }
 
         // if index is the same but term is different
         if (prev_entries._term != heart_request.prev_log_term()
-            && prev_entries._index == heart_request.prev_log_index()) {
+            || prev_entries._index == heart_request.prev_log_index()) {
             response.set_success(false);
             response.set_next_index(prev_entries._index);
             // delete after entries
@@ -83,22 +112,18 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
         return;
     }
 
-    // set leader net handle
-    if (_role_data->_leader_net_handle != node->GetNetHandle()) {
-        _role_data->_leader_net_handle = node->GetNetHandle();
-    }
-
     // apply entries
     auto leader_commit = heart_request.leader_commit();
-    if (leader_commit > 0) {
+    if (_role_data->_last_applied < leader_commit) {
         auto iter = _role_data->_entries_map.find(leader_commit);
         if (iter != _role_data->_entries_map.end()) {
             auto start = _role_data->_entries_map.begin();
             while (start != _role_data->_entries_map.end() && start->first != leader_commit) {
-                _role_data->_commit_entries_call_back(start->second);
-                start = _role_data->_entries_map.erase(start);
+                 _role_data->_commit_entries_call_back(start->second);
+                 start = _role_data->_entries_map.erase(start);
             }
         }
+        _role_data->_last_applied = leader_commit;
     }
 
     // copy entries
@@ -107,7 +132,7 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
         EntriesRef ref((char*)entries_data.c_str(), entries_data.length());
         _role_data->_entries_map[ref.GetIndex()] = ref.GetEntries();
     }
-    _role_data->_current_term = heart_request.term();
+
     if (_role_data->_entries_map.size() > 0) {
         _role_data->_newest_index = _role_data->_entries_map.end()->first;
     }
@@ -146,10 +171,6 @@ void CFollowerRole::CandidateTimeOut() {
         _role_data->_voted_for_id = 0;
         return;
     }
-
-    // vote to myself
-    _role_data->_voted_for_id = _role_data->_cur_node_id;
-
     // to be a candidate
     _role_data->_role_change_call_back(candidate_role, "");
 }

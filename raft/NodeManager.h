@@ -10,7 +10,7 @@ namespace raft {
     class CRole;
     class CNodeManagerImpl : public CNodeManager {
     public:
-        CNodeManagerImpl(std::shared_ptr<CNet>& net);
+        CNodeManagerImpl(std::shared_ptr<CNet>& net, const std::string& net_handle);
         ~CNodeManagerImpl();
 
         // set current role
@@ -54,6 +54,8 @@ namespace raft {
         std::shared_ptr<CRole> _current_role;
         // net 
         std::shared_ptr<CNet>  _net;
+        // current net handle
+        std::string            _cur_net_handle;
     };
 }
 

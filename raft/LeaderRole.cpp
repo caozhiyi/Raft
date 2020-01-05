@@ -22,6 +22,9 @@ ROLE_TYPE CLeaderRole::GetRole() {
 
 void CLeaderRole::ItsMyTurn() {
     _client_net_handle_map.clear();
+    // send heart once.
+    HeartBeatTimerOut();
+    // start heart timer.
     _role_data->_timer->StartHeartTimer(_role_data->_heart_time);
 }
 
@@ -31,23 +34,9 @@ void CLeaderRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vot
 
     VoteResponse response;
     response.set_term(_role_data->_current_term);
-    response.set_vote_granted(true);
-    if (vote_request.last_term() < _role_data->_current_term) {
-        response.set_vote_granted(false);
-    }
-    // compare prev log index and term
-    if (_role_data->_entries_map.size() > 0) {
-        auto last_entries = _role_data->_entries_map.end()--;
-        Entries& prev_entries = last_entries->second;
-        if (prev_entries._index > vote_request.last_index() ||
-            prev_entries._term > vote_request.last_term()) {
-            response.set_vote_granted(false);
-        }
-    }
-    
+    response.set_vote_granted(false);
+    // refuse vote
     node->SendVoteResponse(response);
-    // change role to follower
-    _role_data->_role_change_call_back(follower_role, "");
 }
 
 void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatResquest& heart_request) {
@@ -56,15 +45,15 @@ void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatRe
 
     HeartBeatResponse response;
     response.set_success(true);
-    if (heart_request.term() <= _role_data->_current_term) {
+    if (heart_request.term() < _role_data->_current_term) {
         response.set_success(false);
     }
     // compare prev log index and term
-    if (_role_data->_entries_map.size() > 0) {
+    if (_role_data->_entries_map.size() > 0 && response.success()) {
         auto last_entries = _role_data->_entries_map.end()--;
         Entries& prev_entries = last_entries->second;
-        if (prev_entries._index < heart_request.prev_log_term() ||
-            prev_entries._term < heart_request.prev_log_term()) {
+        if (prev_entries._term > heart_request.prev_log_term() ||
+            prev_entries._index > heart_request.prev_log_index()) {
             response.set_success(false);
         }
     }
@@ -72,10 +61,6 @@ void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatRe
     if (response.success()) {
         // change role to follower
         _role_data->_role_change_call_back(follower_role, node->GetNetHandle());
-        // set leader net handle
-        if (_role_data->_leader_net_handle != node->GetNetHandle()) {
-            _role_data->_leader_net_handle = node->GetNetHandle();
-        }
         // change to follower recv this request again
         _role_data->_recv_heart_again(node, heart_request);
     }
@@ -113,6 +98,7 @@ void CLeaderRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatR
                 client_iter->second->SendToClient(response);
             }
         }
+        _role_data->_prev_match_index = _role_data->_max_match_index;
     }
 }
 
@@ -148,13 +134,13 @@ void CLeaderRole::HeartBeatTimerOut() {
     request.set_leader_id(_role_data->_cur_node_id);
 
     // add last entries info
-    if (_role_data->_entries_map.size() > 0) {
-        auto iter = _role_data->_entries_map.end()--;
+    auto iter = _role_data->_entries_map.find(_role_data->_newest_index);
+    if (iter != _role_data->_entries_map.end()) {
         request.set_prev_log_index(iter->first);
         request.set_prev_log_term(iter->second._term);
     }
-
     request.set_leader_commit(_role_data->_last_applied);
+
     base::LOG_DEBUG("leader heart time out, send context : %s", request.DebugString().c_str());
     // send request to all node
     auto node_map = _role_data->_node_manager->GetAllNode();
@@ -162,13 +148,11 @@ void CLeaderRole::HeartBeatTimerOut() {
         uint64_t next_index = node_iter->second->GetNextIndex();
         if (next_index > 0) {
             // add new entries
-            auto iter = _role_data->_entries_map.find(_role_data->_last_applied);
-            if (iter != _role_data->_entries_map.end()) {
+            auto iter = _role_data->_entries_map.find(next_index);
+            while (iter != _role_data->_entries_map.end()) {
                 iter++;
-                while (iter != _role_data->_entries_map.end()) {
-                    EntriesRef ref(iter->second);
-                    request.add_entries(ref.GetData());
-                }
+                EntriesRef ref(iter->second);
+                request.add_entries(ref.GetData());
             }
         }
         node_iter->second->SendHeartRequest(request);

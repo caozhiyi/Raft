@@ -6,7 +6,7 @@
 using namespace raft;
 static const uint32_t __timer_empty_wait = 100000000;
 
-CTimerImpl::CTimerImpl() : _heart_time(0), _wait_time(0) {
+CTimerImpl::CTimerImpl() : _heart_time(0), _wait_time(0), _reset(false){
 
 }
 
@@ -21,7 +21,12 @@ void CTimerImpl::Start() {
 }
     
 void CTimerImpl::ResetTimer() {
-
+    _reset = true;
+    {
+        std::unique_lock<std::mutex> lock(_mutex);
+        _timer_map.clear();
+    }
+    _notify.notify_one();
 }
     
 void CTimerImpl::Stop() {
@@ -55,6 +60,7 @@ void CTimerImpl::Run() {
     std::map<uint64_t, TimerType>::iterator iter;
     bool timer_out = false;
     while (!_stop) {
+        _reset = false;
         {
             iter = _timer_map.end();
             timer_out = false;
@@ -79,7 +85,7 @@ void CTimerImpl::Run() {
             }
         }
 
-        if (timer_vec.size() > 0) {
+        if (timer_vec.size() > 0 && !_reset) {
             for (size_t i = 0; i < timer_vec.size(); i++) {
                 if (timer_vec[i] == vote_timer) {
                     if (iter != _timer_map.end()) {
@@ -88,17 +94,17 @@ void CTimerImpl::Run() {
                     _vote_call_back();
 
                 } else if (timer_vec[i] == heart_timer) {
-                    _heart_call_back();
                     if (iter != _timer_map.end()) {
                         _timer_map.erase(iter);
                     }
                     if (_heart_time > 0) {
+                        _heart_call_back();
                         AddTimer(_heart_time, heart_timer);
                     }
                 }
             }
-            timer_vec.clear();
         }
+        timer_vec.clear();
     }
 }
 
