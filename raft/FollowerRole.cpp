@@ -75,6 +75,13 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
     base::LOG_DEBUG("follower recv heart request from node, %s, context : %s", 
                 node->GetNetHandle().c_str(), heart_request.DebugString().c_str());
 
+    // reset candidate timer
+    _role_data->_timer->ResetTimer();
+    // reset candidate timer 
+    auto range = _role_data->_candidate_time;
+    uint32_t time = absl::uniform_int_distribution<uint32_t>(range.first, range.second)(_role_data->_gen);
+    _role_data->_timer->StartVoteTimer(time);
+
     // set leader net handle
     if (_role_data->_leader_net_handle != node->GetNetHandle()) {
         _role_data->_leader_net_handle = node->GetNetHandle();
@@ -166,11 +173,6 @@ void CFollowerRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRe
 void CFollowerRole::CandidateTimeOut() {
     base::LOG_DEBUG("follower time out to be a candidate");
 
-    // already vote to other node 
-    if (_role_data->_voted_for_id != 0) {
-        _role_data->_voted_for_id = 0;
-        return;
-    }
     // to be a candidate
     _role_data->_role_change_call_back(candidate_role, "");
 }
