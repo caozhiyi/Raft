@@ -20,12 +20,18 @@ INCLUDES = -I./http            	   \
 CCFLAGS = -lpthread -fPIC -m64 -O2 -std=c++11 -lstdc++ -pipe -march=corei7 
 
 TARGET = ../../libraft.a
+LIB = ../../third/libabsl_64_release.a     \
+      ../../third/lib/libcppnet.a          \
+	  ../../third/lib/libprotobuf-lite.a   \
+	  ../../third/lib/libprotoc.a          \
+	  ../../third/lib/libprotobuf.a        \
+
 SERBIN = raftser
 
 all: $(SERBIN)
 
 $(SERBIN):$(OBJS) $(TARGET)
-	$(CC) $^ -o $@  $(TARGET)  $(CCFLAGS) $(INCLUDES)
+	$(CC) $^ -o $@  $(TARGET) $(LIB) $(CCFLAGS) $(INCLUDES)
 
 %.o : %.cpp
 	$(CC) -c $< -o $@ $(CCFLAGS) $(INCLUDES) 

@@ -70,6 +70,7 @@ void CCandidateRole::RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse
     if (vote_response.vote_granted()) {
         _role_data->_vote_num++;
     }
+    _role_data->_current_term += 1;
     if (_role_data->_vote_num >= _role_data->_node_manager->GetNodeCount() / 2) {
         _role_data->_vote_num = 0;
         // to be a leader
