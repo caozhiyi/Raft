@@ -31,6 +31,8 @@ namespace raft {
         virtual std::string GetNodeInfo() = 0;
 
         virtual uint32_t GetHeartTime() = 0;
+
+        virtual bool IsWithClient() = 0;
     };
 }
 

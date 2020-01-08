@@ -1,5 +1,5 @@
-#ifndef RAFT_CPMMON_CPPNETIMPL
-#define RAFT_CPMMON_CPPNETIMPL
+#ifndef RAFT_CPMMON_CPPNETIMPLWITHOUTCLIENT
+#define RAFT_CPMMON_CPPNETIMPLWITHOUTCLIENT
 
 #include <map>
 #include <functional>
@@ -10,12 +10,12 @@
 #include "CppnetImplCommon.h"
 
 namespace raft {
-
+    
     class CNode;
-    class CCppNet : public CNet {
+    class CCppNetWithOutClient : public CNet {
     public:
-        CCppNet();
-        ~CCppNet();
+        CCppNetWithOutClient();
+        ~CCppNetWithOutClient();
 
         void Init(uint16_t thread_num);
         // start to listen
@@ -42,8 +42,8 @@ namespace raft {
         void SetClientResponseCallBack(const std::function<void(const std::string&, ClientResponse& response)>& func);
         // client call back
         void SetClientRecvCallBack(const std::function<void(const std::string&, ClientRequest&)>& func);
-        void SetClientConnectCallBack(const std::function<void(const std::string&)>& func);
-        void SetClientDisConnectCallBack(const std::function<void(const std::string&)>& func);
+        void SetClientConnectCallBack(const std::function<void(const std::string&)>& func) {}
+        void SetClientDisConnectCallBack(const std::function<void(const std::string&)>& func) {}
 
         // reft about
         // set new connect call back
@@ -71,18 +71,16 @@ namespace raft {
         void BuildSendData(std::string& data, CppBagType type, std::string& ret);
         bool StringToBag(const std::string& data, std::vector<CppBag>& bag_vec, uint32_t& used_size);
         // get net handle
-        std::pair<std::string, uint16_t> GetNetHandle(const cppnet::Handle& handle);
+        std::string GetNetHandle(const cppnet::Handle& handle);
         // send to net
         void SendToNet(const std::string& net_handle, std::string& data, uint16_t type = raft_node);
         // handle bag
         void HandleBag(const std::string& net_handle, const CppBag& bag);
-        // check connect type
-        void CheckConnectType(const cppnet::Handle& handle, const std::string& net_handle, CppBagType type);
 
     private:
         // net handle to cppnet handle
         std::map<std::string, cppnet::Handle>                                 _net_2_handle_map;
-        std::map<cppnet::Handle, std::pair<std::string, uint16_t>>            _handle_2_net_map;
+        std::map<cppnet::Handle, std::string>                                 _handle_2_net_map;
 
         // raft call back
         std::function<void(const std::string&, HeartBeatResquest&)>           _heart_request_call_back;
@@ -96,8 +94,6 @@ namespace raft {
         // client about
         std::function<void(const std::string&, ClientRequest&)>               _client_recv_call_back;
         std::function<void(const std::string&, ClientResponse&)>              _client_response_call_back;
-        std::function<void(const std::string&)>                               _client_connect_call_back;
-        std::function<void(const std::string&)>                               _client_dis_connect_call_back;
     };
 }
 

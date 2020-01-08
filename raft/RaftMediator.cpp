@@ -15,13 +15,11 @@
 #include "absl/strings/numbers.h"
 #include "absl/strings/str_split.h"
 #include "absl/strings/str_format.h"
+#include "CppnetImplWithOutClient.h"
 
 using namespace raft;
 
 CRaftMediator::CRaftMediator() {
-    // create net 
-    _net.reset(new CCppNet());
-
     // creata common data
     _common_data.reset(new CRoleData());
 
@@ -38,13 +36,6 @@ CRaftMediator::CRaftMediator() {
     _leader_role.reset(new CLeaderRole(_common_data));
     _candidate_role.reset(new CCandidateRole(_common_data));
     _follower_role.reset(new CFollowerRole(_common_data));
-
-
-    // create client manager
-    _client_manager.reset(new CClientManagerImpl(_net));
-
-    // create mount client 
-    _mount_client.reset(new CMountClient(_net));
 }
 
 CRaftMediator::~CRaftMediator() {
@@ -58,6 +49,18 @@ void CRaftMediator::Start(const std::string& config_file) {
     // create commit entries
     std::string file = _config->GetCommitDiskFile();
     _commit_entries.reset(new CCommitEntriesDisk(file));
+
+    // create net 
+    bool with_client = _config->IsWithClient();
+    if (with_client) {
+        _net.reset(new CCppNet());
+    } else {
+        _net.reset(new CCppNetWithOutClient());
+    }
+    // create client manager
+    _client_manager.reset(new CClientManagerImpl(_net));
+    // create mount client 
+    _mount_client.reset(new CMountClient(_net));
 
     _common_data->_cur_node_id = _config->GetNodeId();
     _common_data->_heart_time = _config->GetHeartTime();

@@ -57,3 +57,7 @@ std::string CConfigImpl::GetNodeInfo() {
 uint32_t CConfigImpl::GetHeartTime() {
     return _config.GetIntValue("heart_time");
 }
+
+bool CConfigImpl::IsWithClient() {
+    return _config.GetBoolValue("with_client");
+}

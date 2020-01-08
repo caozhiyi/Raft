@@ -33,6 +33,8 @@ namespace raft {
 
         uint32_t GetHeartTime();
 
+        bool IsWithClient();
+
     private:
         base::CConfig   _config;
     };
