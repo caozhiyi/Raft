@@ -79,7 +79,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)base;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(SolutionDir)third\CppNet;$(SolutionDir)include;$(ProjectDir)http;$(ProjectDir)raft;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)third\lib;$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)third\lib\debug_64;$(SolutionDir)$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)base;$(SolutionDir)third;$(SolutionDir)third\protobuf;$(SolutionDir)third\CppNet;$(SolutionDir)include;$(ProjectDir)http;$(ProjectDir)raft;$(IncludePath)</IncludePath>
@@ -97,7 +97,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>absl_win64_debug.lib;CppNet_win64_debug.lib;libprotobufd_win64_debug.lib;libprotobuf-lited_win64_debug.lib;libprotocd_win64_debug.lib;Raft.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>absl.lib;CppNet.lib;Raft.lib;libprotobufd.lib;libprotobuf-lited.lib;libprotocd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -51,12 +51,12 @@ void HttpServerImpl::RecvRequest(const CHttpRequest& req, CHttpResponse& resp) {
         vec = absl::StrSplit(req.GetQuery(), "=");
         if (vec.size() != 2) {
             resp.SetBody("error params.");
+
+        } else {
+            vec[0].erase(vec[0].begin());
+            std::string ret = _request_call_back(request_add, vec[0], vec[1]);
+            resp.SetBody(ret);
         }
-        vec[0].erase(vec[0].begin());
-
-        std::string ret = _request_call_back(request_add, vec[0], vec[1]);
-
-        resp.SetBody(ret);
 
     } else if (req.GetPath() == "/remove") {
         resp.SetStatusCode(k200Ok);
@@ -66,11 +66,14 @@ void HttpServerImpl::RecvRequest(const CHttpRequest& req, CHttpResponse& resp) {
 
         std::vector<std::string> vec;
         vec = absl::StrSplit(req.GetQuery(), "=");
-        vec[0].erase(vec[0].begin());
+        if (!vec.empty()) {
+            vec[0].erase(vec[0].begin());
+            std::string ret = _request_call_back(request_remove, vec[0], "");
+            resp.SetBody(ret);
 
-        std::string ret = _request_call_back(request_remove, vec[0], "");
-
-        resp.SetBody(ret);
+        } else {
+            resp.SetBody("error params.");
+        }
 
     } else if (req.GetPath() == "/modify") {
         resp.SetStatusCode(k200Ok);
@@ -82,12 +85,12 @@ void HttpServerImpl::RecvRequest(const CHttpRequest& req, CHttpResponse& resp) {
         vec = absl::StrSplit(req.GetQuery(), "=");
         if (vec.size() != 2) {
             resp.SetBody("error params.");
+
+        } else {
+            vec[0].erase(vec[0].begin());
+            std::string ret = _request_call_back(request_modify, vec[0], vec[1]);
+            resp.SetBody(ret);
         }
-        vec[0].erase(vec[0].begin());
-
-        std::string ret = _request_call_back(request_modify, vec[0], "");
-
-        resp.SetBody(ret);
 
     } else if (req.GetPath() == "/query") {
         resp.SetStatusCode(k200Ok);
@@ -97,11 +100,14 @@ void HttpServerImpl::RecvRequest(const CHttpRequest& req, CHttpResponse& resp) {
 
         std::vector<std::string> vec;
         vec = absl::StrSplit(req.GetQuery(), "=");
-        vec[0].erase(vec[0].begin());
+        if (!vec.empty()) {
+            vec[0].erase(vec[0].begin());
+            std::string ret = _request_call_back(request_query, vec[0], "");
+            resp.SetBody(ret);
 
-        std::string ret = _request_call_back(request_query, vec[0], "");
-
-        resp.SetBody(ret);
+        } else {
+            resp.SetBody("error params.");
+        }
 
     } else {
         // close connect

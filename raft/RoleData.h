@@ -62,7 +62,7 @@ namespace raft {
             _vote_num(0), 
             _heart_success_num(0),
             _max_match_index(0),
-            _prev_match_index(0),
+            _prev_match_index(1),
             _cur_node_id(0),
             _heart_time(0) {}
     };

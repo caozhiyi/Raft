@@ -50,7 +50,7 @@ void CLeaderRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeatRe
     }
     // compare prev log index and term
     if (_role_data->_entries_map.size() > 0 && response.success()) {
-        auto last_entries = _role_data->_entries_map.end()--;
+        auto last_entries = _role_data->_entries_map.rbegin();
         Entries& prev_entries = last_entries->second;
         if (prev_entries._term > heart_request.prev_log_term() ||
             prev_entries._index > heart_request.prev_log_index()) {
@@ -80,11 +80,12 @@ void CLeaderRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatR
     node->SetNextIndex(heart_response.next_index());
     if (heart_response.success()) {
         _role_data->_heart_success_num++;
-        _role_data->_max_match_index = std::min(_role_data->_max_match_index, heart_response.next_index() - 1);
+        _role_data->_max_match_index = std::min(_role_data->_newest_index, heart_response.next_index() - 1);
     }
     
     // commit entries success
     if (_role_data->_heart_success_num > _role_data->_node_manager->GetNodeCount() / 2) {
+        _role_data->_last_applied = _role_data->_max_match_index;
         auto iter = _role_data->_entries_map.find(_role_data->_prev_match_index);
         ClientResponse response;
         response.set_ret_code(success);
@@ -97,14 +98,15 @@ void CLeaderRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatR
             if (client_iter != _client_net_handle_map.end()) {
                 client_iter->second->SendToClient(response);
             }
+            iter++;
         }
-        _role_data->_prev_match_index = _role_data->_max_match_index;
+        _role_data->_prev_match_index = _role_data->_max_match_index + 1;
     }
 }
 
 void CLeaderRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request) {
     base::LOG_DEBUG("leader recv client request from client, %s, context : %s", 
-            client->GetNetHandle().c_str(), request.DebugString().c_str());
+        client?client->GetNetHandle().c_str():"", request.DebugString().c_str());
 
     // get entries from client
     // create entries
@@ -142,6 +144,8 @@ void CLeaderRole::HeartBeatTimerOut() {
     request.set_leader_commit(_role_data->_last_applied);
 
     base::LOG_DEBUG("leader heart time out, send context : %s", request.DebugString().c_str());
+    // self recved
+    _role_data->_heart_success_num = 1;
     // send request to all node
     auto node_map = _role_data->_node_manager->GetAllNode();
     for (auto node_iter = node_map.begin(); node_iter != node_map.end(); ++node_iter) {
@@ -150,9 +154,9 @@ void CLeaderRole::HeartBeatTimerOut() {
             // add new entries
             auto iter = _role_data->_entries_map.find(next_index);
             while (iter != _role_data->_entries_map.end()) {
-                iter++;
                 EntriesRef ref(iter->second);
                 request.add_entries(ref.GetData());
+                iter++;
             }
         }
         node_iter->second->SendHeartRequest(request);

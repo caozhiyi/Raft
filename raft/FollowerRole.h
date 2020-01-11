@@ -30,6 +30,7 @@ namespace raft {
         void HeartBeatTimerOut();
     private:
         uint64_t    _turn_time;
+        bool        _first_heart;
     };
 }
 

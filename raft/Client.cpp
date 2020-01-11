@@ -21,6 +21,5 @@ std::string CClientImpl::GetNetHandle() {
 }
 
 void CClientImpl::SendToClient(ClientResponse& response) {
-    base::LOG_DEBUG("sned response to %s, context : %s. handle : %s", _net_handle.c_str(), response.DebugString().c_str());
     _net->SendClientResponse(_net_handle, response);
 }

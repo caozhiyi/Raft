@@ -10,7 +10,7 @@ EntriesRef::EntriesRef(const Entries& entries) {
     _data._field._index = entries._index;
     _data._field._term  = entries._term;
     _data._field._entries = (char*)entries._entries.c_str();
-    _data._field._total_len = entries._entries.length() + __flex_total_size;
+    _data._field._total_len = entries._entries.length() + __field_len;
 }
 
 EntriesRef::EntriesRef(char* data, uint32_t len) {
@@ -24,7 +24,7 @@ EntriesRef::EntriesRef(char* data, uint32_t len) {
 EntriesRef::EntriesRef(uint32_t term, uint64_t index, char* entries, uint32_t len) {
     _data._field._term = term;
     _data._field._index = index;
-    _data._field._total_len = len + __flex_total_size;
+    _data._field._total_len = len + __field_len;
     _data._field._entries = entries;
 }
 

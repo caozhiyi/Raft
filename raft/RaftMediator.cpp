@@ -124,8 +124,6 @@ void CRaftMediator::ChangeRole(ROLE_TYPE type, const std::string& net_handle) {
 
     } else if (type == leader_role) {
         _current_role = _leader_role;
-        // send header beat to all
-        _current_role->HeartBeatTimerOut();
 
     } else {
         base::LOG_ERROR("unknow role type.");
