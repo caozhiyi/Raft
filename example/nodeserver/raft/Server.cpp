@@ -10,7 +10,6 @@ void CServer::Init(const std::string& config_file) {
     raft::Init(config_file);
     _http_server.Init("127.0.0.1", 8900);
 
-
     raft::SetCommitEntriesCallBack(std::bind(&CServer::RecvEntries, this, std::placeholders::_1));
     _http_server.SetRequestCallBack(std::bind(&CServer::DoRequest, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 }
@@ -32,13 +31,11 @@ std::string CServer::DoRequest(RequestType type, const std::string& key, const s
         if (iter == _data_map.end()) {
             return "can't find key.";
 
-        }
-        else {
+        } else {
             return iter->second;
         }
 
-    }
-    else {
+    } else {
         if (type == request_add || type == request_modify) {
             if (value.empty()) {
                 return "add and modify must have value.";
@@ -64,20 +61,17 @@ void CServer::RecvEntries(std::string entries) {
         std::unique_lock<std::mutex> lock(_mutex);
         _data_map[vec[1]] = vec[2];
 
-    }
-    else if (type == request_remove) {
+    } else if (type == request_remove) {
         std::cout << "remove key:" << vec[1] << std::endl;
         std::unique_lock<std::mutex> lock(_mutex);
         _data_map.erase(vec[1]);
 
-    }
-    else if (type == request_modify) {
+    } else if (type == request_modify) {
         std::cout << "modify key:" << vec[1] << std::endl;
         std::unique_lock<std::mutex> lock(_mutex);
         _data_map[vec[1]] = vec[2];
 
-    }
-    else {
+    } else {
         base::LOG_ERROR("get a unknow type.");
     }
 }

@@ -134,7 +134,7 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
     if (_role_data->_last_applied < leader_commit) {
         auto iter = _role_data->_entries_map.find(leader_commit);
         if (iter != _role_data->_entries_map.end()) {
-            auto start = _role_data->_entries_map.begin();
+            auto start = _role_data->_last_applied ? _role_data->_entries_map.find(_role_data->_last_applied + 1) : _role_data->_entries_map.begin();
             while (start != _role_data->_entries_map.end() && start->first <= leader_commit) {
                 _role_data->_commit_entries_call_back(start->second);
                 start++;

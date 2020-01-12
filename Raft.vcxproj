@@ -38,6 +38,7 @@
     <ClInclude Include="common\CommitEntriesDisk.h" />
     <ClInclude Include="common\ConfigImpl.h" />
     <ClInclude Include="common\CppnetImpl.h" />
+    <ClInclude Include="common\CppnetImplCommon.h" />
     <ClInclude Include="common\CppnetImplWithOutClient.h" />
     <ClInclude Include="common\Entries.h" />
     <ClInclude Include="common\RaftTimer.h" />

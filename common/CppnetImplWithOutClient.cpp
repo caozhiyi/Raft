@@ -209,7 +209,7 @@ void CCppNetWithOutClient::Recved(const cppnet::Handle& handle, base::CBuffer* d
     }
 
     uint32_t total_len = data->GetCanReadLength();
-    if (total_len <= __header_len) {
+    if (total_len < __header_len) {
         return;
     }
     

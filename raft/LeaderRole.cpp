@@ -136,7 +136,7 @@ void CLeaderRole::HeartBeatTimerOut() {
     request.set_leader_id(_role_data->_cur_node_id);
 
     // add last entries info
-    auto iter = _role_data->_entries_map.find(_role_data->_newest_index);
+    auto iter = _role_data->_entries_map.find(_role_data->_last_applied);
     if (iter != _role_data->_entries_map.end()) {
         request.set_prev_log_index(iter->first);
         request.set_prev_log_term(iter->second._term);
