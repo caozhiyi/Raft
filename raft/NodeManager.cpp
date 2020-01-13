@@ -43,14 +43,14 @@ uint32_t CNodeManagerImpl::GetNodeCount() {
     return (uint32_t)_node_map.size();
 }
 
-const std::map<std::string, std::shared_ptr<CNode>>& CNodeManagerImpl::GetAllNode() {
+const std::unordered_map<std::string, std::shared_ptr<CNode>>& CNodeManagerImpl::GetAllNode() {
     return _node_map;
 }
 
 void CNodeManagerImpl::ConnectToAll(const std::string& net_handle_list) {
     std::vector<std::string> addr_vec = absl::StrSplit(net_handle_list, ";");
     for (size_t i = 0; i < addr_vec.size(); i++) {
-        if (addr_vec[i] .empty() || _node_map.count(addr_vec[i]) > 0) {
+        if (addr_vec[i] .empty() || _node_map.count(addr_vec[i]) > 0 || addr_vec[i] == _cur_net_handle) {
             continue;
         }
 
@@ -80,16 +80,24 @@ void CNodeManagerImpl::NewConnectCallBack(const std::string& net_handle) {
 
     // send all node info to new node
     NodeInfoRequest request;
+    // first add myself net handle
+    request.add_net_handle(_cur_net_handle);
     for (auto iter = _node_map.begin(); iter != _node_map.end(); ++iter) {
+        // don't send currnet connection
+        if (net_handle == iter->first) {
+            continue;
+        }
         request.add_net_handle(iter->first);
     }
+    base::LOG_DEBUG("send a node info request to %s, context: %s", net_handle.c_str(), request.DebugString().c_str());
     node->SendNodeInfoRequest(request);
 }
 
 void CNodeManagerImpl::DisConnectCallBack(const std::string& net_handle) {
-    auto iter = _node_map.find(net_handle);
-    if (iter != _node_map.end()) {
-        _node_map.erase(iter);
+    auto mapping_iter = _mapping_handle.find(net_handle);
+    if (mapping_iter != _mapping_handle.end()) {
+        _node_map.erase(mapping_iter->second);
+        _mapping_handle.erase(mapping_iter);
     }
     base::LOG_DEBUG("we lost a connection. handle : %s", net_handle.c_str());
 }
@@ -117,14 +125,25 @@ void CNodeManagerImpl::VoteResponseRecvCallBack(const std::string& net_handle, V
 void CNodeManagerImpl::NodeInfoRequestCallBack(const std::string& net_handle, NodeInfoRequest& request) {
     base::LOG_DEBUG("get a node info request from %s, context: %s", net_handle.c_str(), request.DebugString().c_str());
 
+    std::string remote_handle = net_handle;
     // connect all node from request
     auto size = request.net_handle_size();
     for (int i = 0; i < size; i++) {
-        std::string net_handle = request.net_handle(i);
-        if (_node_map.count(net_handle) != 0 || net_handle == _cur_net_handle) {
+        std::string temp_net_handle = request.net_handle(i);
+        // first net handle is remote node listen net handle, so we set it to handle of this connection
+        if (i == 0) {
+            if (_node_map.count(net_handle) != 0 && temp_net_handle != net_handle) {
+                _node_map[temp_net_handle] = _node_map[net_handle];
+                _mapping_handle[net_handle] = temp_net_handle;
+                remote_handle = temp_net_handle;
+                _node_map.erase(net_handle);
+            }
             continue;
         }
-        std::vector<std::string> handle_vec = absl::StrSplit(net_handle, ":");
+        if (_node_map.count(temp_net_handle) != 0 || temp_net_handle == _cur_net_handle) {
+            continue;
+        }
+        std::vector<std::string> handle_vec = absl::StrSplit(temp_net_handle, ":");
         if (handle_vec.size() == 2) {
             uint32_t port = 0;
             if (!absl::SimpleAtoi<uint32_t>(handle_vec[1], &port)) {
@@ -136,10 +155,12 @@ void CNodeManagerImpl::NodeInfoRequestCallBack(const std::string& net_handle, No
     
     // send response
     NodeInfoResponse response;
+    // first add myself net handle
+    response.add_net_handle(_cur_net_handle);
     for (auto iter = _node_map.begin(); iter != _node_map.end(); ++iter) {
         response.add_net_handle(iter->first);
     }
-    auto node = GetNode(net_handle);
+    auto node = GetNode(remote_handle);
     node->SendNodeInfoResponse(response);
 }
 
@@ -148,11 +169,20 @@ void CNodeManagerImpl::NodeInfoResponseCallBack(const std::string& net_handle, N
     // connect all node from response
     auto size = response.net_handle_size();
     for (int i = 0; i < size; i++) {
-        std::string net_handle = response.net_handle(i);
-        if (_node_map.count(net_handle) != 0 || net_handle == _cur_net_handle) {
+        std::string temp_net_handle = response.net_handle(i);
+        // first net handle is remote node listen net handle, so we set it to handle of this connection
+        if (i == 0) {
+            if (_node_map.count(net_handle) != 0 && temp_net_handle != net_handle) {
+                _node_map[temp_net_handle] = _node_map[net_handle];
+                _mapping_handle[net_handle] = temp_net_handle;
+                _node_map.erase(net_handle);
+            }
             continue;
         }
-        std::vector<std::string> handle_vec = absl::StrSplit(net_handle, ":");
+        if (_node_map.count(temp_net_handle) != 0 || temp_net_handle == _cur_net_handle) {
+            continue;
+        }
+        std::vector<std::string> handle_vec = absl::StrSplit(temp_net_handle, ":");
         if (handle_vec.size() == 2) {
             uint32_t port = 0;
             if (!absl::SimpleAtoi<uint32_t>(handle_vec[1], &port)) {
@@ -164,6 +194,10 @@ void CNodeManagerImpl::NodeInfoResponseCallBack(const std::string& net_handle, N
 }
 
 std::shared_ptr<CNode> CNodeManagerImpl::GetNode(const std::string& net_handle) {
+    std::string real_net_handle = net_handle;
+    if (_mapping_handle.count(net_handle) > 0) {
+        real_net_handle = _mapping_handle[net_handle];
+    }
     std::shared_ptr<CNode> node;
     auto iter = _node_map.find(net_handle);
     // create a node

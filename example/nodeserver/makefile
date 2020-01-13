@@ -20,7 +20,7 @@ INCLUDES = -I./http            	   \
 CCFLAGS = -lpthread -fPIC -m64 -O2 -std=c++11 -lstdc++ -pipe -march=corei7 
 
 TARGET = ../../libraft.a
-LIB = ../../third/libabsl_64_release.a     \
+LIB = ../../third/lib/libabsl_64_release.a     \
       ../../third/lib/libcppnet.a          \
 	  ../../third/lib/libprotobuf-lite.a   \
 	  ../../third/lib/libprotoc.a          \

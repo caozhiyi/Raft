@@ -19,7 +19,7 @@ namespace raft {
         // get node numbers
         virtual uint32_t GetNodeCount() = 0;
         // get all node info
-        virtual const std::map<std::string, std::shared_ptr<CNode>>& GetAllNode() = 0;
+        virtual const std::unordered_map<std::string, std::shared_ptr<CNode>>& GetAllNode() = 0;
 
         // connect to all
         virtual void ConnectToAll(const std::string& net_handle_list) = 0;

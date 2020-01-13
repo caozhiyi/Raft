@@ -86,6 +86,7 @@ void CRaftMediator::Start(const std::string& config_file) {
     uint16_t port = _config->GetPort();
     
     _common_data->_cur_net_handle = absl::StrFormat("%s:%d", ip.c_str(), port);
+    base::LOG_DEBUG("start listen to : %s", _common_data->_cur_net_handle.c_str());
     _common_data->_node_manager.reset(new CNodeManagerImpl(_net, _common_data->_cur_net_handle));
     _net->Start(ip, port);
 

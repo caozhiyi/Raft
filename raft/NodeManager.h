@@ -1,6 +1,7 @@
 #ifndef RAFT_RAFT_NODEMANAGERIMPL
 #define RAFT_RAFT_NODEMANAGERIMPL
 
+#include <unordered_map>
 #include "INodeManager.h"
 
 namespace raft {
@@ -23,7 +24,7 @@ namespace raft {
         // get node numbers
         uint32_t GetNodeCount();
         // get all node info
-        const std::map<std::string, std::shared_ptr<CNode>>& GetAllNode();
+        const std::unordered_map<std::string, std::shared_ptr<CNode>>& GetAllNode();
         // connect to all
         void ConnectToAll(const std::string& net_handle_list);
         // connect to a node
@@ -49,7 +50,9 @@ namespace raft {
         std::shared_ptr<CNode> GetNode(const std::string& net_handle);
     private:
         // all node
-        std::map<std::string, std::shared_ptr<CNode>> _node_map;
+        std::unordered_map<std::string, std::shared_ptr<CNode>> _node_map;
+        // current connection net handle to remote net handle
+        std::unordered_map<std::string, std::string>            _mapping_handle;
         // currnet role ptr
         std::shared_ptr<CRole> _current_role;
         // net 
