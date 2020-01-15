@@ -159,7 +159,7 @@ void CLeaderRole::HeartBeatTimerOut() {
                 iter++;
             }
         }
-        base::LOG_DEBUG("leader send heart request to %s, context : %s", node_iter->second->GetNetHandle().c_str(), request.DebugString().c_str());
+        base::LOG_DEBUG("leader send heart request to %s, context : %s", node_iter->first.c_str(), request.DebugString().c_str());
         node_iter->second->SendHeartRequest(request);
         request.clear_entries();
     }

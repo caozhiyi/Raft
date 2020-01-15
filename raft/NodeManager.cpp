@@ -199,12 +199,12 @@ std::shared_ptr<CNode> CNodeManagerImpl::GetNode(const std::string& net_handle) 
         real_net_handle = _mapping_handle[net_handle];
     }
     std::shared_ptr<CNode> node;
-    auto iter = _node_map.find(net_handle);
+    auto iter = _node_map.find(real_net_handle);
     // create a node
     if (iter == _node_map.end()) {
-        node.reset(new NodeImpl(_net, net_handle));
-        _node_map[net_handle] = node;
-        base::LOG_DEBUG("get a new node connection. handle : %s", net_handle.c_str());
+        node.reset(new NodeImpl(_net, real_net_handle));
+        _node_map[real_net_handle] = node;
+        base::LOG_DEBUG("get a new node connection. handle : %s", real_net_handle.c_str());
 
     } else {
         node = iter->second;
