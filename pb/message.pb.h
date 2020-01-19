@@ -32,6 +32,7 @@
 #include <google/protobuf/repeated_field.h>  // IWYU pragma: export
 #include <google/protobuf/extension_set.h>  // IWYU pragma: export
 #include <google/protobuf/generated_enum_reflection.h>
+#include <google/protobuf/service.h>
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
@@ -235,7 +236,7 @@ class HeartBeatResquest :
     kLeaderCommitFieldNumber = 6,
     kPrevLogTermFieldNumber = 4,
   };
-  // repeated string entries = 5;
+  // repeated bytes entries = 5;
   int entries_size() const;
   private:
   int _internal_entries_size() const;
@@ -246,12 +247,12 @@ class HeartBeatResquest :
   void set_entries(int index, const std::string& value);
   void set_entries(int index, std::string&& value);
   void set_entries(int index, const char* value);
-  void set_entries(int index, const char* value, size_t size);
+  void set_entries(int index, const void* value, size_t size);
   std::string* add_entries();
   void add_entries(const std::string& value);
   void add_entries(std::string&& value);
   void add_entries(const char* value);
-  void add_entries(const char* value, size_t size);
+  void add_entries(const void* value, size_t size);
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& entries() const;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_entries();
   private:
@@ -878,13 +879,13 @@ class ClientRequest :
   enum : int {
     kEntriesFieldNumber = 1,
   };
-  // string entries = 1;
+  // bytes entries = 1;
   void clear_entries();
   const std::string& entries() const;
   void set_entries(const std::string& value);
   void set_entries(std::string&& value);
   void set_entries(const char* value);
-  void set_entries(const char* value, size_t size);
+  void set_entries(const void* value, size_t size);
   std::string* mutable_entries();
   std::string* release_entries();
   void set_allocated_entries(std::string* entries);
@@ -1337,6 +1338,89 @@ class ClientResponse :
 };
 // ===================================================================
 
+class RaftService_Stub;
+
+class RaftService : public ::PROTOBUF_NAMESPACE_ID::Service {
+ protected:
+  // This class should be treated as an abstract interface.
+  inline RaftService() {};
+ public:
+  virtual ~RaftService();
+
+  typedef RaftService_Stub Stub;
+
+  static const ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor* descriptor();
+
+  virtual void RpcHeart(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::raft::HeartBeatResquest* request,
+                       ::raft::HeartBeatResponse* response,
+                       ::google::protobuf::Closure* done);
+  virtual void RpcVote(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::raft::VoteRequest* request,
+                       ::raft::VoteResponse* response,
+                       ::google::protobuf::Closure* done);
+  virtual void RpcNodeInfo(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::raft::NodeInfoRequest* request,
+                       ::raft::NodeInfoResponse* response,
+                       ::google::protobuf::Closure* done);
+  virtual void RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::raft::ClientRequest* request,
+                       ::raft::ClientResponse* response,
+                       ::google::protobuf::Closure* done);
+
+  // implements Service ----------------------------------------------
+
+  const ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor* GetDescriptor();
+  void CallMethod(const ::PROTOBUF_NAMESPACE_ID::MethodDescriptor* method,
+                  ::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                  const ::PROTOBUF_NAMESPACE_ID::Message* request,
+                  ::PROTOBUF_NAMESPACE_ID::Message* response,
+                  ::google::protobuf::Closure* done);
+  const ::PROTOBUF_NAMESPACE_ID::Message& GetRequestPrototype(
+    const ::PROTOBUF_NAMESPACE_ID::MethodDescriptor* method) const;
+  const ::PROTOBUF_NAMESPACE_ID::Message& GetResponsePrototype(
+    const ::PROTOBUF_NAMESPACE_ID::MethodDescriptor* method) const;
+
+ private:
+  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(RaftService);
+};
+
+class RaftService_Stub : public RaftService {
+ public:
+  RaftService_Stub(::PROTOBUF_NAMESPACE_ID::RpcChannel* channel);
+  RaftService_Stub(::PROTOBUF_NAMESPACE_ID::RpcChannel* channel,
+                   ::PROTOBUF_NAMESPACE_ID::Service::ChannelOwnership ownership);
+  ~RaftService_Stub();
+
+  inline ::PROTOBUF_NAMESPACE_ID::RpcChannel* channel() { return channel_; }
+
+  // implements RaftService ------------------------------------------
+
+  void RpcHeart(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::raft::HeartBeatResquest* request,
+                       ::raft::HeartBeatResponse* response,
+                       ::google::protobuf::Closure* done);
+  void RpcVote(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::raft::VoteRequest* request,
+                       ::raft::VoteResponse* response,
+                       ::google::protobuf::Closure* done);
+  void RpcNodeInfo(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::raft::NodeInfoRequest* request,
+                       ::raft::NodeInfoResponse* response,
+                       ::google::protobuf::Closure* done);
+  void RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                       const ::raft::ClientRequest* request,
+                       ::raft::ClientResponse* response,
+                       ::google::protobuf::Closure* done);
+ private:
+  ::PROTOBUF_NAMESPACE_ID::RpcChannel* channel_;
+  bool owns_channel_;
+  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(RaftService_Stub);
+};
+
+
+// ===================================================================
+
 
 // ===================================================================
 
@@ -1426,7 +1510,7 @@ inline void HeartBeatResquest::set_prev_log_term(::PROTOBUF_NAMESPACE_ID::uint32
   // @@protoc_insertion_point(field_set:raft.HeartBeatResquest.prev_log_term)
 }
 
-// repeated string entries = 5;
+// repeated bytes entries = 5;
 inline int HeartBeatResquest::_internal_entries_size() const {
   return entries_.size();
 }
@@ -1464,7 +1548,7 @@ inline void HeartBeatResquest::set_entries(int index, const char* value) {
   entries_.Mutable(index)->assign(value);
   // @@protoc_insertion_point(field_set_char:raft.HeartBeatResquest.entries)
 }
-inline void HeartBeatResquest::set_entries(int index, const char* value, size_t size) {
+inline void HeartBeatResquest::set_entries(int index, const void* value, size_t size) {
   entries_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_set_pointer:raft.HeartBeatResquest.entries)
@@ -1485,7 +1569,7 @@ inline void HeartBeatResquest::add_entries(const char* value) {
   entries_.Add()->assign(value);
   // @@protoc_insertion_point(field_add_char:raft.HeartBeatResquest.entries)
 }
-inline void HeartBeatResquest::add_entries(const char* value, size_t size) {
+inline void HeartBeatResquest::add_entries(const void* value, size_t size) {
   entries_.Add()->assign(reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_add_pointer:raft.HeartBeatResquest.entries)
 }
@@ -1716,7 +1800,7 @@ inline void VoteResponse::set_vote_granted(bool value) {
 
 // ClientRequest
 
-// string entries = 1;
+// bytes entries = 1;
 inline void ClientRequest::clear_entries() {
   entries_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
@@ -1751,7 +1835,7 @@ inline void ClientRequest::set_entries(const char* value) {
   entries_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:raft.ClientRequest.entries)
 }
-inline void ClientRequest::set_entries(const char* value, size_t size) {
+inline void ClientRequest::set_entries(const void* value, size_t size) {
   
   entries_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));

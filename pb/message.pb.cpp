@@ -162,7 +162,7 @@ static void InitDefaultsscc_info_VoteResponse_message_2eproto() {
 
 static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_message_2eproto[8];
 static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_message_2eproto[1];
-static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_message_2eproto = nullptr;
+static const ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor* file_level_service_descriptors_message_2eproto[1];
 
 const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_message_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
@@ -252,20 +252,26 @@ const char descriptor_table_protodef_message_2eproto[] PROTOBUF_SECTION_VARIABLE
   "\n\rmessage.proto\022\004raft\"\213\001\n\021HeartBeatResqu"
   "est\022\014\n\004term\030\001 \001(\r\022\021\n\tleader_id\030\002 \001(\r\022\026\n\016"
   "prev_log_index\030\003 \001(\004\022\025\n\rprev_log_term\030\004 "
-  "\001(\r\022\017\n\007entries\030\005 \003(\t\022\025\n\rleader_commit\030\006 "
+  "\001(\r\022\017\n\007entries\030\005 \003(\014\022\025\n\rleader_commit\030\006 "
   "\001(\004\"F\n\021HeartBeatResponse\022\014\n\004term\030\001 \001(\r\022\017"
   "\n\007success\030\002 \001(\010\022\022\n\nnext_index\030\003 \001(\004\"X\n\013V"
   "oteRequest\022\014\n\004term\030\001 \001(\r\022\024\n\014candidate_id"
   "\030\002 \001(\r\022\022\n\nlast_index\030\003 \001(\004\022\021\n\tlast_term\030"
   "\004 \001(\r\"2\n\014VoteResponse\022\014\n\004term\030\001 \001(\r\022\024\n\014v"
   "ote_granted\030\002 \001(\010\" \n\rClientRequest\022\017\n\007en"
-  "tries\030\001 \001(\t\"%\n\017NodeInfoRequest\022\022\n\nnet_ha"
+  "tries\030\001 \001(\014\"%\n\017NodeInfoRequest\022\022\n\nnet_ha"
   "ndle\030\001 \003(\t\"&\n\020NodeInfoResponse\022\022\n\nnet_ha"
   "ndle\030\001 \003(\t\"T\n\016ClientResponse\022\'\n\010ret_code"
   "\030\001 \001(\0162\025.raft.CLIENT_RES_CODE\022\031\n\021leader_"
   "net_handle\030\002 \001(\t*O\n\017CLIENT_RES_CODE\022\013\n\007s"
   "uccess\020\000\022\016\n\nnot_leader\020\001\022\017\n\013other_error\020"
-  "\002\022\016\n\nsend_again\020\003b\006proto3"
+  "\002\022\016\n\nsend_again\020\0032\366\001\n\013RaftService\022<\n\010Rpc"
+  "Heart\022\027.raft.HeartBeatResquest\032\027.raft.He"
+  "artBeatResponse\0220\n\007RpcVote\022\021.raft.VoteRe"
+  "quest\032\022.raft.VoteResponse\022<\n\013RpcNodeInfo"
+  "\022\025.raft.NodeInfoRequest\032\026.raft.NodeInfoR"
+  "esponse\0229\n\014RpcClientMsg\022\023.raft.ClientReq"
+  "uest\032\024.raft.ClientResponseB\003\200\001\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_message_2eproto_deps[1] = {
 };
@@ -282,7 +288,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_mes
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_message_2eproto_once;
 static bool descriptor_table_message_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_message_2eproto = {
-  &descriptor_table_message_2eproto_initialized, descriptor_table_protodef_message_2eproto, "message.proto", 665,
+  &descriptor_table_message_2eproto_initialized, descriptor_table_protodef_message_2eproto, "message.proto", 919,
   &descriptor_table_message_2eproto_once, descriptor_table_message_2eproto_sccs, descriptor_table_message_2eproto_deps, 8, 0,
   schemas, file_default_instances, TableStruct_message_2eproto::offsets,
   file_level_metadata_message_2eproto, 8, file_level_enum_descriptors_message_2eproto, file_level_service_descriptors_message_2eproto,
@@ -404,7 +410,7 @@ const char* HeartBeatResquest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // repeated string entries = 5;
+      // repeated bytes entries = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
           ptr -= 1;
@@ -412,7 +418,6 @@ const char* HeartBeatResquest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
             ptr += 1;
             auto str = _internal_add_entries();
             ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-            CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "raft.HeartBeatResquest.entries"));
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
@@ -475,14 +480,10 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(4, this->_internal_prev_log_term(), target);
   }
 
-  // repeated string entries = 5;
+  // repeated bytes entries = 5;
   for (int i = 0, n = this->_internal_entries_size(); i < n; i++) {
     const auto& s = this->_internal_entries(i);
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      s.data(), static_cast<int>(s.length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "raft.HeartBeatResquest.entries");
-    target = stream->WriteString(5, s, target);
+    target = stream->WriteBytes(5, s, target);
   }
 
   // uint64 leader_commit = 6;
@@ -507,11 +508,11 @@ size_t HeartBeatResquest::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated string entries = 5;
+  // repeated bytes entries = 5;
   total_size += 1 *
       ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(entries_.size());
   for (int i = 0, n = entries_.size(); i < n; i++) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
       entries_.Get(i));
   }
 
@@ -1413,12 +1414,11 @@ const char* ClientRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     CHK_(ptr);
     switch (tag >> 3) {
-      // string entries = 1;
+      // bytes entries = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
           auto str = _internal_mutable_entries();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "raft.ClientRequest.entries"));
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -1448,13 +1448,9 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // string entries = 1;
+  // bytes entries = 1;
   if (this->entries().size() > 0) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_entries().data(), static_cast<int>(this->_internal_entries().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "raft.ClientRequest.entries");
-    target = stream->WriteStringMaybeAliased(
+    target = stream->WriteBytesMaybeAliased(
         1, this->_internal_entries(), target);
   }
 
@@ -1474,10 +1470,10 @@ size_t ClientRequest::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string entries = 1;
+  // bytes entries = 1;
   if (this->entries().size() > 0) {
     total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
         this->_internal_entries());
   }
 
@@ -2166,6 +2162,174 @@ void ClientResponse::InternalSwap(ClientResponse* other) {
   return GetMetadataStatic();
 }
 
+
+// ===================================================================
+
+RaftService::~RaftService() {}
+
+const ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor* RaftService::descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_message_2eproto);
+  return file_level_service_descriptors_message_2eproto[0];
+}
+
+const ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor* RaftService::GetDescriptor() {
+  return descriptor();
+}
+
+void RaftService::RpcHeart(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                         const ::raft::HeartBeatResquest*,
+                         ::raft::HeartBeatResponse*,
+                         ::google::protobuf::Closure* done) {
+  controller->SetFailed("Method RpcHeart() not implemented.");
+  done->Run();
+}
+
+void RaftService::RpcVote(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                         const ::raft::VoteRequest*,
+                         ::raft::VoteResponse*,
+                         ::google::protobuf::Closure* done) {
+  controller->SetFailed("Method RpcVote() not implemented.");
+  done->Run();
+}
+
+void RaftService::RpcNodeInfo(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                         const ::raft::NodeInfoRequest*,
+                         ::raft::NodeInfoResponse*,
+                         ::google::protobuf::Closure* done) {
+  controller->SetFailed("Method RpcNodeInfo() not implemented.");
+  done->Run();
+}
+
+void RaftService::RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                         const ::raft::ClientRequest*,
+                         ::raft::ClientResponse*,
+                         ::google::protobuf::Closure* done) {
+  controller->SetFailed("Method RpcClientMsg() not implemented.");
+  done->Run();
+}
+
+void RaftService::CallMethod(const ::PROTOBUF_NAMESPACE_ID::MethodDescriptor* method,
+                             ::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                             const ::PROTOBUF_NAMESPACE_ID::Message* request,
+                             ::PROTOBUF_NAMESPACE_ID::Message* response,
+                             ::google::protobuf::Closure* done) {
+  GOOGLE_DCHECK_EQ(method->service(), file_level_service_descriptors_message_2eproto[0]);
+  switch(method->index()) {
+    case 0:
+      RpcHeart(controller,
+             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<const ::raft::HeartBeatResquest*>(
+                 request),
+             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<::raft::HeartBeatResponse*>(
+                 response),
+             done);
+      break;
+    case 1:
+      RpcVote(controller,
+             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<const ::raft::VoteRequest*>(
+                 request),
+             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<::raft::VoteResponse*>(
+                 response),
+             done);
+      break;
+    case 2:
+      RpcNodeInfo(controller,
+             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<const ::raft::NodeInfoRequest*>(
+                 request),
+             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<::raft::NodeInfoResponse*>(
+                 response),
+             done);
+      break;
+    case 3:
+      RpcClientMsg(controller,
+             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<const ::raft::ClientRequest*>(
+                 request),
+             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<::raft::ClientResponse*>(
+                 response),
+             done);
+      break;
+    default:
+      GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
+      break;
+  }
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message& RaftService::GetRequestPrototype(
+    const ::PROTOBUF_NAMESPACE_ID::MethodDescriptor* method) const {
+  GOOGLE_DCHECK_EQ(method->service(), descriptor());
+  switch(method->index()) {
+    case 0:
+      return ::raft::HeartBeatResquest::default_instance();
+    case 1:
+      return ::raft::VoteRequest::default_instance();
+    case 2:
+      return ::raft::NodeInfoRequest::default_instance();
+    case 3:
+      return ::raft::ClientRequest::default_instance();
+    default:
+      GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
+      return *::PROTOBUF_NAMESPACE_ID::MessageFactory::generated_factory()
+          ->GetPrototype(method->input_type());
+  }
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message& RaftService::GetResponsePrototype(
+    const ::PROTOBUF_NAMESPACE_ID::MethodDescriptor* method) const {
+  GOOGLE_DCHECK_EQ(method->service(), descriptor());
+  switch(method->index()) {
+    case 0:
+      return ::raft::HeartBeatResponse::default_instance();
+    case 1:
+      return ::raft::VoteResponse::default_instance();
+    case 2:
+      return ::raft::NodeInfoResponse::default_instance();
+    case 3:
+      return ::raft::ClientResponse::default_instance();
+    default:
+      GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
+      return *::PROTOBUF_NAMESPACE_ID::MessageFactory::generated_factory()
+          ->GetPrototype(method->output_type());
+  }
+}
+
+RaftService_Stub::RaftService_Stub(::PROTOBUF_NAMESPACE_ID::RpcChannel* channel)
+  : channel_(channel), owns_channel_(false) {}
+RaftService_Stub::RaftService_Stub(
+    ::PROTOBUF_NAMESPACE_ID::RpcChannel* channel,
+    ::PROTOBUF_NAMESPACE_ID::Service::ChannelOwnership ownership)
+  : channel_(channel),
+    owns_channel_(ownership == ::PROTOBUF_NAMESPACE_ID::Service::STUB_OWNS_CHANNEL) {}
+RaftService_Stub::~RaftService_Stub() {
+  if (owns_channel_) delete channel_;
+}
+
+void RaftService_Stub::RpcHeart(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                              const ::raft::HeartBeatResquest* request,
+                              ::raft::HeartBeatResponse* response,
+                              ::google::protobuf::Closure* done) {
+  channel_->CallMethod(descriptor()->method(0),
+                       controller, request, response, done);
+}
+void RaftService_Stub::RpcVote(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                              const ::raft::VoteRequest* request,
+                              ::raft::VoteResponse* response,
+                              ::google::protobuf::Closure* done) {
+  channel_->CallMethod(descriptor()->method(1),
+                       controller, request, response, done);
+}
+void RaftService_Stub::RpcNodeInfo(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                              const ::raft::NodeInfoRequest* request,
+                              ::raft::NodeInfoResponse* response,
+                              ::google::protobuf::Closure* done) {
+  channel_->CallMethod(descriptor()->method(2),
+                       controller, request, response, done);
+}
+void RaftService_Stub::RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+                              const ::raft::ClientRequest* request,
+                              ::raft::ClientResponse* response,
+                              ::google::protobuf::Closure* done) {
+  channel_->CallMethod(descriptor()->method(3),
+                       controller, request, response, done);
+}
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace raft
