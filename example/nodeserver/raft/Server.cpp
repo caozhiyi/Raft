@@ -3,12 +3,17 @@
 #include "Log.h"
 #include "Raft.h"
 #include "server.h"
+#include "Config.h"
 #include "absl/strings/str_split.h"
 #include "absl/strings/str_format.h"
 
 void CServer::Init(const std::string& config_file) {
     raft::Init(config_file);
-    _http_server.Init("127.0.0.1", 8900);
+
+    base::CConfig config;
+    config.LoadFile(config_file);
+    uint16_t port = config.GetIntValue("http_port");
+    _http_server.Init("127.0.0.1", port);
 
     raft::SetCommitEntriesCallBack(std::bind(&CServer::RecvEntries, this, std::placeholders::_1));
     _http_server.SetRequestCallBack(std::bind(&CServer::DoRequest, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));

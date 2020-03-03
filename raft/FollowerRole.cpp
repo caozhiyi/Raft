@@ -61,10 +61,10 @@ void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& v
         if (_role_data->_voted_for_id != 0 && now - _turn_time <= range.first) {
             response.set_vote_granted(false);
 
-        }
-        else {
+        } else {
             _role_data->_voted_for_id = vote_request.candidate_id();
             // reset candidate timer 
+            _role_data->_timer->ResetTimer();
             uint32_t time = absl::uniform_int_distribution<uint32_t>(range.first, range.second)(_role_data->_gen);
             _role_data->_timer->StartVoteTimer(time);
         }
