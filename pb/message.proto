@@ -6,7 +6,7 @@ option cc_generic_services = true;
 message HeartBeatResquest {
     uint32 term                = 1;    // leader's term.
     uint32 leader_id           = 2;    // leader's id, so followsers can redirect clients.
-    uint64 prev_log_index      = 3;    // the snapshort replaces all entries uo through and includeing this index.
+    uint64 prev_log_index      = 3;    // the snapshort replaces all entries no through and includeing this index.
     uint32 prev_log_term       = 4;    // term of last include index.
     repeated string entries    = 5;    // to add logs.
     uint64 leader_commit       = 6;    // leader added log index. 
@@ -21,7 +21,7 @@ message HeartBeatResponse {
 message VoteRequest {
     uint32 term                = 1;    // candidate's term.
     uint32 candidate_id        = 2;    // candidate's id.
-    uint64 last_index          = 3;    // candidata last log index.
+    uint64 last_index          = 3;    // candidate last log index.
     uint32 last_term           = 4;    // candidate last log term.
 }
 
