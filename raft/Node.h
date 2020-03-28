@@ -29,6 +29,10 @@ namespace raft {
         // vote
         void SendVoteRequest(VoteRequest& request);
         void SendVoteResponse(VoteResponse& response);
+        // push entries about
+        void SendEntriesRequest(EntriesRequest& request);
+        void SendEntriesResponse(EntriesResponse& response);
+
     private:
         std::string  _net_handle;       // ip + port
         uint64_t     _match_index;

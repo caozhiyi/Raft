@@ -1,7 +1,6 @@
 #include "Log.h"
 #include "INode.h"
 #include "ITimer.h"
-#include "IClient.h"
 #include "RoleData.h"
 #include "INodeManager.h"
 #include "CandidateRole.h"
@@ -56,6 +55,8 @@ void CCandidateRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBea
     }
 
     if (response.success()) {
+        // set leader node
+        _role_data->_leader_node = node;
         // change role to follower
         _role_data->_role_change_call_back(follower_role, node->GetNetHandle());
         // change to follower recv this request again
@@ -84,14 +85,12 @@ void CCandidateRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBe
                 node->GetNetHandle().c_str(), heart_response.DebugString().c_str());
 }
 
-void CCandidateRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request) {
+void CCandidateRole::RecvEntriesRequest(std::shared_ptr<CNode>& node, EntriesRequest& request) {
     base::LOG_DEBUG("candidate recv client request from node, %s, context : %s", 
-                client->GetNetHandle().c_str(), request.DebugString().c_str());
+                node->GetNetHandle().c_str(), request.DebugString().c_str());
 
-    // tell client resend again, i don't know who is leader.
-    ClientResponse response;
-    response.set_ret_code(send_again);
-    client->SendToClient(response);
+    // cache request, send to leader when see a leader.
+    _role_data->_entries_request_cache.push_back(request);
 }
 
 void CCandidateRole::CandidateTimeOut() {

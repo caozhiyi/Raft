@@ -57,12 +57,12 @@ struct TableStruct_message_2eproto {
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_message_2eproto;
 namespace raft {
-class ClientRequest;
-class ClientRequestDefaultTypeInternal;
-extern ClientRequestDefaultTypeInternal _ClientRequest_default_instance_;
-class ClientResponse;
-class ClientResponseDefaultTypeInternal;
-extern ClientResponseDefaultTypeInternal _ClientResponse_default_instance_;
+class EntriesRequest;
+class EntriesRequestDefaultTypeInternal;
+extern EntriesRequestDefaultTypeInternal _EntriesRequest_default_instance_;
+class EntriesResponse;
+class EntriesResponseDefaultTypeInternal;
+extern EntriesResponseDefaultTypeInternal _EntriesResponse_default_instance_;
 class HeartBeatResponse;
 class HeartBeatResponseDefaultTypeInternal;
 extern HeartBeatResponseDefaultTypeInternal _HeartBeatResponse_default_instance_;
@@ -83,8 +83,8 @@ class VoteResponseDefaultTypeInternal;
 extern VoteResponseDefaultTypeInternal _VoteResponse_default_instance_;
 }  // namespace raft
 PROTOBUF_NAMESPACE_OPEN
-template<> ::raft::ClientRequest* Arena::CreateMaybeMessage<::raft::ClientRequest>(Arena*);
-template<> ::raft::ClientResponse* Arena::CreateMaybeMessage<::raft::ClientResponse>(Arena*);
+template<> ::raft::EntriesRequest* Arena::CreateMaybeMessage<::raft::EntriesRequest>(Arena*);
+template<> ::raft::EntriesResponse* Arena::CreateMaybeMessage<::raft::EntriesResponse>(Arena*);
 template<> ::raft::HeartBeatResponse* Arena::CreateMaybeMessage<::raft::HeartBeatResponse>(Arena*);
 template<> ::raft::HeartBeatResquest* Arena::CreateMaybeMessage<::raft::HeartBeatResquest>(Arena*);
 template<> ::raft::NodeInfoRequest* Arena::CreateMaybeMessage<::raft::NodeInfoRequest>(Arena*);
@@ -771,23 +771,23 @@ class VoteResponse :
 };
 // -------------------------------------------------------------------
 
-class ClientRequest :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:raft.ClientRequest) */ {
+class EntriesRequest :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:raft.EntriesRequest) */ {
  public:
-  ClientRequest();
-  virtual ~ClientRequest();
+  EntriesRequest();
+  virtual ~EntriesRequest();
 
-  ClientRequest(const ClientRequest& from);
-  ClientRequest(ClientRequest&& from) noexcept
-    : ClientRequest() {
+  EntriesRequest(const EntriesRequest& from);
+  EntriesRequest(EntriesRequest&& from) noexcept
+    : EntriesRequest() {
     *this = ::std::move(from);
   }
 
-  inline ClientRequest& operator=(const ClientRequest& from) {
+  inline EntriesRequest& operator=(const EntriesRequest& from) {
     CopyFrom(from);
     return *this;
   }
-  inline ClientRequest& operator=(ClientRequest&& from) noexcept {
+  inline EntriesRequest& operator=(EntriesRequest&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -805,37 +805,37 @@ class ClientRequest :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const ClientRequest& default_instance();
+  static const EntriesRequest& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const ClientRequest* internal_default_instance() {
-    return reinterpret_cast<const ClientRequest*>(
-               &_ClientRequest_default_instance_);
+  static inline const EntriesRequest* internal_default_instance() {
+    return reinterpret_cast<const EntriesRequest*>(
+               &_EntriesRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     4;
 
-  friend void swap(ClientRequest& a, ClientRequest& b) {
+  friend void swap(EntriesRequest& a, EntriesRequest& b) {
     a.Swap(&b);
   }
-  inline void Swap(ClientRequest* other) {
+  inline void Swap(EntriesRequest* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline ClientRequest* New() const final {
-    return CreateMaybeMessage<ClientRequest>(nullptr);
+  inline EntriesRequest* New() const final {
+    return CreateMaybeMessage<EntriesRequest>(nullptr);
   }
 
-  ClientRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<ClientRequest>(arena);
+  EntriesRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<EntriesRequest>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const ClientRequest& from);
-  void MergeFrom(const ClientRequest& from);
+  void CopyFrom(const EntriesRequest& from);
+  void MergeFrom(const EntriesRequest& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -849,10 +849,10 @@ class ClientRequest :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(ClientRequest* other);
+  void InternalSwap(EntriesRequest* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "raft.ClientRequest";
+    return "raft.EntriesRequest";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -895,7 +895,7 @@ class ClientRequest :
   std::string* _internal_mutable_entries();
   public:
 
-  // @@protoc_insertion_point(class_scope:raft.ClientRequest)
+  // @@protoc_insertion_point(class_scope:raft.EntriesRequest)
  private:
   class _Internal;
 
@@ -1192,23 +1192,23 @@ class NodeInfoResponse :
 };
 // -------------------------------------------------------------------
 
-class ClientResponse :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:raft.ClientResponse) */ {
+class EntriesResponse :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:raft.EntriesResponse) */ {
  public:
-  ClientResponse();
-  virtual ~ClientResponse();
+  EntriesResponse();
+  virtual ~EntriesResponse();
 
-  ClientResponse(const ClientResponse& from);
-  ClientResponse(ClientResponse&& from) noexcept
-    : ClientResponse() {
+  EntriesResponse(const EntriesResponse& from);
+  EntriesResponse(EntriesResponse&& from) noexcept
+    : EntriesResponse() {
     *this = ::std::move(from);
   }
 
-  inline ClientResponse& operator=(const ClientResponse& from) {
+  inline EntriesResponse& operator=(const EntriesResponse& from) {
     CopyFrom(from);
     return *this;
   }
-  inline ClientResponse& operator=(ClientResponse&& from) noexcept {
+  inline EntriesResponse& operator=(EntriesResponse&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -1226,37 +1226,37 @@ class ClientResponse :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const ClientResponse& default_instance();
+  static const EntriesResponse& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const ClientResponse* internal_default_instance() {
-    return reinterpret_cast<const ClientResponse*>(
-               &_ClientResponse_default_instance_);
+  static inline const EntriesResponse* internal_default_instance() {
+    return reinterpret_cast<const EntriesResponse*>(
+               &_EntriesResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     7;
 
-  friend void swap(ClientResponse& a, ClientResponse& b) {
+  friend void swap(EntriesResponse& a, EntriesResponse& b) {
     a.Swap(&b);
   }
-  inline void Swap(ClientResponse* other) {
+  inline void Swap(EntriesResponse* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline ClientResponse* New() const final {
-    return CreateMaybeMessage<ClientResponse>(nullptr);
+  inline EntriesResponse* New() const final {
+    return CreateMaybeMessage<EntriesResponse>(nullptr);
   }
 
-  ClientResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<ClientResponse>(arena);
+  EntriesResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<EntriesResponse>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const ClientResponse& from);
-  void MergeFrom(const ClientResponse& from);
+  void CopyFrom(const EntriesResponse& from);
+  void MergeFrom(const EntriesResponse& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -1270,10 +1270,10 @@ class ClientResponse :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(ClientResponse* other);
+  void InternalSwap(EntriesResponse* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "raft.ClientResponse";
+    return "raft.EntriesResponse";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -1326,7 +1326,7 @@ class ClientResponse :
   void _internal_set_ret_code(::raft::CLIENT_RES_CODE value);
   public:
 
-  // @@protoc_insertion_point(class_scope:raft.ClientResponse)
+  // @@protoc_insertion_point(class_scope:raft.EntriesResponse)
  private:
   class _Internal;
 
@@ -1364,8 +1364,8 @@ class RaftService : public ::PROTOBUF_NAMESPACE_ID::Service {
                        ::raft::NodeInfoResponse* response,
                        ::google::protobuf::Closure* done);
   virtual void RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
-                       const ::raft::ClientRequest* request,
-                       ::raft::ClientResponse* response,
+                       const ::raft::EntriesRequest* request,
+                       ::raft::EntriesResponse* response,
                        ::google::protobuf::Closure* done);
 
   // implements Service ----------------------------------------------
@@ -1409,8 +1409,8 @@ class RaftService_Stub : public RaftService {
                        ::raft::NodeInfoResponse* response,
                        ::google::protobuf::Closure* done);
   void RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
-                       const ::raft::ClientRequest* request,
-                       ::raft::ClientResponse* response,
+                       const ::raft::EntriesRequest* request,
+                       ::raft::EntriesResponse* response,
                        ::google::protobuf::Closure* done);
  private:
   ::PROTOBUF_NAMESPACE_ID::RpcChannel* channel_;
@@ -1798,66 +1798,66 @@ inline void VoteResponse::set_vote_granted(bool value) {
 
 // -------------------------------------------------------------------
 
-// ClientRequest
+// EntriesRequest
 
 // bytes entries = 1;
-inline void ClientRequest::clear_entries() {
+inline void EntriesRequest::clear_entries() {
   entries_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline const std::string& ClientRequest::entries() const {
-  // @@protoc_insertion_point(field_get:raft.ClientRequest.entries)
+inline const std::string& EntriesRequest::entries() const {
+  // @@protoc_insertion_point(field_get:raft.EntriesRequest.entries)
   return _internal_entries();
 }
-inline void ClientRequest::set_entries(const std::string& value) {
+inline void EntriesRequest::set_entries(const std::string& value) {
   _internal_set_entries(value);
-  // @@protoc_insertion_point(field_set:raft.ClientRequest.entries)
+  // @@protoc_insertion_point(field_set:raft.EntriesRequest.entries)
 }
-inline std::string* ClientRequest::mutable_entries() {
-  // @@protoc_insertion_point(field_mutable:raft.ClientRequest.entries)
+inline std::string* EntriesRequest::mutable_entries() {
+  // @@protoc_insertion_point(field_mutable:raft.EntriesRequest.entries)
   return _internal_mutable_entries();
 }
-inline const std::string& ClientRequest::_internal_entries() const {
+inline const std::string& EntriesRequest::_internal_entries() const {
   return entries_.GetNoArena();
 }
-inline void ClientRequest::_internal_set_entries(const std::string& value) {
+inline void EntriesRequest::_internal_set_entries(const std::string& value) {
   
   entries_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void ClientRequest::set_entries(std::string&& value) {
+inline void EntriesRequest::set_entries(std::string&& value) {
   
   entries_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:raft.ClientRequest.entries)
+  // @@protoc_insertion_point(field_set_rvalue:raft.EntriesRequest.entries)
 }
-inline void ClientRequest::set_entries(const char* value) {
+inline void EntriesRequest::set_entries(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
   entries_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:raft.ClientRequest.entries)
+  // @@protoc_insertion_point(field_set_char:raft.EntriesRequest.entries)
 }
-inline void ClientRequest::set_entries(const void* value, size_t size) {
+inline void EntriesRequest::set_entries(const void* value, size_t size) {
   
   entries_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:raft.ClientRequest.entries)
+  // @@protoc_insertion_point(field_set_pointer:raft.EntriesRequest.entries)
 }
-inline std::string* ClientRequest::_internal_mutable_entries() {
+inline std::string* EntriesRequest::_internal_mutable_entries() {
   
   return entries_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* ClientRequest::release_entries() {
-  // @@protoc_insertion_point(field_release:raft.ClientRequest.entries)
+inline std::string* EntriesRequest::release_entries() {
+  // @@protoc_insertion_point(field_release:raft.EntriesRequest.entries)
   
   return entries_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void ClientRequest::set_allocated_entries(std::string* entries) {
+inline void EntriesRequest::set_allocated_entries(std::string* entries) {
   if (entries != nullptr) {
     
   } else {
     
   }
   entries_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), entries);
-  // @@protoc_insertion_point(field_set_allocated:raft.ClientRequest.entries)
+  // @@protoc_insertion_point(field_set_allocated:raft.EntriesRequest.entries)
 }
 
 // -------------------------------------------------------------------
@@ -2018,86 +2018,86 @@ NodeInfoResponse::mutable_net_handle() {
 
 // -------------------------------------------------------------------
 
-// ClientResponse
+// EntriesResponse
 
 // .raft.CLIENT_RES_CODE ret_code = 1;
-inline void ClientResponse::clear_ret_code() {
+inline void EntriesResponse::clear_ret_code() {
   ret_code_ = 0;
 }
-inline ::raft::CLIENT_RES_CODE ClientResponse::_internal_ret_code() const {
+inline ::raft::CLIENT_RES_CODE EntriesResponse::_internal_ret_code() const {
   return static_cast< ::raft::CLIENT_RES_CODE >(ret_code_);
 }
-inline ::raft::CLIENT_RES_CODE ClientResponse::ret_code() const {
-  // @@protoc_insertion_point(field_get:raft.ClientResponse.ret_code)
+inline ::raft::CLIENT_RES_CODE EntriesResponse::ret_code() const {
+  // @@protoc_insertion_point(field_get:raft.EntriesResponse.ret_code)
   return _internal_ret_code();
 }
-inline void ClientResponse::_internal_set_ret_code(::raft::CLIENT_RES_CODE value) {
+inline void EntriesResponse::_internal_set_ret_code(::raft::CLIENT_RES_CODE value) {
   
   ret_code_ = value;
 }
-inline void ClientResponse::set_ret_code(::raft::CLIENT_RES_CODE value) {
+inline void EntriesResponse::set_ret_code(::raft::CLIENT_RES_CODE value) {
   _internal_set_ret_code(value);
-  // @@protoc_insertion_point(field_set:raft.ClientResponse.ret_code)
+  // @@protoc_insertion_point(field_set:raft.EntriesResponse.ret_code)
 }
 
 // string leader_net_handle = 2;
-inline void ClientResponse::clear_leader_net_handle() {
+inline void EntriesResponse::clear_leader_net_handle() {
   leader_net_handle_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline const std::string& ClientResponse::leader_net_handle() const {
-  // @@protoc_insertion_point(field_get:raft.ClientResponse.leader_net_handle)
+inline const std::string& EntriesResponse::leader_net_handle() const {
+  // @@protoc_insertion_point(field_get:raft.EntriesResponse.leader_net_handle)
   return _internal_leader_net_handle();
 }
-inline void ClientResponse::set_leader_net_handle(const std::string& value) {
+inline void EntriesResponse::set_leader_net_handle(const std::string& value) {
   _internal_set_leader_net_handle(value);
-  // @@protoc_insertion_point(field_set:raft.ClientResponse.leader_net_handle)
+  // @@protoc_insertion_point(field_set:raft.EntriesResponse.leader_net_handle)
 }
-inline std::string* ClientResponse::mutable_leader_net_handle() {
-  // @@protoc_insertion_point(field_mutable:raft.ClientResponse.leader_net_handle)
+inline std::string* EntriesResponse::mutable_leader_net_handle() {
+  // @@protoc_insertion_point(field_mutable:raft.EntriesResponse.leader_net_handle)
   return _internal_mutable_leader_net_handle();
 }
-inline const std::string& ClientResponse::_internal_leader_net_handle() const {
+inline const std::string& EntriesResponse::_internal_leader_net_handle() const {
   return leader_net_handle_.GetNoArena();
 }
-inline void ClientResponse::_internal_set_leader_net_handle(const std::string& value) {
+inline void EntriesResponse::_internal_set_leader_net_handle(const std::string& value) {
   
   leader_net_handle_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void ClientResponse::set_leader_net_handle(std::string&& value) {
+inline void EntriesResponse::set_leader_net_handle(std::string&& value) {
   
   leader_net_handle_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:raft.ClientResponse.leader_net_handle)
+  // @@protoc_insertion_point(field_set_rvalue:raft.EntriesResponse.leader_net_handle)
 }
-inline void ClientResponse::set_leader_net_handle(const char* value) {
+inline void EntriesResponse::set_leader_net_handle(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
   leader_net_handle_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:raft.ClientResponse.leader_net_handle)
+  // @@protoc_insertion_point(field_set_char:raft.EntriesResponse.leader_net_handle)
 }
-inline void ClientResponse::set_leader_net_handle(const char* value, size_t size) {
+inline void EntriesResponse::set_leader_net_handle(const char* value, size_t size) {
   
   leader_net_handle_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:raft.ClientResponse.leader_net_handle)
+  // @@protoc_insertion_point(field_set_pointer:raft.EntriesResponse.leader_net_handle)
 }
-inline std::string* ClientResponse::_internal_mutable_leader_net_handle() {
+inline std::string* EntriesResponse::_internal_mutable_leader_net_handle() {
   
   return leader_net_handle_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* ClientResponse::release_leader_net_handle() {
-  // @@protoc_insertion_point(field_release:raft.ClientResponse.leader_net_handle)
+inline std::string* EntriesResponse::release_leader_net_handle() {
+  // @@protoc_insertion_point(field_release:raft.EntriesResponse.leader_net_handle)
   
   return leader_net_handle_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void ClientResponse::set_allocated_leader_net_handle(std::string* leader_net_handle) {
+inline void EntriesResponse::set_allocated_leader_net_handle(std::string* leader_net_handle) {
   if (leader_net_handle != nullptr) {
     
   } else {
     
   }
   leader_net_handle_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), leader_net_handle);
-  // @@protoc_insertion_point(field_set_allocated:raft.ClientResponse.leader_net_handle)
+  // @@protoc_insertion_point(field_set_allocated:raft.EntriesResponse.leader_net_handle)
 }
 
 #ifdef __GNUC__

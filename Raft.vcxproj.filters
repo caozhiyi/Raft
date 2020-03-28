@@ -117,18 +117,6 @@
     <ClInclude Include="common\RaftTimer.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="raft\Client.h">
-      <Filter>raft</Filter>
-    </ClInclude>
-    <ClInclude Include="raft\ClientManager.h">
-      <Filter>raft</Filter>
-    </ClInclude>
-    <ClInclude Include="interface\IClient.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClInclude Include="interface\IClientManager.h">
-      <Filter>interface</Filter>
-    </ClInclude>
     <ClInclude Include="interface\INodeManager.h">
       <Filter>interface</Filter>
     </ClInclude>
@@ -143,12 +131,6 @@
     </ClInclude>
     <ClInclude Include="include\Raft.h">
       <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="raft\MountClient.h">
-      <Filter>raft</Filter>
-    </ClInclude>
-    <ClInclude Include="common\CppnetImplWithOutClient.h">
-      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="common\CppnetImplCommon.h">
       <Filter>common</Filter>
@@ -200,12 +182,6 @@
     <ClCompile Include="common\RaftTimer.cpp">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="raft\Client.cpp">
-      <Filter>raft</Filter>
-    </ClCompile>
-    <ClCompile Include="raft\ClientManager.cpp">
-      <Filter>raft</Filter>
-    </ClCompile>
     <ClCompile Include="common\ConfigImpl.cpp">
       <Filter>common</Filter>
     </ClCompile>
@@ -220,12 +196,6 @@
     </ClCompile>
     <ClCompile Include="pb\message.pb.cpp">
       <Filter>pb</Filter>
-    </ClCompile>
-    <ClCompile Include="raft\MountClient.cpp">
-      <Filter>raft</Filter>
-    </ClCompile>
-    <ClCompile Include="common\CppnetImplWithOutClient.cpp">
-      <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,16 +6,13 @@
 #include "LeaderRole.h"
 #include "ConfigImpl.h"
 #include "NodeManager.h"
-#include "MountClient.h"
 #include "RaftMediator.h"
 #include "FollowerRole.h"
 #include "CandidateRole.h"
-#include "ClientManager.h"
 #include "CommitEntriesDisk.h"
 #include "absl/strings/numbers.h"
 #include "absl/strings/str_split.h"
 #include "absl/strings/str_format.h"
-#include "CppnetImplWithOutClient.h"
 
 using namespace raft;
 
@@ -50,17 +47,15 @@ void CRaftMediator::Start(const std::string& config_file) {
     std::string file = _config->GetCommitDiskFile();
     _commit_entries.reset(new CCommitEntriesDisk(file));
 
+    std::string ip = _config->GetIp();
+    uint16_t port = _config->GetPort();
+
+    _common_data->_cur_net_handle = absl::StrFormat("%s:%d", ip.c_str(), port);
+    base::LOG_DEBUG("start listen to : %s", _common_data->_cur_net_handle.c_str());
+    _common_data->_node_manager.reset(new CNodeManagerImpl(_common_data->_cur_net_handle));
+
     // create net 
-    bool with_client = _config->IsWithClient();
-    if (with_client) {
-        _net.reset(new CCppNet());
-    } else {
-        _net.reset(new CCppNetWithOutClient());
-    }
-    // create client manager
-    _client_manager.reset(new CClientManagerImpl(_net));
-    // create mount client 
-    _mount_client.reset(new CMountClient(_net));
+    _net.reset(new CCppNetImpl(_common_data->_node_manager));
 
     _common_data->_cur_node_id = _config->GetNodeId();
     _common_data->_heart_time = _config->GetHeartTime();
@@ -82,12 +77,6 @@ void CRaftMediator::Start(const std::string& config_file) {
     }
     
     // start net io
-    std::string ip = _config->GetIp();
-    uint16_t port = _config->GetPort();
-    
-    _common_data->_cur_net_handle = absl::StrFormat("%s:%d", ip.c_str(), port);
-    base::LOG_DEBUG("start listen to : %s", _common_data->_cur_net_handle.c_str());
-    _common_data->_node_manager.reset(new CNodeManagerImpl(_net, _common_data->_cur_net_handle));
     _net->Start(ip, port);
 
     // connect to other node
@@ -116,7 +105,6 @@ void CRaftMediator::CommitEntries(Entries& entries) {
 
 void CRaftMediator::ChangeRole(ROLE_TYPE type, const std::string& net_handle) {
     base::LOG_DEBUG("change role to %d", type);
-    _mount_client->SetLeaderHandle(net_handle);
     if (type == follower_role) {
         _current_role = _follower_role;
 
@@ -130,13 +118,14 @@ void CRaftMediator::ChangeRole(ROLE_TYPE type, const std::string& net_handle) {
         base::LOG_ERROR("unknow role type.");
     }
     _common_data->_node_manager->SetRole(_current_role);
-    _client_manager->SetRole(_current_role);
-    _mount_client->SetCurRole(_current_role);
     _current_role->ItsMyTurn();
 }
 
 void CRaftMediator::PushEntries(const std::string& entries) {
-    _mount_client->SendEntries(entries);
+    EntriesRequest reqeust;
+    reqeust.set_entries(entries);
+    std::shared_ptr<CNode> temp_node;
+    _current_role->RecvEntriesRequest(temp_node, reqeust);
 }
 
 void CRaftMediator::RecvHeartBeat(std::shared_ptr<CNode>& node, HeartBeatResquest& request) {

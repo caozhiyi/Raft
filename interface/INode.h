@@ -29,6 +29,9 @@ namespace raft {
         // vote
         virtual void SendVoteRequest(VoteRequest& request) = 0;
         virtual void SendVoteResponse(VoteResponse& response) = 0;
+        // push entries about
+        virtual void SendEntriesRequest(EntriesRequest& request) = 0;
+        virtual void SendEntriesResponse(EntriesResponse& response) = 0;
     };
 }
 

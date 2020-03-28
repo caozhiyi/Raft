@@ -11,9 +11,10 @@ namespace raft {
     class CRole;
     class CNodeManagerImpl : public CNodeManager {
     public:
-        CNodeManagerImpl(std::shared_ptr<CNet>& net, const std::string& net_handle);
+        CNodeManagerImpl(const std::string& net_handle);
         ~CNodeManagerImpl();
-
+        
+        void SetNet(std::shared_ptr<CNet> net);
         // set current role
         void SetRole(std::shared_ptr<CRole>& role);
 
@@ -30,21 +31,22 @@ namespace raft {
         // connect to a node
         void ConnectTo(const std::string& ip, uint16_t port);
 
-        // new connect call back
+        // connection call back
         void NewConnectCallBack(const std::string& net_handle);
-        // disconnect call back
         void DisConnectCallBack(const std::string& net_handle);
-        // heart request call back
+        // heart call back
         void HeartRequestRecvCallBack(const std::string& net_handle, HeartBeatResquest& request);
-        // heart response call back
         void HeartResponseRecvCallBack(const std::string& net_handle, HeartBeatResponse& response);
-        // vote request call back
+        // vote call back
         void VoteRequestRecvCallBack(const std::string& net_handle, VoteRequest& request);
-        // vote response call back
         void VoteResponseRecvCallBack(const std::string& net_handle, VoteResponse& response);
         // node find about
         void NodeInfoRequestCallBack(const std::string& net_handle, NodeInfoRequest& request);
         void NodeInfoResponseCallBack(const std::string& net_handle, NodeInfoResponse& response);
+        // entries call back
+        void EntriesRequestCallBack(const std::string& net_handle, EntriesRequest& request);
+        void EntriesResponseCallBack(const std::string& net_handle, EntriesResponse& response);
+
     private:
         // get a node
         std::shared_ptr<CNode> GetNode(const std::string& net_handle);

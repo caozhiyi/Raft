@@ -1,5 +1,5 @@
-#ifndef RAFT_CPMMON_CPPNETIMPL
-#define RAFT_CPMMON_CPPNETIMPL
+#ifndef RAFT_CPMMON_CPPNETIMPLWITHOUTCLIENT
+#define RAFT_CPMMON_CPPNETIMPLWITHOUTCLIENT
 
 #include <map>
 #include <functional>
@@ -10,12 +10,12 @@
 #include "CppnetImplCommon.h"
 
 namespace raft {
-
+    
     class CNode;
-    class CCppNet : public CNet {
+    class CCppNetImpl : public CNet {
     public:
-        CCppNet();
-        ~CCppNet();
+        CCppNetImpl(std::shared_ptr<CNodeManager> node_manager);
+        ~CCppNetImpl();
 
         void Init(uint16_t thread_num);
         // start to listen
@@ -37,30 +37,9 @@ namespace raft {
         void SendVoteResponse(const std::string& net_handle, VoteResponse& response);
 
         // client about
-        void SendClientRequest(const std::string& net_handle, ClientRequest& request);
-        void SendClientResponse(const std::string& net_handle, ClientResponse& response);
-        void SetClientResponseCallBack(const std::function<void(const std::string&, ClientResponse& response)>& func);
-        // client call back
-        void SetClientRecvCallBack(const std::function<void(const std::string&, ClientRequest&)>& func);
-        void SetClientConnectCallBack(const std::function<void(const std::string&)>& func);
-        void SetClientDisConnectCallBack(const std::function<void(const std::string&)>& func);
+        void SendEntriesRequest(const std::string& net_handle, EntriesRequest& request);
+        void SendEntriesResponse(const std::string& net_handle, EntriesResponse& response);
 
-        // reft about
-        // set new connect call back
-        void SetNewConnectCallBack(const std::function<void(const std::string&)>& func);
-        // set disconnect call back
-        void SetDisConnectCallBack(const std::function<void(const std::string&)>& func);
-        // set heart request call back
-        void SetHeartRequestRecvCallBack(const std::function<void(const std::string&, HeartBeatResquest&)>& func);
-        // set heart response call back
-        void SetHeartResponseRecvCallBack(const std::function<void(const std::string&, HeartBeatResponse&)>& func);
-        // set vote request call back
-        void SetVoteRequestRecvCallBack(const std::function<void(const std::string&, VoteRequest&)>& func);
-        // set vote response call back
-        void SetVoteResponseRecvCallBack(const std::function<void(const std::string&, VoteResponse&)>& func);
-        // node info 
-        void SetNodeInfoRequestCallBack(const std::function<void(const std::string&, NodeInfoRequest&)>& func);
-        void SetNodeInfoResponseCallBack(const std::function<void(const std::string&, NodeInfoResponse&)>& func);
     private:
         // cppnet call back
         void Connected(const cppnet::Handle& handle, uint32_t err);
@@ -71,33 +50,16 @@ namespace raft {
         void BuildSendData(std::string& data, CppBagType type, std::string& ret);
         bool StringToBag(const std::string& data, std::vector<CppBag>& bag_vec, uint32_t& used_size);
         // get net handle
-        std::pair<std::string, uint16_t> GetNetHandle(const cppnet::Handle& handle);
+        std::string GetNetHandle(const cppnet::Handle& handle);
         // send to net
-        void SendToNet(const std::string& net_handle, std::string& data, uint16_t type = raft_node);
+        void SendToNet(const std::string& net_handle, std::string& data);
         // handle bag
         void HandleBag(const std::string& net_handle, const CppBag& bag);
-        // check connect type
-        void CheckConnectType(const cppnet::Handle& handle, const std::string& net_handle, CppBagType type);
 
     private:
         // net handle to cppnet handle
         std::map<std::string, cppnet::Handle>                                 _net_2_handle_map;
-        std::map<cppnet::Handle, std::pair<std::string, uint16_t>>            _handle_2_net_map;
-
-        // raft call back
-        std::function<void(const std::string&, HeartBeatResquest&)>           _heart_request_call_back;
-        std::function<void(const std::string&, HeartBeatResponse&)>           _heart_response_call_back;
-        std::function<void(const std::string&, VoteRequest&)>                 _vote_request_call_back;
-        std::function<void(const std::string&, VoteResponse&)>                _vote_response_call_back;
-        std::function<void(const std::string&, NodeInfoRequest&)>             _node_info_request_call_back;
-        std::function<void(const std::string&, NodeInfoResponse&)>            _node_info_response_call_back;
-        std::function<void(const std::string&)>                               _raft_connect_call_back;
-        std::function<void(const std::string&)>                               _raft_dis_connect_call_back;
-        // client about
-        std::function<void(const std::string&, ClientRequest&)>               _client_recv_call_back;
-        std::function<void(const std::string&, ClientResponse&)>              _client_response_call_back;
-        std::function<void(const std::string&)>                               _client_connect_call_back;
-        std::function<void(const std::string&)>                               _client_dis_connect_call_back;
+        std::map<cppnet::Handle, std::string>                                 _handle_2_net_map;
     };
 }
 

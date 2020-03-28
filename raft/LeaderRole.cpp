@@ -1,7 +1,6 @@
 #include "Log.h"
 #include "INode.h"
 #include "ITimer.h"
-#include "IClient.h"
 #include "RoleData.h"
 #include "LeaderRole.h"
 #include "INodeManager.h"
@@ -21,11 +20,16 @@ ROLE_TYPE CLeaderRole::GetRole() {
 }
 
 void CLeaderRole::ItsMyTurn() {
-    _client_net_handle_map.clear();
     // send heart once.
     HeartBeatTimerOut();
     // start heart timer.
     _role_data->_timer->StartHeartTimer(_role_data->_heart_time);
+    // I'm leader, push all entries to myself
+    std::shared_ptr<CNode> temp_node;
+    for (int i = 0; i < _role_data->_entries_request_cache.size(); i++) {
+        RecvEntriesRequest(temp_node, _role_data->_entries_request_cache[i]);
+    }
+    _role_data->_entries_request_cache.clear();
 }
 
 void CLeaderRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
@@ -87,26 +91,20 @@ void CLeaderRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatR
     if (_role_data->_heart_success_num > _role_data->_node_manager->GetNodeCount() / 2) {
         _role_data->_last_applied = _role_data->_max_match_index;
         auto iter = _role_data->_entries_map.find(_role_data->_prev_match_index);
-        ClientResponse response;
+        EntriesResponse response;
         response.set_ret_code(success);
         while (iter != _role_data->_entries_map.end() && iter->first <= _role_data->_max_match_index) {
             // commit entries
             _role_data->_commit_entries_call_back(iter->second);
-
-            // send response to client
-            auto client_iter = _client_net_handle_map.find(iter->first);
-            if (client_iter != _client_net_handle_map.end()) {
-                client_iter->second->SendToClient(response);
-            }
             iter++;
         }
         _role_data->_prev_match_index = _role_data->_max_match_index + 1;
     }
 }
 
-void CLeaderRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request) {
+void CLeaderRole::RecvEntriesRequest(std::shared_ptr<CNode>& node, EntriesRequest& request) {
     base::LOG_DEBUG("leader recv client request from client, %s, context : %s", 
-        client?client->GetNetHandle().c_str():"", request.DebugString().c_str());
+        node?node->GetNetHandle().c_str():"", request.DebugString().c_str());
 
     // get entries from client
     // create entries
@@ -118,9 +116,6 @@ void CLeaderRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequ
 
     // insert entries
     _role_data->_entries_map[entries._index] = entries;
-    if (client) {
-        _client_net_handle_map[entries._index] = client;
-    }
 }
 
 void CLeaderRole::CandidateTimeOut() {

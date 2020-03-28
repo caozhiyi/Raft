@@ -9,16 +9,11 @@ namespace raft {
         heart_beat_response = 2,
         vote_request        = 3,
         vote_response       = 4,
-        client_requst       = 5,
-        client_response     = 6,
+        entries_requst      = 5,
+        entries_response    = 6,
         node_info_request   = 7,
         node_info_response  = 8
     };
-
-    
-    static const uint16_t unknow_type         = 0x01;
-    static const uint16_t user_client         = 0x02;
-    static const uint16_t raft_node           = 0x04;
 
     static const uint32_t __header_len = sizeof(uint64_t);
     struct CppBag {

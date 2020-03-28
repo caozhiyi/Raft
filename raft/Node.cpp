@@ -60,3 +60,11 @@ void NodeImpl::SendVoteRequest(VoteRequest& request) {
 void NodeImpl::SendVoteResponse(VoteResponse& response) {
     _net->SendVoteResponse(_net_handle, response);
 }
+
+void NodeImpl::SendEntriesRequest(EntriesRequest& request) {
+    _net->SendEntriesRequest(_net_handle, request);
+}
+
+void NodeImpl::SendEntriesResponse(EntriesResponse& response) {
+    _net->SendEntriesResponse(_net_handle, response);
+}

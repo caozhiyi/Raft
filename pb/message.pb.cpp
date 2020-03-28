@@ -31,10 +31,10 @@ class VoteResponseDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<VoteResponse> _instance;
 } _VoteResponse_default_instance_;
-class ClientRequestDefaultTypeInternal {
+class EntriesRequestDefaultTypeInternal {
  public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<ClientRequest> _instance;
-} _ClientRequest_default_instance_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<EntriesRequest> _instance;
+} _EntriesRequest_default_instance_;
 class NodeInfoRequestDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<NodeInfoRequest> _instance;
@@ -43,38 +43,38 @@ class NodeInfoResponseDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<NodeInfoResponse> _instance;
 } _NodeInfoResponse_default_instance_;
-class ClientResponseDefaultTypeInternal {
+class EntriesResponseDefaultTypeInternal {
  public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<ClientResponse> _instance;
-} _ClientResponse_default_instance_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<EntriesResponse> _instance;
+} _EntriesResponse_default_instance_;
 }  // namespace raft
-static void InitDefaultsscc_info_ClientRequest_message_2eproto() {
+static void InitDefaultsscc_info_EntriesRequest_message_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::raft::_ClientRequest_default_instance_;
-    new (ptr) ::raft::ClientRequest();
+    void* ptr = &::raft::_EntriesRequest_default_instance_;
+    new (ptr) ::raft::EntriesRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::raft::ClientRequest::InitAsDefaultInstance();
+  ::raft::EntriesRequest::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_ClientRequest_message_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_ClientRequest_message_2eproto}, {}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_EntriesRequest_message_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_EntriesRequest_message_2eproto}, {}};
 
-static void InitDefaultsscc_info_ClientResponse_message_2eproto() {
+static void InitDefaultsscc_info_EntriesResponse_message_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::raft::_ClientResponse_default_instance_;
-    new (ptr) ::raft::ClientResponse();
+    void* ptr = &::raft::_EntriesResponse_default_instance_;
+    new (ptr) ::raft::EntriesResponse();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::raft::ClientResponse::InitAsDefaultInstance();
+  ::raft::EntriesResponse::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_ClientResponse_message_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_ClientResponse_message_2eproto}, {}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_EntriesResponse_message_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_EntriesResponse_message_2eproto}, {}};
 
 static void InitDefaultsscc_info_HeartBeatResponse_message_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -201,11 +201,11 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_message_2eproto::offsets[] PRO
   PROTOBUF_FIELD_OFFSET(::raft::VoteResponse, term_),
   PROTOBUF_FIELD_OFFSET(::raft::VoteResponse, vote_granted_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::raft::ClientRequest, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::raft::EntriesRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::raft::ClientRequest, entries_),
+  PROTOBUF_FIELD_OFFSET(::raft::EntriesRequest, entries_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::NodeInfoRequest, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -219,22 +219,22 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_message_2eproto::offsets[] PRO
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::raft::NodeInfoResponse, net_handle_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::raft::ClientResponse, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::raft::EntriesResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::raft::ClientResponse, ret_code_),
-  PROTOBUF_FIELD_OFFSET(::raft::ClientResponse, leader_net_handle_),
+  PROTOBUF_FIELD_OFFSET(::raft::EntriesResponse, ret_code_),
+  PROTOBUF_FIELD_OFFSET(::raft::EntriesResponse, leader_net_handle_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::raft::HeartBeatResquest)},
   { 11, -1, sizeof(::raft::HeartBeatResponse)},
   { 19, -1, sizeof(::raft::VoteRequest)},
   { 28, -1, sizeof(::raft::VoteResponse)},
-  { 35, -1, sizeof(::raft::ClientRequest)},
+  { 35, -1, sizeof(::raft::EntriesRequest)},
   { 41, -1, sizeof(::raft::NodeInfoRequest)},
   { 47, -1, sizeof(::raft::NodeInfoResponse)},
-  { 53, -1, sizeof(::raft::ClientResponse)},
+  { 53, -1, sizeof(::raft::EntriesResponse)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -242,10 +242,10 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_HeartBeatResponse_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_VoteRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_VoteResponse_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_ClientRequest_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_EntriesRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_NodeInfoRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_NodeInfoResponse_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_ClientResponse_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::raft::_EntriesResponse_default_instance_),
 };
 
 const char descriptor_table_protodef_message_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
@@ -258,10 +258,10 @@ const char descriptor_table_protodef_message_2eproto[] PROTOBUF_SECTION_VARIABLE
   "oteRequest\022\014\n\004term\030\001 \001(\r\022\024\n\014candidate_id"
   "\030\002 \001(\r\022\022\n\nlast_index\030\003 \001(\004\022\021\n\tlast_term\030"
   "\004 \001(\r\"2\n\014VoteResponse\022\014\n\004term\030\001 \001(\r\022\024\n\014v"
-  "ote_granted\030\002 \001(\010\" \n\rClientRequest\022\017\n\007en"
+  "ote_granted\030\002 \001(\010\" \n\rEntriesRequest\022\017\n\007en"
   "tries\030\001 \001(\014\"%\n\017NodeInfoRequest\022\022\n\nnet_ha"
   "ndle\030\001 \003(\t\"&\n\020NodeInfoResponse\022\022\n\nnet_ha"
-  "ndle\030\001 \003(\t\"T\n\016ClientResponse\022\'\n\010ret_code"
+  "ndle\030\001 \003(\t\"T\n\016EntriesResponse\022\'\n\010ret_code"
   "\030\001 \001(\0162\025.raft.CLIENT_RES_CODE\022\031\n\021leader_"
   "net_handle\030\002 \001(\t*O\n\017CLIENT_RES_CODE\022\013\n\007s"
   "uccess\020\000\022\016\n\nnot_leader\020\001\022\017\n\013other_error\020"
@@ -271,13 +271,13 @@ const char descriptor_table_protodef_message_2eproto[] PROTOBUF_SECTION_VARIABLE
   "quest\032\022.raft.VoteResponse\022<\n\013RpcNodeInfo"
   "\022\025.raft.NodeInfoRequest\032\026.raft.NodeInfoR"
   "esponse\0229\n\014RpcClientMsg\022\023.raft.ClientReq"
-  "uest\032\024.raft.ClientResponseB\003\200\001\001b\006proto3"
+  "uest\032\024.raft.EntriesResponseB\003\200\001\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_message_2eproto_deps[1] = {
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_message_2eproto_sccs[8] = {
-  &scc_info_ClientRequest_message_2eproto.base,
-  &scc_info_ClientResponse_message_2eproto.base,
+  &scc_info_EntriesRequest_message_2eproto.base,
+  &scc_info_EntriesResponse_message_2eproto.base,
   &scc_info_HeartBeatResponse_message_2eproto.base,
   &scc_info_HeartBeatResquest_message_2eproto.base,
   &scc_info_NodeInfoRequest_message_2eproto.base,
@@ -1352,18 +1352,18 @@ void VoteResponse::InternalSwap(VoteResponse* other) {
 
 // ===================================================================
 
-void ClientRequest::InitAsDefaultInstance() {
+void EntriesRequest::InitAsDefaultInstance() {
 }
-class ClientRequest::_Internal {
+class EntriesRequest::_Internal {
  public:
 };
 
-ClientRequest::ClientRequest()
+EntriesRequest::EntriesRequest()
   : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:raft.ClientRequest)
+  // @@protoc_insertion_point(constructor:raft.EntriesRequest)
 }
-ClientRequest::ClientRequest(const ClientRequest& from)
+EntriesRequest::EntriesRequest(const EntriesRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
       _internal_metadata_(nullptr) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -1371,34 +1371,34 @@ ClientRequest::ClientRequest(const ClientRequest& from)
   if (!from._internal_entries().empty()) {
     entries_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.entries_);
   }
-  // @@protoc_insertion_point(copy_constructor:raft.ClientRequest)
+  // @@protoc_insertion_point(copy_constructor:raft.EntriesRequest)
 }
 
-void ClientRequest::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_ClientRequest_message_2eproto.base);
+void EntriesRequest::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_EntriesRequest_message_2eproto.base);
   entries_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-ClientRequest::~ClientRequest() {
-  // @@protoc_insertion_point(destructor:raft.ClientRequest)
+EntriesRequest::~EntriesRequest() {
+  // @@protoc_insertion_point(destructor:raft.EntriesRequest)
   SharedDtor();
 }
 
-void ClientRequest::SharedDtor() {
+void EntriesRequest::SharedDtor() {
   entries_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-void ClientRequest::SetCachedSize(int size) const {
+void EntriesRequest::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ClientRequest& ClientRequest::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_ClientRequest_message_2eproto.base);
+const EntriesRequest& EntriesRequest::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_EntriesRequest_message_2eproto.base);
   return *internal_default_instance();
 }
 
 
-void ClientRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:raft.ClientRequest)
+void EntriesRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:raft.EntriesRequest)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -1407,7 +1407,7 @@ void ClientRequest::Clear() {
   _internal_metadata_.Clear();
 }
 
-const char* ClientRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* EntriesRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
@@ -1442,9 +1442,9 @@ failure:
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* ClientRequest::_InternalSerialize(
+::PROTOBUF_NAMESPACE_ID::uint8* EntriesRequest::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:raft.ClientRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:raft.EntriesRequest)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1458,12 +1458,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:raft.ClientRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:raft.EntriesRequest)
   return target;
 }
 
-size_t ClientRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:raft.ClientRequest)
+size_t EntriesRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:raft.EntriesRequest)
   size_t total_size = 0;
 
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -1486,23 +1486,23 @@ size_t ClientRequest::ByteSizeLong() const {
   return total_size;
 }
 
-void ClientRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:raft.ClientRequest)
+void EntriesRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:raft.EntriesRequest)
   GOOGLE_DCHECK_NE(&from, this);
-  const ClientRequest* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<ClientRequest>(
+  const EntriesRequest* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<EntriesRequest>(
           &from);
   if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:raft.ClientRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:raft.EntriesRequest)
     ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:raft.ClientRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:raft.EntriesRequest)
     MergeFrom(*source);
   }
 }
 
-void ClientRequest::MergeFrom(const ClientRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.ClientRequest)
+void EntriesRequest::MergeFrom(const EntriesRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:raft.EntriesRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -1514,32 +1514,32 @@ void ClientRequest::MergeFrom(const ClientRequest& from) {
   }
 }
 
-void ClientRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:raft.ClientRequest)
+void EntriesRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:raft.EntriesRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ClientRequest::CopyFrom(const ClientRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:raft.ClientRequest)
+void EntriesRequest::CopyFrom(const EntriesRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:raft.EntriesRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ClientRequest::IsInitialized() const {
+bool EntriesRequest::IsInitialized() const {
   return true;
 }
 
-void ClientRequest::InternalSwap(ClientRequest* other) {
+void EntriesRequest::InternalSwap(EntriesRequest* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
   entries_.Swap(&other->entries_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata ClientRequest::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata EntriesRequest::GetMetadata() const {
   return GetMetadataStatic();
 }
 
@@ -1938,18 +1938,18 @@ void NodeInfoResponse::InternalSwap(NodeInfoResponse* other) {
 
 // ===================================================================
 
-void ClientResponse::InitAsDefaultInstance() {
+void EntriesResponse::InitAsDefaultInstance() {
 }
-class ClientResponse::_Internal {
+class EntriesResponse::_Internal {
  public:
 };
 
-ClientResponse::ClientResponse()
+EntriesResponse::EntriesResponse()
   : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:raft.ClientResponse)
+  // @@protoc_insertion_point(constructor:raft.EntriesResponse)
 }
-ClientResponse::ClientResponse(const ClientResponse& from)
+EntriesResponse::EntriesResponse(const EntriesResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
       _internal_metadata_(nullptr) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -1958,35 +1958,35 @@ ClientResponse::ClientResponse(const ClientResponse& from)
     leader_net_handle_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.leader_net_handle_);
   }
   ret_code_ = from.ret_code_;
-  // @@protoc_insertion_point(copy_constructor:raft.ClientResponse)
+  // @@protoc_insertion_point(copy_constructor:raft.EntriesResponse)
 }
 
-void ClientResponse::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_ClientResponse_message_2eproto.base);
+void EntriesResponse::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_EntriesResponse_message_2eproto.base);
   leader_net_handle_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   ret_code_ = 0;
 }
 
-ClientResponse::~ClientResponse() {
-  // @@protoc_insertion_point(destructor:raft.ClientResponse)
+EntriesResponse::~EntriesResponse() {
+  // @@protoc_insertion_point(destructor:raft.EntriesResponse)
   SharedDtor();
 }
 
-void ClientResponse::SharedDtor() {
+void EntriesResponse::SharedDtor() {
   leader_net_handle_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-void ClientResponse::SetCachedSize(int size) const {
+void EntriesResponse::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ClientResponse& ClientResponse::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_ClientResponse_message_2eproto.base);
+const EntriesResponse& EntriesResponse::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_EntriesResponse_message_2eproto.base);
   return *internal_default_instance();
 }
 
 
-void ClientResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:raft.ClientResponse)
+void EntriesResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:raft.EntriesResponse)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -1996,7 +1996,7 @@ void ClientResponse::Clear() {
   _internal_metadata_.Clear();
 }
 
-const char* ClientResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* EntriesResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
@@ -2016,7 +2016,7 @@ const char* ClientResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
           auto str = _internal_mutable_leader_net_handle();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "raft.ClientResponse.leader_net_handle"));
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "raft.EntriesResponse.leader_net_handle"));
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -2040,9 +2040,9 @@ failure:
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* ClientResponse::_InternalSerialize(
+::PROTOBUF_NAMESPACE_ID::uint8* EntriesResponse::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:raft.ClientResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:raft.EntriesResponse)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -2058,7 +2058,7 @@ failure:
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_leader_net_handle().data(), static_cast<int>(this->_internal_leader_net_handle().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "raft.ClientResponse.leader_net_handle");
+      "raft.EntriesResponse.leader_net_handle");
     target = stream->WriteStringMaybeAliased(
         2, this->_internal_leader_net_handle(), target);
   }
@@ -2067,12 +2067,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:raft.ClientResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:raft.EntriesResponse)
   return target;
 }
 
-size_t ClientResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:raft.ClientResponse)
+size_t EntriesResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:raft.EntriesResponse)
   size_t total_size = 0;
 
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -2101,23 +2101,23 @@ size_t ClientResponse::ByteSizeLong() const {
   return total_size;
 }
 
-void ClientResponse::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:raft.ClientResponse)
+void EntriesResponse::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:raft.EntriesResponse)
   GOOGLE_DCHECK_NE(&from, this);
-  const ClientResponse* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<ClientResponse>(
+  const EntriesResponse* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<EntriesResponse>(
           &from);
   if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:raft.ClientResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:raft.EntriesResponse)
     ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:raft.ClientResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:raft.EntriesResponse)
     MergeFrom(*source);
   }
 }
 
-void ClientResponse::MergeFrom(const ClientResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.ClientResponse)
+void EntriesResponse::MergeFrom(const EntriesResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:raft.EntriesResponse)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -2132,25 +2132,25 @@ void ClientResponse::MergeFrom(const ClientResponse& from) {
   }
 }
 
-void ClientResponse::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:raft.ClientResponse)
+void EntriesResponse::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:raft.EntriesResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void ClientResponse::CopyFrom(const ClientResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:raft.ClientResponse)
+void EntriesResponse::CopyFrom(const EntriesResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:raft.EntriesResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ClientResponse::IsInitialized() const {
+bool EntriesResponse::IsInitialized() const {
   return true;
 }
 
-void ClientResponse::InternalSwap(ClientResponse* other) {
+void EntriesResponse::InternalSwap(EntriesResponse* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
   leader_net_handle_.Swap(&other->leader_net_handle_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
@@ -2158,7 +2158,7 @@ void ClientResponse::InternalSwap(ClientResponse* other) {
   swap(ret_code_, other->ret_code_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata ClientResponse::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata EntriesResponse::GetMetadata() const {
   return GetMetadataStatic();
 }
 
@@ -2201,8 +2201,8 @@ void RaftService::RpcNodeInfo(::PROTOBUF_NAMESPACE_ID::RpcController* controller
 }
 
 void RaftService::RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
-                         const ::raft::ClientRequest*,
-                         ::raft::ClientResponse*,
+                         const ::raft::EntriesRequest*,
+                         ::raft::EntriesResponse*,
                          ::google::protobuf::Closure* done) {
   controller->SetFailed("Method RpcClientMsg() not implemented.");
   done->Run();
@@ -2241,9 +2241,9 @@ void RaftService::CallMethod(const ::PROTOBUF_NAMESPACE_ID::MethodDescriptor* me
       break;
     case 3:
       RpcClientMsg(controller,
-             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<const ::raft::ClientRequest*>(
+             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<const ::raft::EntriesRequest*>(
                  request),
-             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<::raft::ClientResponse*>(
+             ::PROTOBUF_NAMESPACE_ID::internal::DownCast<::raft::EntriesResponse*>(
                  response),
              done);
       break;
@@ -2264,7 +2264,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message& RaftService::GetRequestPrototype(
     case 2:
       return ::raft::NodeInfoRequest::default_instance();
     case 3:
-      return ::raft::ClientRequest::default_instance();
+      return ::raft::EntriesRequest::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
       return *::PROTOBUF_NAMESPACE_ID::MessageFactory::generated_factory()
@@ -2283,7 +2283,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message& RaftService::GetResponsePrototype(
     case 2:
       return ::raft::NodeInfoResponse::default_instance();
     case 3:
-      return ::raft::ClientResponse::default_instance();
+      return ::raft::EntriesResponse::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
       return *::PROTOBUF_NAMESPACE_ID::MessageFactory::generated_factory()
@@ -2324,8 +2324,8 @@ void RaftService_Stub::RpcNodeInfo(::PROTOBUF_NAMESPACE_ID::RpcController* contr
                        controller, request, response, done);
 }
 void RaftService_Stub::RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
-                              const ::raft::ClientRequest* request,
-                              ::raft::ClientResponse* response,
+                              const ::raft::EntriesRequest* request,
+                              ::raft::EntriesResponse* response,
                               ::google::protobuf::Closure* done) {
   channel_->CallMethod(descriptor()->method(3),
                        controller, request, response, done);
@@ -2346,8 +2346,8 @@ template<> PROTOBUF_NOINLINE ::raft::VoteRequest* Arena::CreateMaybeMessage< ::r
 template<> PROTOBUF_NOINLINE ::raft::VoteResponse* Arena::CreateMaybeMessage< ::raft::VoteResponse >(Arena* arena) {
   return Arena::CreateInternal< ::raft::VoteResponse >(arena);
 }
-template<> PROTOBUF_NOINLINE ::raft::ClientRequest* Arena::CreateMaybeMessage< ::raft::ClientRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::raft::ClientRequest >(arena);
+template<> PROTOBUF_NOINLINE ::raft::EntriesRequest* Arena::CreateMaybeMessage< ::raft::EntriesRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::raft::EntriesRequest >(arena);
 }
 template<> PROTOBUF_NOINLINE ::raft::NodeInfoRequest* Arena::CreateMaybeMessage< ::raft::NodeInfoRequest >(Arena* arena) {
   return Arena::CreateInternal< ::raft::NodeInfoRequest >(arena);
@@ -2355,8 +2355,8 @@ template<> PROTOBUF_NOINLINE ::raft::NodeInfoRequest* Arena::CreateMaybeMessage<
 template<> PROTOBUF_NOINLINE ::raft::NodeInfoResponse* Arena::CreateMaybeMessage< ::raft::NodeInfoResponse >(Arena* arena) {
   return Arena::CreateInternal< ::raft::NodeInfoResponse >(arena);
 }
-template<> PROTOBUF_NOINLINE ::raft::ClientResponse* Arena::CreateMaybeMessage< ::raft::ClientResponse >(Arena* arena) {
-  return Arena::CreateInternal< ::raft::ClientResponse >(arena);
+template<> PROTOBUF_NOINLINE ::raft::EntriesResponse* Arena::CreateMaybeMessage< ::raft::EntriesResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::raft::EntriesResponse >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

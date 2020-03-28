@@ -15,7 +15,6 @@ namespace raft {
     class CConfig;
     class Entries;
     class CRoleData;
-    class CMountClient;
     class CNodeManager;
     class CClientManager;
     class CCommitEntries;
@@ -53,13 +52,9 @@ namespace raft {
         std::shared_ptr<CNet>           _net;
         std::shared_ptr<CCommitEntries> _commit_entries;
         std::shared_ptr<CConfig>        _config;
-        std::shared_ptr<CMountClient>   _mount_client;
 
         // common data
         std::shared_ptr<CRoleData>      _common_data;
-
-        // client manager
-        std::shared_ptr<CClientManager> _client_manager;
 
         // role about
         std::shared_ptr<CRole>          _current_role;

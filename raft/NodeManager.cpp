@@ -8,19 +8,16 @@
 
 using namespace raft;
 
-CNodeManagerImpl::CNodeManagerImpl(std::shared_ptr<CNet>& net, const std::string& net_handle) : _net(net), _cur_net_handle(net_handle) {
-    _net->SetNewConnectCallBack(std::bind(&CNodeManagerImpl::NewConnectCallBack, this, std::placeholders::_1));
-    _net->SetDisConnectCallBack(std::bind(&CNodeManagerImpl::DisConnectCallBack, this, std::placeholders::_1));
-    _net->SetHeartRequestRecvCallBack(std::bind(&CNodeManagerImpl::HeartRequestRecvCallBack, this, std::placeholders::_1, std::placeholders::_2));
-    _net->SetHeartResponseRecvCallBack(std::bind(&CNodeManagerImpl::HeartResponseRecvCallBack, this, std::placeholders::_1, std::placeholders::_2));
-    _net->SetVoteRequestRecvCallBack(std::bind(&CNodeManagerImpl::VoteRequestRecvCallBack, this, std::placeholders::_1, std::placeholders::_2));
-    _net->SetVoteResponseRecvCallBack(std::bind(&CNodeManagerImpl::VoteResponseRecvCallBack, this, std::placeholders::_1, std::placeholders::_2));
-    _net->SetNodeInfoRequestCallBack(std::bind(&CNodeManagerImpl::NodeInfoRequestCallBack, this, std::placeholders::_1, std::placeholders::_2));
-    _net->SetNodeInfoResponseCallBack(std::bind(&CNodeManagerImpl::NodeInfoResponseCallBack, this, std::placeholders::_1, std::placeholders::_2));
+CNodeManagerImpl::CNodeManagerImpl(const std::string& net_handle) : _cur_net_handle(net_handle) {
+
 }
 
 CNodeManagerImpl::~CNodeManagerImpl() {
 
+}
+
+void CNodeManagerImpl::SetNet(std::shared_ptr<CNet> net) {
+    _net = net;
 }
 
 void CNodeManagerImpl::SetRole(std::shared_ptr<CRole>& role) {

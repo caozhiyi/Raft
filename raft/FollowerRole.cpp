@@ -1,7 +1,6 @@
 #include "Log.h"
 #include "INode.h"
 #include "ITimer.h"
-#include "IClient.h"
 #include "RoleData.h"
 #include "FollowerRole.h"
 #include "absl/time/time.h"
@@ -32,6 +31,12 @@ void CFollowerRole::ItsMyTurn() {
     auto range = _role_data->_candidate_time;
     uint32_t time = absl::uniform_int_distribution<uint32_t>(range.first, range.second)(_role_data->_gen);
     _role_data->_timer->StartVoteTimer(time);
+
+    // get a leader now, push all entries to him
+    for (int i = 0; i < _role_data->_entries_request_cache.size(); i++) {
+        RecvEntriesRequest(_role_data->_leader_node, _role_data->_entries_request_cache[i]);
+    }
+    _role_data->_entries_request_cache.clear();
 }
 
 void CFollowerRole::RecvVoteRequest(std::shared_ptr<CNode>& node, VoteRequest& vote_request) {
@@ -87,8 +92,8 @@ void CFollowerRole::RecvHeartBeatRequest(std::shared_ptr<CNode>& node, HeartBeat
     _role_data->_timer->StartVoteTimer(time);
 
     // set leader net handle
-    if (_role_data->_leader_net_handle != node->GetNetHandle()) {
-        _role_data->_leader_net_handle = node->GetNetHandle();
+    if (_role_data->_leader_node != node) {
+        _role_data->_leader_node = node;
     }
     _role_data->_current_term = heart_request.term();
 
@@ -167,15 +172,13 @@ void CFollowerRole::RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBea
         node->GetNetHandle().c_str(), heart_response.DebugString().c_str());
 }
 
-void CFollowerRole::RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request) {
+void CFollowerRole::RecvEntriesRequest(std::shared_ptr<CNode>& node, EntriesRequest& request) {
     base::LOG_DEBUG("follower recv client request from client, %s, context : %s",
-        client->GetNetHandle().c_str(), request.DebugString().c_str());
+        node->GetNetHandle().c_str(), request.DebugString().c_str());
 
-    // tell client send to leader.
-    ClientResponse response;
-    response.set_ret_code(not_leader);
-    response.set_leader_net_handle(_role_data->_leader_net_handle);
-    client->SendToClient(response);
+    // forward request.
+    EntriesResponse response;
+    _role_data->_leader_node->SendEntriesRequest(request);
 }
 
 void CFollowerRole::CandidateTimeOut() {

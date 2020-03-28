@@ -30,10 +30,6 @@ message VoteResponse {
     bool vote_granted          = 2;    // is vote?
 }
 
-message ClientRequest {
-    bytes entries              = 1;    // commit entries.
-}
-
 message NodeInfoRequest {
 	repeated string net_handle = 1;    // all node net address
 }
@@ -42,6 +38,9 @@ message NodeInfoResponse {
 	repeated string net_handle = 1;    // all node net address
 }
 
+message EntriesRequest {
+    bytes entries              = 1;    // commit entries.
+}
 
 enum CLIENT_RES_CODE {
     success                    = 0;
@@ -50,7 +49,7 @@ enum CLIENT_RES_CODE {
     send_again                 = 3;    // now don't have a leader, client try again a minute after
 }
 
-message ClientResponse {
+message EntriesResponse {
     CLIENT_RES_CODE ret_code = 1;      // return code
     string leader_net_handle = 2;      // leader net handle  
 }
@@ -63,5 +62,5 @@ service RaftService {
 
     rpc RpcNodeInfo(NodeInfoRequest) returns (NodeInfoResponse);
 
-	rpc RpcClientMsg(ClientRequest) returns (ClientResponse);
+	rpc RpcEntries(EntriesRequest) returns (EntriesResponse);
 };

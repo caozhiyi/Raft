@@ -21,14 +21,12 @@ namespace raft {
         void RecvVoteResponse(std::shared_ptr<CNode>& node, VoteResponse& vote_response);
         // get a heart message
         void RecvHeartBeatResponse(std::shared_ptr<CNode>& node, HeartBeatResponse& heart_response);
-        // get a client request
-        void RecvClientRequest(std::shared_ptr<CClient>& client, ClientRequest& request);
+        // get a entries request
+        void RecvEntriesRequest(std::shared_ptr<CNode>& node, EntriesRequest& request);
         // when candidate timer out. follower and candidate
         void CandidateTimeOut();
         // when heart beat timer out
         void HeartBeatTimerOut();
-    private:
-        std::unordered_map<uint64_t, std::shared_ptr<CClient>> _client_net_handle_map;
     };
 }
 

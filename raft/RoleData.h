@@ -37,16 +37,18 @@ namespace raft {
         uint64_t                      _prev_match_index;
 
         // leader net handle
-        std::string                   _leader_net_handle;
+        std::shared_ptr<CNode>        _leader_node;
         // current node net handle
         std::string                   _cur_net_handle;
         // current node id          
         uint32_t                      _cur_node_id;
         // heart time
         uint32_t                      _heart_time;
-        // candidate time
+        // candidate time range
         std::pair<uint32_t, uint32_t> _candidate_time;
 
+        // cache all unprocessed requests
+        std::vector<EntriesRequest>                                      _entries_request_cache;
         std::function<void(ROLE_TYPE, const std::string&)>               _role_change_call_back;
         std::function<void(Entries&)>                                    _commit_entries_call_back;
         std::function<void(std::shared_ptr<CNode>&, HeartBeatResquest&)> _recv_heart_again;
@@ -63,6 +65,7 @@ namespace raft {
             _heart_success_num(0),
             _max_match_index(0),
             _prev_match_index(1),
+            _leader_node(nullptr),
             _cur_node_id(0),
             _heart_time(0) {}
     };
