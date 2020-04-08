@@ -2200,11 +2200,11 @@ void RaftService::RpcNodeInfo(::PROTOBUF_NAMESPACE_ID::RpcController* controller
   done->Run();
 }
 
-void RaftService::RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+void RaftService::RpcEntries(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
                          const ::raft::EntriesRequest*,
                          ::raft::EntriesResponse*,
                          ::google::protobuf::Closure* done) {
-  controller->SetFailed("Method RpcClientMsg() not implemented.");
+  controller->SetFailed("Method RpcEntries() not implemented.");
   done->Run();
 }
 
@@ -2240,7 +2240,7 @@ void RaftService::CallMethod(const ::PROTOBUF_NAMESPACE_ID::MethodDescriptor* me
              done);
       break;
     case 3:
-      RpcClientMsg(controller,
+      RpcEntries(controller,
              ::PROTOBUF_NAMESPACE_ID::internal::DownCast<const ::raft::EntriesRequest*>(
                  request),
              ::PROTOBUF_NAMESPACE_ID::internal::DownCast<::raft::EntriesResponse*>(
@@ -2323,7 +2323,7 @@ void RaftService_Stub::RpcNodeInfo(::PROTOBUF_NAMESPACE_ID::RpcController* contr
   channel_->CallMethod(descriptor()->method(2),
                        controller, request, response, done);
 }
-void RaftService_Stub::RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+void RaftService_Stub::RpcEntries(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
                               const ::raft::EntriesRequest* request,
                               ::raft::EntriesResponse* response,
                               ::google::protobuf::Closure* done) {

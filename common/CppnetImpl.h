@@ -7,8 +7,7 @@
 #include "INet.h"
 #include "CppNet.h"
 #include "CppDefine.h"
-#include "CppnetImplCommon.h"
-
+#include "NetCommon.h"
 namespace raft {
     
     class CNode;
@@ -41,13 +40,23 @@ namespace raft {
         void SendEntriesResponse(const std::string& net_handle, EntriesResponse& response);
 
     private:
+        struct CppBag {
+            union Header {
+                struct Field {
+                    uint32_t  _len;
+                    uint32_t  _type;
+                } _field;
+                uint64_t      _data;
+            } _header;
+            std::string       _body;
+        };
         // cppnet call back
         void Connected(const cppnet::Handle& handle, uint32_t err);
         void DisConnected(const cppnet::Handle& handle, uint32_t err);
         void Sended(const cppnet::Handle& handle, uint32_t len, uint32_t err);
         void Recved(const cppnet::Handle& handle, base::CBuffer* data, uint32_t len, uint32_t err);
         // bag about
-        void BuildSendData(std::string& data, CppBagType type, std::string& ret);
+        void BuildSendData(std::string& data, MessageType type, std::string& ret);
         bool StringToBag(const std::string& data, std::vector<CppBag>& bag_vec, uint32_t& used_size);
         // get net handle
         std::string GetNetHandle(const cppnet::Handle& handle);

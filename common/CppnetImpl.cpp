@@ -6,6 +6,8 @@
 
 using namespace raft;
 
+static const uint32_t __header_len = sizeof(uint64_t);
+
 CCppNetImpl::CCppNetImpl(std::shared_ptr<CNodeManager> node_manager) : CNet(node_manager) {
 
 }
@@ -199,7 +201,7 @@ void CCppNetImpl::Recved(const cppnet::Handle& handle, base::CBuffer* data, uint
     delete []buf;
 }
 
-void CCppNetImpl::BuildSendData(std::string& data, CppBagType type, std::string& ret) {
+void CCppNetImpl::BuildSendData(std::string& data, MessageType type, std::string& ret) {
     CppBag bag;
     bag._header._field._len = data.length();
     bag._header._field._type = type;

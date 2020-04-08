@@ -1363,7 +1363,7 @@ class RaftService : public ::PROTOBUF_NAMESPACE_ID::Service {
                        const ::raft::NodeInfoRequest* request,
                        ::raft::NodeInfoResponse* response,
                        ::google::protobuf::Closure* done);
-  virtual void RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+  virtual void RpcEntries(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
                        const ::raft::EntriesRequest* request,
                        ::raft::EntriesResponse* response,
                        ::google::protobuf::Closure* done);
@@ -1408,7 +1408,7 @@ class RaftService_Stub : public RaftService {
                        const ::raft::NodeInfoRequest* request,
                        ::raft::NodeInfoResponse* response,
                        ::google::protobuf::Closure* done);
-  void RpcClientMsg(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
+  void RpcEntries(::PROTOBUF_NAMESPACE_ID::RpcController* controller,
                        const ::raft::EntriesRequest* request,
                        ::raft::EntriesResponse* response,
                        ::google::protobuf::Closure* done);
