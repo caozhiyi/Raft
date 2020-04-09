@@ -2,9 +2,9 @@
 #define TEST_HTTP_HTTPSERVERIMPL_HEADER
 
 #include <functional>
-#include "HttpResponse.h"
 #include "HttpServer.h"
 #include "HttpRequest.h"
+#include "HttpResponse.h"
 
 enum RequestType {
     request_add    = 1,
