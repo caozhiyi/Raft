@@ -29,9 +29,9 @@ CCommitEntriesDisk::CCommitEntriesDisk(const std::string& file_name) {
     _file_name = file_name;
     _out_file_stream.open(_file_name, std::ios::binary | std::ios::app | std::ios::out);
     _in_file_stream.open(_file_name, std::ios::binary | std::ios::in);
-	if (!_in_file_stream.good() || !_out_file_stream.good()) {
-		throw std::exception(std::logic_error("open entries file failed"));
-	}
+    if (!_in_file_stream.good() || !_out_file_stream.good()) {
+        throw std::exception(std::logic_error("open entries file failed"));
+    }
 
     // get newest index
     Entries new_entries;
@@ -52,10 +52,9 @@ CCommitEntriesDisk::~CCommitEntriesDisk() {
 }
 
 bool CCommitEntriesDisk::PushEntries(const Entries& entries) {
-    if (_newest_index >= entries._index && entries._index != 0) {
-        return false;
+    if (_newest_index < entries._index) {
+        _newest_index = entries._index;
     }
-    _newest_index = entries._index;
     EntriesRef entries_ref(entries);
     
     std::string data = entries_ref.GetData();
@@ -65,11 +64,9 @@ bool CCommitEntriesDisk::PushEntries(const Entries& entries) {
 }
 
 bool CCommitEntriesDisk::PushEntries(uint64_t index, uint32_t term, const std::string& entries) {
-    if (_newest_index >= index && index != 0) {
-        return false;
+    if (_newest_index < index) {
+        _newest_index = index;
     }
-    _newest_index = index;
-
     EntriesRef entries_ref(term, index, (char*)entries.data(), entries.length());
 
     std::string data = entries_ref.GetData();
@@ -115,15 +112,15 @@ bool CCommitEntriesDisk::GetEntries(Entries& entries) {
 bool CCommitEntriesDisk::ReadEntries(uint64_t index, std::vector<Entries>& entries_vec, bool only_one) {
     _in_file_stream.clear();
     _in_file_stream.seekg(0, std::ios::end);
-	auto file_size = _in_file_stream.tellg();
+    auto file_size = _in_file_stream.tellg();
     if (file_size == 0) {
         return false;
     }
-	if (file_size <= __once_step){
+    if (file_size <= __once_step){
         _in_file_stream.seekg(0, std::ios::beg);
-	} else {
+    } else {
         _in_file_stream.seekg(-__once_step, std::ios::end);
-	}
+    }
 
     std::vector<char*> buf_vec;
     char* cur_buf = nullptr;
@@ -131,9 +128,12 @@ bool CCommitEntriesDisk::ReadEntries(uint64_t index, std::vector<Entries>& entri
     uint32_t prev_buf_left = 0;
     int32_t find_rand = 0;
     bool ret = true;
-    
+    uint64_t prev_index = 0;
+    // de duplicate entries and sort
+    std::set<Entries, EntriesCompare> read_entrie_cache;
+
     bool loop = true;
-	while (loop) {
+    while (loop) {
         find_rand++;
         // create buf
         cur_buf = new char[__once_step];
@@ -145,10 +145,10 @@ bool CCommitEntriesDisk::ReadEntries(uint64_t index, std::vector<Entries>& entri
         }
 
         _in_file_stream.read(cur_buf + prev_buf_left, __once_step - prev_buf_left);
-		auto len = _in_file_stream.gcount();
-		if (len == 0) {
-			break;
-		}
+        auto len = _in_file_stream.gcount();
+        if (len == 0) {
+            break;
+        }
         mmrev(cur_buf + prev_buf_left, cur_buf + prev_buf_left + len -1);
 
         uint32_t left_len = prev_buf_left + len;
@@ -156,35 +156,54 @@ bool CCommitEntriesDisk::ReadEntries(uint64_t index, std::vector<Entries>& entri
         // parser current buffer.
         while (true) {
             if (left_len > __field_len) {
-			    EntriesRef entries_ref(cur_buf + offset, left_len);
+                EntriesRef entries_ref(cur_buf + offset, left_len);
                 if (entries_ref.GetTotalLen() > left_len) {
                     prev_buf = cur_buf;
                     prev_buf_left = left_len;
                     break;
                 } else {
                     // get a complete entries.
-                    entries_vec.push_back(std::move(entries_ref.GetEntries()));
-                    if (entries_ref.GetIndex() <= index || only_one) {
+                    auto entries = entries_ref.GetEntries();
+                    if (read_entrie_cache.count(entries) < 1) {
+                        read_entrie_cache.insert(std::move(entries));
+                    }
+                    
+                    // index must be continuous
+                    if ((entries_ref.GetIndex() <= index && (entries_ref.GetIndex() == prev_index - 1 || prev_index == 0)) 
+                    || (only_one && entries_ref.GetIndex() == _newest_index)) {
                         loop = false;
                         break;
+                    }
+                    // get next decreasing id
+                    if (entries_ref.GetIndex() == prev_index - 1 || prev_index == 0) {
+                        prev_index = entries_ref.GetIndex();
                     }
                     offset += entries_ref.GetTotalLen();
                     left_len -= entries_ref.GetTotalLen();
                 }
-		    } else {
+            } else {
                 prev_buf = cur_buf;
                 prev_buf_left = left_len;
                 break;
             }
         }
 
-		if (_in_file_stream.eof()) {
+        if (_in_file_stream.eof()) {
             _in_file_stream.clear();
-		}
+        }
         // move read point
-		int pos = -find_rand * __once_step;
+        int pos = -find_rand * __once_step;
         _in_file_stream.seekg(pos, std::ios::end);
-	}
+    }
+
+    // get target entries
+    for (auto iter = read_entrie_cache.rbegin(); iter != read_entrie_cache.rend(); iter++) {
+        if (iter->_index <= index) {
+            break;
+        }
+        entries_vec.push_back(std::move(*iter));
+    }
+
     // reset read point to end of file.
     _in_file_stream.seekg(0, std::ios::end);
     for (size_t i = 0; i < buf_vec.size(); i++) {

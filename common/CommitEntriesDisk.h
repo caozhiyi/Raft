@@ -1,9 +1,10 @@
 #ifndef RAFT_COMMON_COMMIYLOGNORMAL
 #define RAFT_COMMON_COMMIYLOGNORMAL
 
+#include <set>
+#include <vector>
 #include <fstream>
 #include <functional>
-#include <vector>
 
 #include "Entries.h"
 #include "ICommitEntries.h"
@@ -38,6 +39,14 @@ namespace raft {
         std::fstream           _out_file_stream;
         uint64_t               _newest_index;
         std::function<void(std::vector<Entries>&)> _entries_call_back;
+
+        struct EntriesCompare {
+            bool operator()(const Entries& entries1, const Entries& entries2) const {
+                if (entries1._index != entries2._index) {
+                    return entries1._index < entries2._index;
+                }
+            }
+        };
     };
 }
 #endif
