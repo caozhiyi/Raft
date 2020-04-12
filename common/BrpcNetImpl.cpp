@@ -49,7 +49,7 @@ void CBrpcNetImpl::ConnectTo(const std::string& ip, uint16_t port) {
 }
 
 void CBrpcNetImpl::DisConnect(const std::string& net_handle) {
-    _net_2_handle_map.erase(net_handle);
+    _channel_map.erase(net_handle);
 }
 
 void CBrpcNetImpl::SendNodeInfoRequest(const std::string& net_handle, NodeInfoRequest& request) {
@@ -59,7 +59,7 @@ void CBrpcNetImpl::SendNodeInfoRequest(const std::string& net_handle, NodeInfoRe
     auto iter = _channel_map.find(net_handle);
     NodeInfoResponse* response = new NodeInfoResponse;
     brpc::Controller* cntl = new brpc::Controller;
-    RpcDoneParam param = new RpcDoneParam(net_handle, (void*)response, node_info_response);
+    RpcDoneParam* param = new RpcDoneParam(net_handle, (void*)response, node_info_response);
     cntl->set_timeout_ms(__rpc_time_out);
     auto closure = google::protobuf::NewCallback(&CBrpcNetImpl::RpcDone, (void*)param, cntl);
     iter->second._stub->RpcNodeInfo(cntl, &request, response, closure);
@@ -67,7 +67,7 @@ void CBrpcNetImpl::SendNodeInfoRequest(const std::string& net_handle, NodeInfoRe
 
 void CBrpcNetImpl::SendNodeInfoResponse(const std::string& net_handle, NodeInfoResponse& response) {
     auto iter = _channel_map.find(net_handle);
-    if (iter == _net_2_handle_map.end()) {
+    if (iter == _channel_map.end()) {
         return;
     }
     auto& channel_info = iter->second;
@@ -85,7 +85,7 @@ void CBrpcNetImpl::SendHeartRequest(const std::string& net_handle, HeartBeatResq
     auto iter = _channel_map.find(net_handle);
     HeartBeatResponse* response = new HeartBeatResponse;
     brpc::Controller* cntl = new brpc::Controller;
-    RpcDoneParam param = new RpcDoneParam(net_handle, (void*)response, heart_beat_response);
+    RpcDoneParam* param = new RpcDoneParam(net_handle, (void*)response, heart_beat_response);
     cntl->set_timeout_ms(__rpc_time_out);
     auto closure = google::protobuf::NewCallback(&CBrpcNetImpl::RpcDone, (void*)param, cntl);
     iter->second._stub->RpcHeart(cntl, &request, response, closure);
@@ -113,7 +113,7 @@ void CBrpcNetImpl::SendVoteRequest(const std::string& net_handle, VoteRequest& r
     
     VoteResponse* response = new VoteResponse;
     brpc::Controller* cntl = new brpc::Controller;
-    RpcDoneParam param = new RpcDoneParam(net_handle, (void*)response, vote_response);
+    RpcDoneParam* param = new RpcDoneParam(net_handle, (void*)response, vote_response);
     cntl->set_timeout_ms(__rpc_time_out);
     auto closure = google::protobuf::NewCallback(&CBrpcNetImpl::RpcDone, (void*)param, cntl);
     iter->second._stub->RpcVote(cntl, &request, response, closure);
@@ -140,7 +140,7 @@ void CBrpcNetImpl::SendEntriesRequest(const std::string& net_handle, EntriesRequ
   
     EntriesResponse* response = new EntriesResponse;
     brpc::Controller* cntl = new brpc::Controller;
-    RpcDoneParam param = new RpcDoneParam(net_handle, (void*)response, entries_response);
+    RpcDoneParam* param = new RpcDoneParam(net_handle, (void*)response, entries_response);
     cntl->set_timeout_ms(__rpc_time_out);
     auto closure = google::protobuf::NewCallback(&CBrpcNetImpl::RpcDone, (void*)param, cntl);
     iter->second._stub->RpcEntries(cntl, &request, response, closure);
@@ -198,9 +198,8 @@ void CBrpcNetImpl::RpcEntries(::PROTOBUF_NAMESPACE_ID::RpcController* controller
 void CBrpcNetImpl::RpcDone(void* param, brpc::Controller* cntl) {
     auto response = ((RpcDoneParam*)param)->_response;
     auto type = ((RpcDoneParam*)param)->_type;
-    auto net_handle = std::move((RpcDoneParam*)param)->_net_handle);
+    std::string net_handle = std::move(((RpcDoneParam*)param)->_net_handle));
 
-    std::unique_ptr<raft::ClientResponse> response_guard(response);
     std::unique_ptr<brpc::Controller> cntl_guard(cntl);
     if (cntl->Failed()) {
         LOG_ERROR("rpc call server failed. err info : %s", cntl->ErrorText().c_str());
@@ -208,7 +207,7 @@ void CBrpcNetImpl::RpcDone(void* param, brpc::Controller* cntl) {
         return;
     }
 
-    switch (bag._header._field._type)
+    switch (type)
     {
     case heart_beat_response:
         {
