@@ -15,22 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-
-#ifndef BRPC_BUILTIN_SORTTABLE_JS_H
-#define BRPC_BUILTIN_SORTTABLE_JS_H
-
-#include "butil/iobuf.h"
-
+#pragma once
 
 namespace brpc {
 
-// Get the sorttable.js as string or IOBuf.
-// We need to pack all js inside C++ code so that builtin services can be
-// accessed without external resources and network connection.
-const char* sorttable_js();
-const butil::IOBuf& sorttable_js_iobuf();
+const char* flamegraph_perl();
 
 } // namespace brpc
-
-
-#endif // BRPC_BUILTIN_SORTTABLE_JS_H

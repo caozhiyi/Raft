@@ -1,19 +1,22 @@
-// iobuf - A non-continuous zero-copied buffer
-// Copyright (c) 2012 Baidu, Inc.
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
 
-// Author: Ge,Jun (gejun@baidu.com)
+// iobuf - A non-continuous zero-copied buffer
+
 // Date: Thu Nov 22 13:57:56 CST 2012
 
 #ifndef BUTIL_IOBUF_H
@@ -588,14 +591,14 @@ public:
     virtual ~IOBufAsSnappySource() {}
 
     // Return the number of bytes left to read from the source
-    virtual size_t Available() const;
+    size_t Available() const override;
 
     // Peek at the next flat region of the source.
-    virtual const char* Peek(size_t* len); 
+    const char* Peek(size_t* len) override; 
 
     // Skip the next n bytes.  Invalidates any buffer returned by
     // a previous call to Peek().
-    virtual void Skip(size_t n);
+    void Skip(size_t n) override;
     
 private:
     const butil::IOBuf* _buf;
@@ -609,10 +612,10 @@ public:
     virtual ~IOBufAsSnappySink() {}
 
     // Append "bytes[0,n-1]" to this.
-    virtual void Append(const char* bytes, size_t n);
+    void Append(const char* bytes, size_t n) override;
     
     // Returns a writable buffer of the specified length for appending.
-    virtual char* GetAppendBuffer(size_t length, char* scratch);
+    char* GetAppendBuffer(size_t length, char* scratch) override;
     
 private:
     char* _cur_buf;
@@ -665,6 +668,11 @@ public:
     // Returns 0 on success, -1 otherwise.
     int append(const void* data, size_t n);
     int append(const butil::StringPiece& str);
+
+    // Format integer |d| to back side of the internal buffer, which is much faster
+    // than snprintf(..., "%lu", d).
+    // Returns 0 on success, -1 otherwise.
+    int append_decimal(long d);
     
     // Push the character to back side of the internal buffer.
     // Costs ~3ns while IOBuf.push_back costs ~13ns on Intel(R) Xeon(R) CPU

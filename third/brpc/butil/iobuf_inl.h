@@ -1,19 +1,22 @@
-// iobuf - A non-continuous zero-copied buffer
-// Copyright (c) 2012 Baidu, Inc.
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
 
-// Author: Ge,Jun (gejun@baidu.com)
+// iobuf - A non-continuous zero-copied buffer
+
 // Date: Thu Nov 22 13:57:56 CST 2012
 
 // Inlined implementations of some methods defined in iobuf.h
@@ -279,6 +282,25 @@ inline int IOBufAppender::append(const void* src, size_t n) {
 
 inline int IOBufAppender::append(const StringPiece& str) {
     return append(str.data(), str.size());
+}
+
+inline int IOBufAppender::append_decimal(long d) {
+    char buf[24];  // enough for decimal 64-bit integers
+    size_t n = sizeof(buf);
+    bool negative = false;
+    if (d < 0) {
+        negative = true;
+        d = -d;
+    }
+    do {
+        const long q = d / 10;
+        buf[--n] = d - q * 10 + '0';
+        d = q;
+    } while (d);
+    if (negative) {
+        buf[--n] = '-';
+    }
+    return append(buf + n, sizeof(buf) - n);
 }
 
 inline int IOBufAppender::push_back(char c) {
